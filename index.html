@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padre Nuestro - Multiple Choice Quiz Arcade</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;900&display=swap');
+
+        :root {
+            --primary: #4338CA;
+            --primary-light: #EEF2FF;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --bg-page: #6366F1;
+            --card-bg: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .arcade-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            max-width: 580px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Mode Switcher */
+        .mode-nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: #F1F5F9;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 10px 4px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s;
+        }
+
+        .nav-btn .icon {
+            font-size: 1.35rem;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 56, 202, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Header / Stats */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .mode-title {
+            font-family: 'Fredoka', cursive;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .score-badge {
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #E2E8F0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Question Box */
+        .question-box {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 22px 18px;
+            text-align: center;
+            margin-bottom: 18px;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .q-sub {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .q-text {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-dark);
+            line-height: 1.45;
+        }
+
+        .blank-space {
+            color: var(--primary);
+            text-decoration: underline;
+            padding: 0 4px;
+            font-weight: 900;
+        }
+
+        /* Multiple Choice Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .mc-btn {
+            background: white;
+            border: 2px solid #CBD5E1;
+            box-shadow: 0 3px 0 #94A3B8;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.1s ease;
+        }
+
+        .mc-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #94A3B8;
+        }
+
+        .mc-letter {
+            background: #F1F5F9;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        /* Visual Feedback States (No Sound) */
+        .mc-btn.correct {
+            background: #D1FAE5 !important;
+            border-color: var(--success) !important;
+            box-shadow: 0 3px 0 #059669 !important;
+            color: #065F46 !important;
+        }
+
+        .mc-btn.correct .mc-letter {
+            background: var(--success);
+            color: white;
+        }
+
+        .mc-btn.wrong {
+            background: #FEE2E2 !important;
+            border-color: var(--danger) !important;
+            box-shadow: 0 3px 0 #DC2626 !important;
+            color: #991B1B !important;
+        }
+
+        .mc-btn.wrong .mc-letter {
+            background: var(--danger);
+            color: white;
+        }
+
+        .shake {
+            animation: shake 0.35s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        /* Next Button */
+        .bottom-action {
+            display: flex;
+            justify-content: flex-end;
+            min-height: 48px;
+        }
+
+        .next-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 3px 0 #312E81;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: none;
+        }
+
+        .next-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #312E81;
+        }
+
+        /* Report Card (For Game 4) */
+        .report-card {
+            display: none;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .grade-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #FEF3C7;
+            border: 5px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 16px auto;
+        }
+
+        .grade-letter {
+            font-family: 'Fredoka', cursive;
+            font-size: 2.8rem;
+            color: #92400E;
+            line-height: 1;
+        }
+
+        .grade-score {
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: #B45309;
+        }
+
+        /* Confetti Overlay */
+        #confettiCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<div class="arcade-card">
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Game Navigation -->
+    <div class="mode-nav">
+        <button class="nav-btn active" onclick="loadMode('fill')">
+            <span class="icon">🔍</span>Blanks
+        </button>
+        <button class="nav-btn" onclick="loadMode('sequence')">
+            <span class="icon">➡️</span>Next Line
+        </button>
+        <button class="nav-btn" onclick="loadMode('meaning')">
+            <span class="icon">🌐</span>Meaning
+        </button>
+        <button class="nav-btn" onclick="loadMode('exam')">
+            <span class="icon">📝</span>Test Mode
+        </button>
+    </div>
+
+    <!-- Top Status Bar -->
+    <div class="quiz-header">
+        <h2 class="mode-title" id="modeTitle">Missing Word</h2>
+        <div class="score-badge">⭐ Score: <span id="scoreDisplay">0</span></div>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+    </div>
+
+    <!-- Quiz Question Area -->
+    <div id="quizContent">
+        <div class="question-box" id="questionBox">
+            <div class="q-sub" id="qSub">Question 1</div>
+            <div class="q-text" id="qPrompt">Loading...</div>
+        </div>
+
+        <!-- Multiple Choice Options -->
+        <div class="options-list" id="optionsList"></div>
+
+        <!-- Next Question Button -->
+        <div class="bottom-action">
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➔</button>
+        </div>
+    </div>
+
+    <!-- Final Test Report Card -->
+    <div class="report-card" id="reportCard">
+        <div class="grade-circle">
+            <div class="grade-letter" id="reportGrade">A+</div>
+            <div class="grade-score" id="reportScore">10 / 10</div>
+        </div>
+        <h2 style="font-family: 'Fredoka', cursive; margin: 0 0 8px 0;" id="reportMsg">Super Star!</h2>
+        <p style="color: var(--text-muted); font-weight: 800; margin-bottom: 24px;" id="reportSub">You are totally ready for the test!</p>
+        <button class="next-btn" style="display: inline-block; margin: 0 auto;" onclick="loadMode('exam')">Try Again 🔄</button>
+    </div>
+
+</div>
+
+<script>
+    // Master database of the Spanish Our Father
+    const PRAYER_LINES = [
+        "Padre nuestro, que estás en el cielo,",
+        "santificado sea tu Nombre;",
+        "venga a nosotros tu reino;",
+        "hágase tu voluntad en la tierra como en el cielo.",
+        "Danos hoy nuestro pan de cada día;",
+        "perdona nuestras ofensas,",
+        "como también nosotros perdonamos a los que nos ofenden;",
+        "no nos dejes caer en la tentación,",
+        "y líbranos del mal. Amén."
+    ];
+
+    // 1. Fill-In-The-Blank Database
+    const fillQuestions = [
+        {
+            q: "Padre nuestro, que estás en el <span class='blank-space'>______</span>,",
+            correct: "cielo",
+            options: ["cielo", "suelo", "reino", "mar"]
+        },
+        {
+            q: "santificado sea tu <span class='blank-space'>______</span>;",
+            correct: "Nombre",
+            options: ["Día", "Nombre", "Pan", "Cielo"]
+        },
+        {
+            q: "venga a nosotros tu <span class='blank-space'>______</span>;",
+            correct: "reino",
+            options: ["amigo", "casa", "reino", "ofensa"]
+        },
+        {
+            q: "hágase tu voluntad en la <span class='blank-space'>______</span> como en el cielo.",
+            correct: "tierra",
+            options: ["tierra", "luna", "noche", "vida"]
+        },
+        {
+            q: "Danos hoy nuestro <span class='blank-space'>______</span> de cada día;",
+            correct: "pan",
+            options: ["agua", "sol", "pan", "reino"]
+        },
+        {
+            q: "perdona nuestras <span class='blank-space'>______</span>,",
+            correct: "ofensas",
+            options: ["manos", "ofensas", "palabras", "tierras"]
+        },
+        {
+            q: "como también nosotros perdonamos a los que nos <span class='blank-space'>______</span>;",
+            correct: "ofenden",
+            options: ["llaman", "miran", "ofenden", "cantan"]
+        },
+        {
+            q: "no nos dejes caer en la <span class='blank-space'>______</span>,",
+            correct: "tentación",
+            options: ["tentación", "tierra", "tormenta", "casa"]
+        },
+        {
+            q: "y líbranos del <span class='blank-space'>______</span>. Amén.",
+            correct: "mal",
+            options: ["bien", "frío", "mal", "miedo"]
+        }
+    ];
+
+    // 2. Next Line Database
+    const sequenceQuestions = [
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« Padre nuestro, que estás en el cielo, »</b>",
+            correct: "santificado sea tu Nombre;",
+            options: [
+                "santificado sea tu Nombre;",
+                "venga a nosotros tu reino;",
+                "Danos hoy nuestro pan de cada día;"
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« santificado sea tu Nombre; »</b>",
+            correct: "venga a nosotros tu reino;",
+            options: [
+                "hágase tu voluntad en la tierra...",
+                "venga a nosotros tu reino;",
+                "perdona nuestras ofensas,"
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« venga a nosotros tu reino; »</b>",
+            correct: "hágase tu voluntad en la tierra como en el cielo.",
+            options: [
+                "hágase tu voluntad en la tierra como en el cielo.",
+                "y líbranos del mal. Amén.",
+                "Danos hoy nuestro pan de cada día;"
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« hágase tu voluntad en la tierra como en el cielo. »</b>",
+            correct: "Danos hoy nuestro pan de cada día;",
+            options: [
+                "no nos dejes caer en la tentación,",
+                "perdona nuestras ofensas,",
+                "Danos hoy nuestro pan de cada día;"
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« Danos hoy nuestro pan de cada día; »</b>",
+            correct: "perdona nuestras ofensas,",
+            options: [
+                "santificado sea tu Nombre;",
+                "perdona nuestras ofensas,",
+                "como también nosotros perdonamos..."
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« perdona nuestras ofensas, »</b>",
+            correct: "como también nosotros perdonamos a los que nos ofenden;",
+            options: [
+                "como también nosotros perdonamos a los que nos ofenden;",
+                "no nos dejes caer en la tentación,",
+                "y líbranos del mal. Amén."
+            ]
+        },
+        {
+            prompt: "What line comes immediately AFTER:<br><b>« no nos dejes caer en la tentación, »</b>",
+            correct: "y líbranos del mal. Amén.",
+            options: [
+                "Danos hoy nuestro pan de cada día;",
+                "santificado sea tu Nombre;",
+                "y líbranos del mal. Amén."
+            ]
+        }
+    ];
+
+    // 3. Meaning Match Database (English to Spanish)
+    const meaningQuestions = [
+        {
+            prompt: "Which Spanish line means:<br><b>\"Our Father, who art in heaven\"</b>?",
+            correct: "Padre nuestro, que estás en el cielo,",
+            options: [
+                "Padre nuestro, que estás en el cielo,",
+                "venga a nosotros tu reino;",
+                "santificado sea tu Nombre;"
+            ]
+        },
+        {
+            prompt: "Which Spanish line means:<br><b>\"hallowed be thy Name\"</b>?",
+            correct: "santificado sea tu Nombre;",
+            options: [
+                "Danos hoy nuestro pan de cada día;",
+                "santificado sea tu Nombre;",
+                "no nos dejes caer en la tentación,"
+            ]
+        },
+        {
+            prompt: "Which Spanish line means:<br><b>\"thy kingdom come\"</b>?",
+            correct: "venga a nosotros tu reino;",
+            options: [
+                "venga a nosotros tu reino;",
+                "perdona nuestras ofensas,",
+                "y líbranos del mal. Amén."
+            ]
+        },
+        {
+            prompt: "Which Spanish line means:<br><b>\"Give us this day our daily bread\"</b>?",
+            correct: "Danos hoy nuestro pan de cada día;",
+            options: [
+                "hágase tu voluntad en la tierra como en el cielo.",
+                "Danos hoy nuestro pan de cada día;",
+                "como también nosotros perdonamos..."
+            ]
+        },
+        {
+            prompt: "Which Spanish line means:<br><b>\"and lead us not into temptation\"</b>?",
+            correct: "no nos dejes caer en la tentación,",
+            options: [
+                "no nos dejes caer en la tentación,",
+                "perdona nuestras ofensas,",
+                "santificado sea tu Nombre;"
+            ]
+        },
+        {
+            prompt: "Which Spanish line means:<br><b>\"but deliver us from evil. Amen.\"</b>?",
+            correct: "y líbranos del mal. Amén.",
+            options: [
+                "Danos hoy nuestro pan de cada día;",
+                "venga a nosotros tu reino;",
+                "y líbranos del mal. Amén."
+            ]
+        }
+    ];
+
+    // 4. Practice Exam Database (Curated 10 Questions)
+    const examQuestions = [
+        {
+            q: "What is the very first line of the prayer?",
+            correct: "Padre nuestro, que estás en el cielo,",
+            options: [
+                "Padre nuestro, que estás en el cielo,",
+                "santificado sea tu Nombre;",
+                "venga a nosotros tu reino;"
+            ]
+        },
+        {
+            q: "Fill in the blank:<br>« santificado sea tu <span class='blank-space'>______</span>; »",
+            correct: "Nombre",
+            options: ["Cielo", "Nombre", "Pan"]
+        },
+        {
+            q: "Which word completes this line?<br>« venga a nosotros tu <span class='blank-space'>______</span>; »",
+            correct: "reino",
+            options: ["reino", "ofensa", "voluntad"]
+        },
+        {
+            q: "« ...en la tierra como en el cielo » means:",
+            correct: "...on earth as it is in heaven",
+            options: [
+                "...give us our daily bread",
+                "...on earth as it is in heaven",
+                "...deliver us from evil"
+            ]
+        },
+        {
+            q: "Fill in the blank:<br>« Danos hoy nuestro <span class='blank-space'>______</span> de cada día; »",
+            correct: "pan",
+            options: ["pan", "cielo", "nombre"]
+        },
+        {
+            q: "What line comes after « Danos hoy nuestro pan de cada día; »?",
+            correct: "perdona nuestras ofensas,",
+            options: [
+                "y líbranos del mal. Amén.",
+                "perdona nuestras ofensas,",
+                "no nos dejes caer en la tentación,"
+            ]
+        },
+        {
+            q: "Which word completes the blank?<br>« como también nosotros perdonamos a los que nos <span class='blank-space'>______</span>; »",
+            correct: "ofenden",
+            options: ["ofenden", "llaman", "salvan"]
+        },
+        {
+            q: "Fill in the blank:<br>« no nos dejes caer en la <span class='blank-space'>______</span>, »",
+            correct: "tentación",
+            options: ["tierra", "tentación", "mentira"]
+        },
+        {
+            q: "What is the final line of the prayer?",
+            correct: "y líbranos del mal. Amén.",
+            options: [
+                "y líbranos del mal. Amén.",
+                "santificado sea tu Nombre;",
+                "venga a nosotros tu reino;"
+            ]
+        },
+        {
+            q: "What does « pan de cada día » mean?",
+            correct: "daily bread",
+            options: ["daily bread", "good friends", "holy kingdom"]
+        }
+    ];
+
+    // State Variables
+    let currentMode = 'fill';
+    let currentPool = [];
+    let qIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    function loadMode(mode) {
+        currentMode = mode;
+        qIndex = 0;
+        score = 0;
+        answered = false;
+        document.getElementById('scoreDisplay').innerText = score;
+
+        // Nav tabs highlight
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons[0].classList.toggle('active', mode === 'fill');
+        buttons[1].classList.toggle('active', mode === 'sequence');
+        buttons[2].classList.toggle('active', mode === 'meaning');
+        buttons[3].classList.toggle('active', mode === 'exam');
+
+        document.getElementById('quizContent').style.display = 'block';
+        document.getElementById('reportCard').style.display = 'none';
+
+        if (mode === 'fill') {
+            document.getElementById('modeTitle').innerText = "🔍 Missing Word";
+            currentPool = [...fillQuestions].sort(() => Math.random() - 0.5);
+        } else if (mode === 'sequence') {
+            document.getElementById('modeTitle').innerText = "➡️ What Comes Next?";
+            currentPool = [...sequenceQuestions].sort(() => Math.random() - 0.5);
+        } else if (mode === 'meaning') {
+            document.getElementById('modeTitle').innerText = "🌐 Meaning Match";
+            currentPool = [...meaningQuestions].sort(() => Math.random() - 0.5);
+        } else if (mode === 'exam') {
+            document.getElementById('modeTitle').innerText = "📝 Practice Test";
+            currentPool = [...examQuestions]; // Set order for test
+        }
+
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        answered = false;
+        document.getElementById('nextBtn').style.display = 'none';
+        
+        const qData = currentPool[qIndex];
+        const progressPercent = ((qIndex) / currentPool.length) * 100;
+        document.getElementById('progressBar').style.width = progressPercent + '%';
+
+        document.getElementById('qSub').innerText = `Question ${qIndex + 1} of ${currentPool.length}`;
+        
+        // Handle question text
+        const promptEl = document.getElementById('qPrompt');
+        promptEl.innerHTML = qData.q || qData.prompt;
+
+        // Build Multiple Choice options
+        const optionsList = document.getElementById('optionsList');
+        optionsList.innerHTML = '';
+
+        // Shuffle options so the correct answer isn't predictable
+        const letters = ['A', 'B', 'C', 'D'];
+        const shuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
+
+        shuffledOptions.forEach((optText, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'mc-btn';
+            btn.innerHTML = `
+                <span class="mc-letter">${letters[i]}</span>
+                <span style="flex-grow: 1;">${optText}</span>
+            `;
+            btn.onclick = () => selectOption(btn, optText, qData.correct);
+            optionsList.appendChild(btn);
+        });
+    }
+
+    function selectOption(clickedBtn, selectedText, correctText) {
+        if (answered) return;
+        answered = true;
+
+        const allButtons = document.querySelectorAll('.mc-btn');
+        allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+        if (selectedText === correctText) {
+            clickedBtn.classList.add('correct');
+            score += 10;
+            document.getElementById('scoreDisplay').innerText = score;
+            triggerConfetti();
+        } else {
+            clickedBtn.classList.add('wrong');
+            const card = document.querySelector('.arcade-card');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 400);
+
+            // Highlight the right one so he immediately learns
+            allButtons.forEach(b => {
+                if (b.innerText.includes(correctText)) {
+                    b.classList.add('correct');
+                }
+            });
+        }
+
+        document.getElementById('nextBtn').style.display = 'inline-block';
+    }
+
+    function nextQuestion() {
+        if (qIndex < currentPool.length - 1) {
+            qIndex++;
+            renderQuestion();
+        } else {
+            showFinalScreen();
+        }
+    }
+
+    function showFinalScreen() {
+        document.getElementById('progressBar').style.width = '100%';
+        triggerConfetti();
+
+        if (currentMode === 'exam') {
+            document.getElementById('quizContent').style.display = 'none';
+            const report = document.getElementById('reportCard');
+            report.style.display = 'block';
+
+            const maxScore = currentPool.length * 10;
+            const percentage = Math.round((score / maxScore) * 100);
+            document.getElementById('reportScore').innerText = `${score / 10} / ${currentPool.length}`;
+
+            const gradeLetter = document.getElementById('reportGrade');
+            const msg = document.getElementById('reportMsg');
+            const sub = document.getElementById('reportSub');
+
+            if (percentage >= 90) {
+                gradeLetter.innerText = "A+";
+                msg.innerText = "🏆 EXCELLENT JOB!";
+                sub.innerText = "You have memorized the prayer in Spanish!";
+            } else if (percentage >= 70) {
+                gradeLetter.innerText = "B";
+                msg.innerText = "👍 GREAT EFFORT!";
+                sub.innerText = "You almost have it down 100%!";
+            } else {
+                gradeLetter.innerText = "C";
+                msg.innerText = "💪 KEEP PRACTICING!";
+                sub.innerText = "Try the 'Blanks' mode to review the words!";
+            }
+        } else {
+            alert(`🎉 Mode Complete! Great job! You scored ${score} points!`);
+            loadMode(currentMode);
+        }
+    }
+
+    // ==========================================
+    // ZERO-SOUND VISUAL CONFETTI CANNON
+    // ==========================================
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function triggerConfetti() {
+        resizeCanvas();
+        particles = [];
+        const colors = ['#10B981', '#6366F1', '#F59E0B', '#EC4899', '#3B82F6'];
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: canvas.width / 2,
+                y: canvas.height * 0.4,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 0.7) * 10,
+                size: Math.random() * 7 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: 1
+            });
+        }
+        requestAnimationFrame(renderConfetti);
+    }
+
+    function renderConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.25; // gravity
+            p.alpha -= 0.025;
+
+            if (p.alpha > 0) {
+                active = true;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+        });
+
+        if (active) requestAnimationFrame(renderConfetti);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Launch initial mode
+    loadMode('fill');
+    resizeCanvas();
+</script>
+
+</body>
+</html>
