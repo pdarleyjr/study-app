@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#18375a">
+  <meta name="description" content="A kid-friendly practice game for Social Studies Unit 1, Lessons 2 and 3.">
+  <title>Unit 1 Explorer Quest — Social Studies</title>
+  <style>
+    :root{--ink:#18324f;--muted:#64738a;--blue:#2563a5;--blue-dark:#194b7e;--sky:#e5f3ff;--gold:#ffc857;--cream:#fffaf0;--green:#16734b;--green-bg:#e7f8ee;--red:#a43b3b;--red-bg:#fff0ee;--line:#dce5ed;--white:#fff;--shadow:0 12px 32px rgba(25,54,83,.1)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(180deg,#e9f5ff 0,#f5f9fb 480px,#fffaf2 100%);font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);min-height:100vh}
+    button,select{font:inherit}
+    button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid #e4a71a;outline-offset:3px}
+    .wrap{width:min(980px,100%);margin:auto;padding:16px 19px 48px}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    .back-link{text-decoration:none;color:var(--blue-dark);font-weight:900;background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:13px}
+    .nav-label{font-size:.78rem;font-weight:950;letter-spacing:.09em;color:#58708a}
+    .hero{background:linear-gradient(125deg,#184b7a,#2266a3 70%,#3381ba);border-radius:28px;color:white;padding:27px clamp(20px,5vw,43px);box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;right:-28px;top:-58px;width:190px;height:190px;border:24px solid rgba(255,255,255,.11);border-radius:50%}
+    .hero-kicker{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.19);border-radius:99px;padding:7px 11px;font-size:.76rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+    h1{position:relative;z-index:1;font-size:clamp(2rem,6vw,3.55rem);letter-spacing:-.05em;line-height:1.06;margin:14px 0 9px}
+    .hero p{position:relative;z-index:1;max-width:660px;color:#e8f4ff;line-height:1.55;margin:0;font-size:1.03rem;font-weight:650}
+    .hero-sticker{position:absolute;right:30px;bottom:15px;font-size:4.1rem;transform:rotate(-9deg);filter:drop-shadow(0 5px 3px rgba(0,0,0,.18))}
+    .callout{margin:15px 0 21px;padding:12px 15px;border-radius:14px;background:#fff4cd;border:1px solid #f2df9c;color:#604b17;font-weight:800;line-height:1.45}
+    .callout strong{color:#4d3910}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:19px 2px 12px}
+    .section-head h2{font-size:1.28rem;margin:0;letter-spacing:-.025em}
+    .section-head span{font-size:.82rem;color:var(--muted);font-weight:800}
+    .missions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .mission{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:0 5px 14px rgba(29,61,91,.06);display:flex;flex-direction:column;min-height:236px}
+    .mission-icon{height:46px;width:46px;border-radius:15px;background:var(--sky);display:grid;place-items:center;font-size:1.55rem}
+    .mission:nth-child(2) .mission-icon{background:#fff0d7}.mission:nth-child(3) .mission-icon{background:#e8f5e8}
+    .mission h3{font-size:1.05rem;margin:13px 0 6px}.mission p{font-size:.9rem;color:var(--muted);line-height:1.48;margin:0 0 14px}
+    .mission small{display:block;color:#58708a;font-size:.76rem;font-weight:850;margin-top:auto;margin-bottom:11px}
+    .primary,.secondary,.choice,.check-button,.next-button{border:0;border-radius:13px;min-height:46px;padding:11px 15px;font-weight:950;cursor:pointer}
+    .primary,.check-button,.next-button{background:var(--blue);color:white;box-shadow:0 4px 0 var(--blue-dark)}
+    .primary:active,.check-button:active,.next-button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-dark)}
+    .secondary{background:#edf3f8;color:#294d70;border:1px solid var(--line)}
+    .quick-review{margin-top:19px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:0 17px;box-shadow:0 4px 12px rgba(29,61,91,.04)}
+    .quick-review summary{cursor:pointer;padding:16px 2px;font-weight:950;color:#294d70}
+    .review-body{border-top:1px solid var(--line);padding:11px 2px 16px;color:#475a70;line-height:1.55;font-size:.92rem}
+    .review-body h3{font-size:1rem;color:var(--ink);margin:12px 0 5px}.review-body p{margin:5px 0}
+    .game-panel{display:none;margin-top:17px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(16px,4vw,25px);box-shadow:var(--shadow)}
+    .game-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .game-top button{font-size:.87rem}
+    .mode-title{font-size:1.2rem;font-weight:950;margin:0}
+    .score-pill{border-radius:99px;background:#fff4cf;padding:8px 11px;font-size:.83rem;font-weight:950;color:#664d13}
+    .progress-row{display:flex;justify-content:space-between;color:var(--muted);font-size:.83rem;font-weight:850;margin:18px 0 7px}
+    .track{height:10px;border-radius:99px;background:#e8eef3;overflow:hidden}
+    .track-fill{height:100%;width:0;background:linear-gradient(90deg,#41a774,#97cd55);border-radius:99px;transition:width .25s}
+    .question-card{margin:19px 0 14px;padding:clamp(17px,4vw,24px);border-radius:18px;background:#f5faff;border:1px solid #dfecf7}
+    .prompt-label{text-transform:uppercase;font-size:.75rem;letter-spacing:.09em;color:#58728d;font-weight:950;margin-bottom:8px}
+    .prompt{font-size:clamp(1.12rem,3.1vw,1.45rem);line-height:1.42;font-weight:950;color:#203a57}
+    .helper{font-size:.9rem;color:var(--muted);line-height:1.45;font-weight:700;margin-top:9px}
+    .select-wrap{margin:16px 0}
+    select{width:100%;min-height:54px;background:#fff;border:2px solid #ccdbe7;border-radius:13px;padding:12px 42px 12px 13px;color:#203a57;font-weight:850}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
+    .actions button{flex:1 1 155px}
+    .choice-list{display:grid;gap:10px;margin:16px 0}
+    .choice{text-align:left;background:#fff;border:2px solid #d1dfeb;box-shadow:0 3px 0 #c1d1df;color:#233e5b;line-height:1.35;display:flex;align-items:center;gap:11px;min-height:53px}
+    .choice:active{transform:translateY(2px);box-shadow:0 1px 0 #c1d1df}
+    .choice-letter{flex:0 0 29px;width:29px;height:29px;border-radius:9px;background:#eaf2f8;color:#42627f;display:grid;place-items:center;font-weight:950}
+    .choice.correct{background:var(--green-bg);border-color:#56b781;color:#155e3e;box-shadow:0 3px 0 #399160}
+    .choice.correct .choice-letter{background:#399160;color:white}
+    .choice.wrong{background:var(--red-bg);border-color:#db8c82;color:#873c37;box-shadow:0 3px 0 #c46b60}
+    .choice.wrong .choice-letter{background:#c46b60;color:white}
+    .feedback{display:none;padding:13px 14px;border-radius:13px;margin:14px 0;font-weight:850;line-height:1.5}
+    .feedback.good{display:block;background:var(--green-bg);border:1px solid #b9e4ca;color:#155e3e}
+    .feedback.try{display:block;background:#fff3da;border:1px solid #efdaa5;color:#644b12}
+    .region-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+    .region-field{background:#fff;border:1px solid #d7e4ed;border-radius:14px;padding:12px}
+    .region-field label{display:block;font-size:.77rem;text-transform:uppercase;letter-spacing:.05em;color:#5a7189;font-weight:950;margin-bottom:8px}
+    .region-field select{min-height:49px;font-size:.9rem}
+    .region-field.is-correct{background:var(--green-bg);border-color:#7dc59a}
+    .region-field.is-wrong{background:var(--red-bg);border-color:#db9489}
+    .finish{text-align:center;padding:27px 7px 13px}
+    .finish-icon{font-size:3.5rem}.finish h2{margin:8px 0;font-size:1.7rem}.finish-score{font-size:1.1rem;color:#335778;font-weight:950}
+    .finish p{max-width:500px;margin:9px auto 18px;color:var(--muted);line-height:1.55;font-weight:700}
+    .finish .actions{max-width:490px;margin:18px auto}
+    .footer{text-align:center;margin-top:22px;color:#6b7c90;font-size:.83rem;font-weight:750}
+    [hidden]{display:none!important}
+    @media(max-width:760px){.missions{grid-template-columns:1fr}.mission{min-height:unset}.mission p{max-width:570px}.hero-sticker{font-size:3rem;right:19px;bottom:13px}.hero{padding-right:79px}}
+    @media(max-width:470px){.wrap{padding:12px 12px 35px}.nav-label{display:none}.hero-sticker{opacity:.75;font-size:2.6rem;right:13px}.region-fields{grid-template-columns:1fr}.section-head span{max-width:130px;text-align:right}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav" aria-label="Site navigation">
+      <a class="back-link" href="../">← Study Quest home</a>
+      <span class="nav-label">SOCIAL STUDIES • UNIT 1 • LESSONS 2 &amp; 3</span>
+    </nav>
+    <header class="hero">
+      <span class="hero-kicker">Explorer training • test practice</span>
+      <h1>First Americans<br>&amp; Cultural Regions</h1>
+      <p>Learn the key words, follow the first migration routes, and discover how Native American cultures adapted to different places.</p>
+      <span class="hero-sticker" aria-hidden="true">🧭</span>
+    </header>
+    <p class="callout"><strong>Mission:</strong> Practice a little at a time. Read the clue, choose your answer, and use the feedback to learn. You can replay every mission!</p>
+
+    <section id="launcher" aria-labelledby="mission-heading">
+      <div class="section-head"><h2 id="mission-heading">Choose a study mission</h2><span>Three short activities</span></div>
+      <div class="missions">
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🧩</span>
+          <h3>Word Picker</h3>
+          <p>Read a meaning, then pick the matching vocabulary word from a dropdown—just like the test.</p>
+          <small>10 words • one at a time</small>
+          <button class="primary" type="button" data-start="vocab">Start Word Picker</button>
+        </article>
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🏹</span>
+          <h3>First Americans Quiz</h3>
+          <p>Practice the land bridge, migration, environments, the Inuit, artifacts, and how the land shaped life.</p>
+          <small>16 questions • multiple choice</small>
+          <button class="primary" type="button" data-start="quiz">Start the Quiz</button>
+        </article>
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🗺️</span>
+          <h3>Region Chart Builder</h3>
+          <p>Fill in the location, climate, resources, and tribes for all three regions using dropdowns.</p>
+          <small>3 regions • 12 chart clues</small>
+          <button class="primary" type="button" data-start="regions">Build the Chart</button>
+        </article>
+      </div>
+      <details class="quick-review">
+        <summary>📖 Quick review: peek at the key ideas</summary>
+        <div class="review-body">
+          <h3>First Americans</h3>
+          <p>Historians believe the first settlers came from <strong>Asia</strong>. During the <strong>Ice Age</strong>, people may have walked over <strong>Beringia</strong> or traveled by boat along the Pacific coast. They spread south from Alaska, then east and south across the continent.</p>
+          <p>Desert: hot, dry, little rain. Forest: trees, animals, rainfall. Mountains: rocky, colder high up, little flat land. Plains: flat, grassy, good for hunting and farming.</p>
+          <h3>Culture and environment</h3>
+          <p>Climate, physical features, and natural resources shaped homes, clothing, food, tools, and farming. Rivers gave people water, food, and travel routes. Inuit families used warm animal-skin clothing, built snow or ice homes, hunted sea animals and fish, and used every part of the animals.</p>
+          <h3>Three regions</h3>
+          <p><strong>Northwest Coast:</strong> Pacific coast from Alaska to California; mild and very rainy; cedar forests, fish, animals, rivers, and ocean; Kwakiutl, Chinook, Tlingit.</p>
+          <p><strong>California–Intermountain:</strong> California coast to the Sierra Nevada and Great Basin; mild near the coast, dry with extreme temperatures in the Basin; shells, redwood, reeds, berries, fish, small game, desert plants; Pomo, Miwok, Shoshone, Paiute.</p>
+          <p><strong>Southwest:</strong> Southwestern U.S. into northern Mexico; hot days, cold nights, very dry; clay, adobe, few trees, desert plants, and dry farming of corn, beans, squash; Hopi, Apache, Ancestral Pueblo.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="game-panel" id="game-panel" aria-labelledby="game-title">
+      <div class="game-top">
+        <button type="button" class="secondary" id="back-button">← All missions</button>
+        <h2 class="mode-title" id="game-title">Study mission</h2>
+        <span class="score-pill" id="score-pill">⭐ 0 correct</span>
+      </div>
+      <div class="progress-row"><span id="step-label">Question 1</span><span id="percent-label">Keep going!</span></div>
+      <div class="track" role="progressbar" aria-label="Mission progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="track-fill" id="progress-fill"></div></div>
+      <div id="activity-content" aria-live="polite"></div>
+    </section>
+    <footer class="footer">Made for curious explorers. No timer—take your time and learn! 🌎</footer>
+  </main>
+<script>
+  const vocab = [
+    {term:"Adaptation", definition:"A change in behavior, lifestyle, or tools that helps people survive in a particular environment."},
+    {term:"Environment", definition:"The natural surroundings where people, animals, and plants live, including climate, landforms, and resources."},
+    {term:"Kiva", definition:"A circular underground room used by Southwest Native American tribes for religious and social gatherings."},
+    {term:"Migration", definition:"The movement of people from one region or place to another, often over a long distance."},
+    {term:"Natural resource", definition:"Something found in nature that people use to meet their needs, such as wood, water, animals, or minerals."},
+    {term:"Origin story", definition:"A traditional story that explains a group's beginnings or how the world and its people were created."},
+    {term:"Culture", definition:"A group's shared way of life, including beliefs, customs, food, language, art, and traditions."},
+    {term:"Artifact", definition:"A human-made object from the past that historians study to learn about people and their lives."},
+    {term:"Nomadic", definition:"A way of life in which people move from place to place, often following food sources."},
+    {term:"Adobe", definition:"A building material made from sun-dried mud and straw, often used to build homes in the Southwest."}
+  ];
+  const quiz = [
+    {q:"Historians believe the first settlers came from which part of the world?",a:"Asia",o:["Asia","Europe","Africa","Australia"],why:"The study guide says the first settlers came from Asia."},
+    {q:"What was the name of the land bridge, and during what climate period did it form?",a:"Beringia during the Ice Age",o:["Beringia during the Ice Age","The Great Plains during a drought","The Pacific Path during summer","The Rocky Bridge during a warm period"],why:"Beringia formed when sea levels were lower during the Ice Age."},
+    {q:"Which answer names the two main migration ideas?",a:"Walking across Beringia and traveling by boat along the Pacific coast",o:["Sailing across the Atlantic and walking from Europe","Walking across Beringia and traveling by boat along the Pacific coast","Flying south and crossing the Rocky Mountains","Following rivers east and crossing the Great Lakes"],why:"The two theories are the land bridge route and the coastal migration route."},
+    {q:"According to the study guide, how did people spread across North America?",a:"South from Alaska through the West, then east and south across the continent",o:["North from Mexico into Alaska, then west","South from Alaska through the West, then east and south across the continent","Only along the Atlantic Coast","East from Alaska directly across the Arctic"],why:"The route began south from Alaska through western North America, then spread east and south."},
+    {q:"Which list best describes what an environment includes?",a:"Landforms, climate, water, plants, animals, and natural resources",o:["Only buildings and roads","Only weather and clothing","Landforms, climate, water, plants, animals, and natural resources","Only rivers and mountains"],why:"An environment includes both natural surroundings and resources."},
+    {q:"Which environment is hot and dry, with little rain and sparse plants?",a:"Desert",o:["Forest","Mountains","Plains","Desert"],why:"Deserts have little rain and sparse vegetation."},
+    {q:"Which environment is flat and grassy, and can be good for hunting and farming?",a:"Plains",o:["Plains","Forest","Mountains","Desert"],why:"The study guide describes plains as flat and grassy."},
+    {q:"Which environment has plenty of trees, animals, and rainfall?",a:"Forest",o:["Desert","Forest","Mountains","Plains"],why:"Forests have many trees and animals and usually get plenty of rainfall."},
+    {q:"Which environment is rocky, colder at high elevations, and has little flat land?",a:"Mountains",o:["Mountains","Plains","Forest","Desert"],why:"Mountains can be rocky and cold at high elevations, with limited flat land."},
+    {q:"How did Inuit people stay warm and find food in a harsh, cold environment?",a:"They wore animal-skin clothing, made homes from snow or ice, hunted, and used the animals fully",o:["They built adobe homes and grew many crops","They wore animal-skin clothing, made homes from snow or ice, hunted, and used the animals fully","They moved to the desert every winter","They used only wood from dense forests"],why:"The Inuit adapted with warm clothing, snow or ice homes, hunting, and using every part of what they hunted."},
+    {q:"What is an artifact, and how do historians use one?",a:"A human-made object from the past that helps historians learn how people lived",o:["A story about the future that predicts weather","A natural mountain that shows where people traveled","A human-made object from the past that helps historians learn how people lived","A type of climate that tells how much rain fell"],why:"Artifacts include things like tools, pottery, and clothing. Historians study them to learn how people lived, what they ate, and how they adapted."},
+    {q:"Which three environmental factors influenced Native American cultures?",a:"Climate, physical features, and natural resources",o:["Language, games, and music","Climate, physical features, and natural resources","Mountains, cities, and roads","Food, clothing, and houses"],why:"The three factors are climate, physical features, and natural resources."},
+    {q:"How did rivers help people, and how could mountains affect them?",a:"Rivers gave water, food, and travel; mountains affected settlement and movement",o:["Rivers blocked travel; mountains provided ocean fish","Rivers gave water, food, and travel; mountains affected settlement and movement","Rivers made farming impossible; mountains were always warm","Rivers provided building clay; mountains gave people boats"],why:"Rivers provided water, food, and transportation. Mountains affected where people settled and how they moved or traded."},
+    {q:"How can climate affect homes, clothing, and farming?",a:"It affects the materials people use and whether farming is possible or which crops can grow",o:["It affects the materials people use and whether farming is possible or which crops can grow","It only changes the names of tribes","It decides which rivers flow north","It has no effect on homes or farming"],why:"Climate influences building and clothing materials and whether farming can happen and what crops can grow."},
+    {q:"Why do natural resources help historians understand tools, shelter, and food?",a:"People used nearby materials like wood, clay, animals, and water to meet their needs",o:["Resources were only used for trading far away","People used nearby materials like wood, clay, animals, and water to meet their needs","Resources tell us only what language people spoke","People did not use materials from nature"],why:"People used what was available nearby to make tools, build homes, and find food."},
+    {q:"What were totem poles, and where were they commonly used?",a:"Carved wooden poles showing family history, status, or beliefs, used in the Northwest Coast",o:["Ice homes built by the Inuit","Carved wooden poles showing family history, status, or beliefs, used in the Northwest Coast","Stone bridges used across Beringia","Underground rooms used across the Plains"],why:"Totem poles were carved wooden poles commonly used by Northwest Coast tribes."}
+  ];
+  const regions = [
+    {name:"Northwest Coast",fields:[
+      {label:"Location",answer:"Pacific Coast, Alaska to California",choices:["Pacific Coast, Alaska to California","California coast to the Sierra Nevada and Great Basin","Southwestern U.S. into northern Mexico"]},
+      {label:"Climate",answer:"Mild with heavy rainfall",choices:["Hot days, cold nights, very dry","Mild with heavy rainfall","Coastal mild; Basin dry with extreme temperatures"]},
+      {label:"Resources",answer:"Cedar forests, fish, animals, rivers, ocean",choices:["Clay, adobe, little wood, desert plants, dry-farmed crops","Shells, redwood, reeds, berries, fish, small game, desert plants","Cedar forests, fish, animals, rivers, ocean"]},
+      {label:"Tribes",answer:"Kwakiutl, Chinook, Tlingit",choices:["Hopi, Apache, Ancestral Pueblo","Kwakiutl, Chinook, Tlingit","Pomo, Miwok, Shoshone, Paiute"]}
+    ]},
+    {name:"California–Intermountain",fields:[
+      {label:"Location",answer:"California coast to the Sierra Nevada and Great Basin",choices:["Southwestern U.S. into northern Mexico","Pacific Coast, Alaska to California","California coast to the Sierra Nevada and Great Basin"]},
+      {label:"Climate",answer:"Coastal mild; Basin dry with extreme temperatures",choices:["Mild with heavy rainfall","Coastal mild; Basin dry with extreme temperatures","Hot days, cold nights, very dry"]},
+      {label:"Resources",answer:"Shells, redwood, reeds, berries, fish, small game, desert plants",choices:["Shells, redwood, reeds, berries, fish, small game, desert plants","Cedar forests, fish, animals, rivers, ocean","Clay, adobe, little wood, desert plants, dry-farmed crops"]},
+      {label:"Tribes",answer:"Pomo, Miwok, Shoshone, Paiute",choices:["Pomo, Miwok, Shoshone, Paiute","Kwakiutl, Chinook, Tlingit","Hopi, Apache, Ancestral Pueblo"]}
+    ]},
+    {name:"Southwest Region",fields:[
+      {label:"Location",answer:"Southwestern U.S. into northern Mexico",choices:["California coast to the Sierra Nevada and Great Basin","Pacific Coast, Alaska to California","Southwestern U.S. into northern Mexico"]},
+      {label:"Climate",answer:"Hot days, cold nights, very dry",choices:["Hot days, cold nights, very dry","Coastal mild; Basin dry with extreme temperatures","Mild with heavy rainfall"]},
+      {label:"Resources",answer:"Clay, adobe, little wood, desert plants, dry farming (corn, beans, squash)",choices:["Clay, adobe, little wood, desert plants, dry farming (corn, beans, squash)","Cedar forests, fish, animals, rivers, ocean","Shells, redwood, reeds, berries, fish, small game, desert plants"]},
+      {label:"Tribes",answer:"Hopi, Apache, Ancestral Pueblo",choices:["Pomo, Miwok, Shoshone, Paiute","Hopi, Apache, Ancestral Pueblo","Kwakiutl, Chinook, Tlingit"]}
+    ]}
+  ];
+  const titles={vocab:"🧩 Word Picker",quiz:"🏹 First Americans Quiz",regions:"🗺️ Region Chart Builder"};
+  let mode="",index=0,points=0,total=0,answered=false;
+  const launcher=document.getElementById("launcher");
+  const panel=document.getElementById("game-panel");
+  const content=document.getElementById("activity-content");
+  const tracker=document.querySelector(".track");
+
+  function el(tag,className,text){
+    const node=document.createElement(tag);
+    if(className) node.className=className;
+    if(text!==undefined) node.textContent=text;
+    return node;
+  }
+  function button(label,className,onClick){
+    const b=el("button",className,label);b.type="button";b.addEventListener("click",onClick);return b;
+  }
+  function start(which){
+    mode=which;index=0;points=0;total=which==="vocab"?vocab.length:(which==="quiz"?quiz.length:regions.length*4);
+    launcher.hidden=true;panel.style.display="block";
+    document.getElementById("game-title").textContent=titles[mode];
+    render();
+    panel.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function goBack(){
+    panel.style.display="none";launcher.hidden=false;content.innerHTML="";
+    launcher.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  document.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>start(b.dataset.start)));
+  document.getElementById("back-button").addEventListener("click",goBack);
+  function setProgress(){
+    const length=mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:regions.length);
+    const complete=mode==="regions"?(index*4+(answered?4:0)):(index+(answered?1:0));
+    const progress=(complete/total)*100;
+    document.getElementById("step-label").textContent=mode==="regions"?"Region "+(index+1)+" of "+regions.length:"Question "+(index+1)+" of "+length;
+    document.getElementById("percent-label").textContent=complete===0?"Ready when you are!":points+" / "+complete+" so far";
+    document.getElementById("score-pill").textContent="⭐ "+points+" correct";
+    document.getElementById("progress-fill").style.width=progress+"%";
+    tracker.setAttribute("aria-valuenow",String(Math.round(progress)));
+  }
+  function fieldQuestion(){
+    const card=el("div","question-card");
+    const item=vocab[index];
+    card.append(el("div","prompt-label","Choose the matching word"));
+    card.append(el("div","prompt",item.definition));
+    card.append(el("div","helper","Tap the dropdown, choose one of the 10 vocabulary words, then check your answer."));
+    const wrap=el("div","select-wrap"),select=document.createElement("select");
+    select.setAttribute("aria-label","Choose the vocabulary word");
+    const first=document.createElement("option");first.value="";first.textContent="Choose a word…";select.append(first);
+    vocab.forEach(word=>{const op=document.createElement("option");op.value=word.term;op.textContent=word.term;select.append(op)});
+    wrap.append(select);card.append(wrap);
+    const feedback=el("div","feedback");feedback.setAttribute("aria-live","polite");card.append(feedback);
+    const actions=el("div","actions");
+    const check=button("Check my answer","check-button",()=>{
+      if(answered)return;
+      if(!select.value){feedback.className="feedback try";feedback.textContent="Choose a word from the menu first.";return}
+      answered=true;select.disabled=true;
+      if(select.value.toLowerCase()===item.term.toLowerCase()){points++;feedback.className="feedback good";feedback.textContent="🌟 That's it! "+item.term+" is the matching word."}
+      else{feedback.className="feedback try";feedback.textContent="Good try! The matching word is "+item.term+". Read the meaning once more, then keep going."}
+      check.hidden=true;next.hidden=false;setProgress();
+    });
+    const next=button(index===vocab.length-1?"See my score →":"Next word →","next-button",advance);next.hidden=true;
+    actions.append(check,next);card.append(actions);content.replaceChildren(card);setProgress();
+  }
+  function quizQuestion(){
+    const item=quiz[index],card=el("div","question-card");
+    card.append(el("div","prompt-label","Pick the best answer"));
+    card.append(el("div","prompt",item.q));
+    card.append(el("div","helper","Take your time. If you miss one, the clue below will help you remember it."));
+    const list=el("div","choice-list"),feedback=el("div","feedback");feedback.setAttribute("aria-live","polite");
+    const choices=item.o.slice().sort(()=>Math.random()-.5);
+    choices.forEach((answer,i)=>{
+      const b=button("","choice",()=>{});
+      const letter=el("span","choice-letter",String.fromCharCode(65+i));
+      const label=el("span","",answer);b.append(letter,label);
+      b.addEventListener("click",()=>{
+        if(answered)return;answered=true;
+        list.querySelectorAll("button").forEach(x=>x.disabled=true);
+        if(answer===item.a){b.classList.add("correct");points++;feedback.className="feedback good";feedback.textContent="✅ Correct! "+item.why}
+        else{b.classList.add("wrong");list.querySelectorAll("button").forEach(x=>{if(x.lastChild.textContent===item.a)x.classList.add("correct")});feedback.className="feedback try";feedback.textContent="Almost! The answer is: "+item.a+". "+item.why}
+        next.hidden=false;setProgress();
+      });
+      list.append(b);
+    });
+    const actions=el("div","actions");
+    const next=button(index===quiz.length-1?"See my score →":"Next question →","next-button",advance);next.hidden=true;
+    card.append(list,feedback);actions.append(next);card.append(actions);content.replaceChildren(card);setProgress();
+  }
+  function regionQuestion(){
+    const data=regions[index],card=el("div","question-card");
+    card.append(el("div","prompt-label","Fill in the study guide chart"));
+    card.append(el("div","prompt",data.name));
+    card.append(el("div","helper","Choose the best match for each column. You will fill in location, climate, resources, and tribes."));
+    const fields=el("div","region-fields");
+    const selects=[];
+    data.fields.forEach(field=>{
+      const box=el("div","region-field"),label=el("label","",field.label),select=document.createElement("select");
+      select.setAttribute("aria-label",field.label+" for "+data.name);
+      const blank=document.createElement("option");blank.value="";blank.textContent="Choose "+field.label.toLowerCase()+"…";select.append(blank);
+      field.choices.forEach(choice=>{const option=document.createElement("option");option.value=choice;option.textContent=choice;select.append(option)});
+      box.append(label,select);fields.append(box);selects.push({field,box,select});
+    });
+    const feedback=el("div","feedback");feedback.setAttribute("aria-live","polite");
+    const actions=el("div","actions");
+    const check=button("Check this region","check-button",()=>{
+      if(answered)return;
+      const missing=selects.some(x=>!x.select.value);
+      if(missing){feedback.className="feedback try";feedback.textContent="Pick an answer in all four boxes, then check your chart.";return}
+      answered=true;let missed=[];
+      selects.forEach(({field,box,select})=>{
+        select.disabled=true;
+        if(select.value===field.answer){points++;box.classList.add("is-correct")}
+        else{box.classList.add("is-wrong");missed.push(field.label+": "+field.answer)}
+      });
+      if(missed.length===0){feedback.className="feedback good";feedback.textContent="🎉 Perfect chart row! You matched all four clues for "+data.name+"."}
+      else{feedback.className="feedback try";feedback.textContent="Nice practice! Check these chart answers: "+missed.join(" • ")+". The green boxes are correct."}
+      check.hidden=true;next.hidden=false;setProgress();
+    });
+    const next=button(index===regions.length-1?"See my score →":"Next region →","next-button",advance);next.hidden=true;
+    actions.append(check,next);card.append(fields,feedback,actions);content.replaceChildren(card);setProgress();
+  }
+  function render(){
+    answered=false;
+    if(index>= (mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:regions.length))){finish();return}
+    if(mode==="vocab")fieldQuestion();else if(mode==="quiz")quizQuestion();else regionQuestion();
+  }
+  function advance(){index++;render();panel.scrollIntoView({behavior:"smooth",block:"start"})}
+  function finish(){
+    const card=el("div","finish");
+    const percent=Math.round(points/total*100);
+    const icon=percent>=90?"🏆":percent>=65?"🌟":"💪";
+    card.append(el("div","finish-icon",icon));
+    card.append(el("h2","",percent>=90?"Explorer superstar!":percent>=65?"Great work, explorer!":"Good practice—keep going!"));
+    card.append(el("div","finish-score","You got "+points+" out of "+total+" right on the first try ("+percent+"%)."));
+    const message=percent>=90?"You know this mission really well. Try another one or play again to keep it fresh.":percent>=65?"You are learning these ideas. Replay the questions that felt tricky, then try again.":"Every question you practice helps. Use the quick review, then come back for another round.";
+    card.append(el("p","",message));
+    const actions=el("div","actions");
+    actions.append(button("Play this mission again ↻","primary",()=>start(mode)));
+    actions.append(button("Choose another mission","secondary",goBack));
+    card.append(actions);content.replaceChildren(card);
+    document.getElementById("step-label").textContent="Mission complete";
+    document.getElementById("percent-label").textContent=percent+"%";
+    document.getElementById("progress-fill").style.width="100%";
+    tracker.setAttribute("aria-valuenow","100");
+    document.getElementById("score-pill").textContent="⭐ "+points+" / "+total;
+  }
+</script>
+</body>
+</html>
