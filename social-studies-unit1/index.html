@@ -28,10 +28,10 @@
     .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:19px 2px 12px}
     .section-head h2{font-size:1.28rem;margin:0;letter-spacing:-.025em}
     .section-head span{font-size:.82rem;color:var(--muted);font-weight:800}
-    .missions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .missions{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px}
     .mission{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:0 5px 14px rgba(29,61,91,.06);display:flex;flex-direction:column;min-height:236px}
     .mission-icon{height:46px;width:46px;border-radius:15px;background:var(--sky);display:grid;place-items:center;font-size:1.55rem}
-    .mission:nth-child(2) .mission-icon{background:#fff0d7}.mission:nth-child(3) .mission-icon{background:#e8f5e8}
+    .mission:nth-child(2) .mission-icon{background:#fff0d7}.mission:nth-child(3) .mission-icon{background:#e8f5e8}.mission:nth-child(4) .mission-icon{background:#eee8ff}
     .mission h3{font-size:1.05rem;margin:13px 0 6px}.mission p{font-size:.9rem;color:var(--muted);line-height:1.48;margin:0 0 14px}
     .mission small{display:block;color:#58708a;font-size:.76rem;font-weight:850;margin-top:auto;margin-bottom:11px}
     .primary,.secondary,.choice,.check-button,.next-button{border:0;border-radius:13px;min-height:46px;padding:11px 15px;font-weight:950;cursor:pointer}
@@ -75,6 +75,13 @@
     .region-field select{min-height:49px;font-size:.9rem}
     .region-field.is-correct{background:var(--green-bg);border-color:#7dc59a}
     .region-field.is-wrong{background:var(--red-bg);border-color:#db9489}
+    .route-order{list-style:none;padding:0;margin:16px 0;display:grid;gap:8px}
+    .route-slot{display:flex;align-items:center;gap:11px;min-height:52px;padding:9px 12px;border-radius:12px;background:#fff;border:1px dashed #aabed0;color:#62768b;font-weight:800}
+    .route-slot.filled{border-style:solid;border-color:#9db9d1;color:#294d70}
+    .route-number{flex:0 0 30px;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#e8f1f8;color:#345b7f;font-weight:950}
+    .route-cards{display:grid;gap:9px;margin:12px 0}
+    .route-card{width:100%;text-align:left;background:#fff;border:2px solid #d1dfeb;box-shadow:0 3px 0 #c1d1df;border-radius:13px;padding:12px 14px;min-height:49px;color:#29435d;font-weight:850;cursor:pointer}
+    .route-card:active{transform:translateY(2px);box-shadow:0 1px 0 #c1d1df}
     .finish{text-align:center;padding:27px 7px 13px}
     .finish-icon{font-size:3.5rem}.finish h2{margin:8px 0;font-size:1.7rem}.finish-score{font-size:1.1rem;color:#335778;font-weight:950}
     .finish p{max-width:500px;margin:9px auto 18px;color:var(--muted);line-height:1.55;font-weight:700}
@@ -123,6 +130,13 @@
           <p>Fill in the location, climate, resources, and tribes for all three regions using dropdowns.</p>
           <small>3 regions • 12 chart clues</small>
           <button class="primary" type="button" data-start="regions">Build the Chart</button>
+        </article>
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🧭</span>
+          <h3>Final Expedition</h3>
+          <p>Solve fresh explorer scenarios, identify regions from field notes, and put the migration trail in order.</p>
+          <small>15 mixed challenges • no timer</small>
+          <button class="primary" type="button" data-start="final">Start the Final Expedition</button>
         </article>
       </div>
       <details class="quick-review">
@@ -184,6 +198,28 @@
     {q:"Why do natural resources help historians understand tools, shelter, and food?",a:"People used nearby materials like wood, clay, animals, and water to meet their needs",o:["Resources were only used for trading far away","People used nearby materials like wood, clay, animals, and water to meet their needs","Resources tell us only what language people spoke","People did not use materials from nature"],why:"People used what was available nearby to make tools, build homes, and find food."},
     {q:"What were totem poles, and where were they commonly used?",a:"Carved wooden poles showing family history, status, or beliefs, used in the Northwest Coast",o:["Ice homes built by the Inuit","Carved wooden poles showing family history, status, or beliefs, used in the Northwest Coast","Stone bridges used across Beringia","Underground rooms used across the Plains"],why:"Totem poles were carved wooden poles commonly used by Northwest Coast tribes."}
   ];
+  const finalQuestions = [
+    {q:"An Inuit family wears animal-skin clothing, makes a shelter from snow or ice, and hunts nearby sea animals. What big idea does this show?",a:"People adapt how they live to fit their environment",o:["People adapt how they live to fit their environment","People all use the same tools everywhere","People never use natural resources","People move only to trade"],why:"The Inuit adapted their clothing, homes, and food gathering to the cold environment."},
+    {q:"An explorer finds a painted clay bowl in an old home. What could studying it help historians figure out?",a:"Clues about daily life, such as how people stored or prepared food",o:["Clues about daily life, such as how people stored or prepared food","The exact words someone said while making it","The name of every person who lived there","What the weather will be next year"],why:"A handmade object from the past is an artifact. It can give clues about people's everyday lives."},
+    {q:"Which item is a natural resource before people turn it into something?",a:"A cedar tree growing in a forest",o:["A cedar tree growing in a forest","A carved wooden canoe","A woven basket","A painted clay pot"],why:"A cedar tree is found in nature. A canoe, basket, or pot is made by people."},
+    {q:"A community shares its own foods, language, beliefs, music, and traditions. What word describes this shared way of life?",a:"Culture",o:["Culture","Migration","Artifact","Adobe"],why:"Culture includes a group's shared beliefs, customs, food, language, art, and traditions."},
+    {q:"One group moves its camp as the seasons change so it can follow food animals. It does not settle in one place. What word fits?",a:"Nomadic",o:["Nomadic","Origin story","Kiva","Environment"],why:"A nomadic way of life means moving from place to place, often following food."},
+    {q:"People enter a round room built partly underground for an important gathering. What Southwest structure is it?",a:"A kiva",o:["A kiva","An igloo","A totem pole","An adobe brick"],why:"A kiva is a circular underground room used for religious and social gatherings."},
+    {q:"A grandparent tells a traditional story that explains how the community began. What kind of story is it?",a:"An origin story",o:["An origin story","A weather report","An artifact","A migration route"],why:"An origin story tells about a group's beginnings or how the world and its people were created."},
+    {q:"A builder mixes mud and straw, then lets it dry in the sun to make home walls. What is this building material called?",a:"Adobe",o:["Adobe","Cedar","Beringia","A natural resource"],why:"Adobe is made from sun-dried mud and straw and was commonly used for Southwest homes."},
+    {q:"A Southwest family lives where days are hot, nights are cold, and rain is scarce. Which farming plan best fits?",a:"Dry farming with crops such as corn, beans, and squash",o:["Dry farming with crops such as corn, beans, and squash","Growing only plants that need daily heavy rain","Planting crops that need a cold, snowy summer","Farming without paying attention to the climate"],why:"The Southwest was very dry. The study chart lists dry farming of corn, beans, and squash."},
+    {q:"Traders travel by river to reach another village, but a tall mountain makes a land route harder. What is the best lesson from this?",a:"Rivers could help with travel, while mountains could affect where people settled and how they moved",o:["Rivers could help with travel, while mountains could affect where people settled and how they moved","Mountains always made travel faster than rivers","Rivers were useful only for building homes","Landforms did not affect travel or settlement"],why:"Rivers gave water, food, and transportation. Mountains influenced settlement and movement."},
+    {q:"A carved pole shows a bear, an eagle, and symbols from one family. What could the figures help tell people?",a:"The family's history, status, or beliefs",o:["The family's history, status, or beliefs","The exact path of a river","Which crops need the most rain","How to make an igloo"],why:"Totem poles were carved with figures or symbols that told family history, status, and beliefs."},
+    {q:"Your field notes list Pomo, Miwok, Shoshone, and Paiute. Which region should you mark on the chart?",a:"California–Intermountain Region",o:["California–Intermountain Region","Northwest Coast","Southwest Region","The Arctic"],why:"Pomo, Miwok, Shoshone, and Paiute are listed for the California–Intermountain Region."},
+    {q:"A place has cedar forests, lots of fish, rivers, and heavy rainfall. Which region matches those clues?",a:"Northwest Coast",o:["Northwest Coast","California–Intermountain Region","Southwest Region","The Plains"],why:"The Northwest Coast had mild, rainy weather and resources such as cedar, fish, rivers, and ocean life."},
+    {q:"Imagine a boat traveling along the Pacific shore instead of walking over the land bridge. Which migration idea does that describe?",a:"Coastal migration theory",o:["Coastal migration theory","Land bridge theory","Nomadic farming","The origin story"],why:"The coastal migration theory says people traveled by boat along the Pacific coast."}
+  ];
+  const routeSteps = [
+    "First settlers came from Asia.",
+    "During the Ice Age, lower sea levels exposed Beringia.",
+    "People crossed Beringia into North America.",
+    "They traveled south from Alaska, then spread east and south."
+  ];
   const regions = [
     {name:"Northwest Coast",fields:[
       {label:"Location",answer:"Pacific Coast, Alaska to California",choices:["Pacific Coast, Alaska to California","California coast to the Sierra Nevada and Great Basin","Southwestern U.S. into northern Mexico"]},
@@ -204,7 +240,7 @@
       {label:"Tribes",answer:"Hopi, Apache, Ancestral Pueblo",choices:["Pomo, Miwok, Shoshone, Paiute","Hopi, Apache, Ancestral Pueblo","Kwakiutl, Chinook, Tlingit"]}
     ]}
   ];
-  const titles={vocab:"🧩 Word Picker",quiz:"🏹 First Americans Quiz",regions:"🗺️ Region Chart Builder"};
+  const titles={vocab:"🧩 Word Picker",quiz:"🏹 First Americans Quiz",regions:"🗺️ Region Chart Builder",final:"🧭 Final Expedition"};
   let mode="",index=0,points=0,total=0,answered=false;
   const launcher=document.getElementById("launcher");
   const panel=document.getElementById("game-panel");
@@ -221,7 +257,7 @@
     const b=el("button",className,label);b.type="button";b.addEventListener("click",onClick);return b;
   }
   function start(which){
-    mode=which;index=0;points=0;total=which==="vocab"?vocab.length:(which==="quiz"?quiz.length:regions.length*4);
+    mode=which;index=0;points=0;total=which==="vocab"?vocab.length:(which==="quiz"?quiz.length:(which==="regions"?regions.length*4:finalQuestions.length+1));
     launcher.hidden=true;panel.style.display="block";
     document.getElementById("game-title").textContent=titles[mode];
     render();
@@ -234,10 +270,10 @@
   document.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>start(b.dataset.start)));
   document.getElementById("back-button").addEventListener("click",goBack);
   function setProgress(){
-    const length=mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:regions.length);
+    const length=mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:(mode==="regions"?regions.length:(finalQuestions.length+1)));
     const complete=mode==="regions"?(index*4+(answered?4:0)):(index+(answered?1:0));
     const progress=(complete/total)*100;
-    document.getElementById("step-label").textContent=mode==="regions"?"Region "+(index+1)+" of "+regions.length:"Question "+(index+1)+" of "+length;
+    document.getElementById("step-label").textContent=mode==="regions"?"Region "+(index+1)+" of "+regions.length:(mode==="final"&&index===finalQuestions.length?"Map challenge • Last step":"Question "+(index+1)+" of "+length);
     document.getElementById("percent-label").textContent=complete===0?"Ready when you are!":points+" / "+complete+" so far";
     document.getElementById("score-pill").textContent="⭐ "+points+" correct";
     document.getElementById("progress-fill").style.width=progress+"%";
@@ -324,10 +360,75 @@
     const next=button(index===regions.length-1?"See my score →":"Next region →","next-button",advance);next.hidden=true;
     actions.append(check,next);card.append(fields,feedback,actions);content.replaceChildren(card);setProgress();
   }
+  function finalChoiceQuestion(){
+    const item=finalQuestions[index],card=el("div","question-card");
+    card.append(el("div","prompt-label","Final Expedition • Field Note "+(index+1)));
+    card.append(el("div","prompt",item.q));
+    card.append(el("div","helper","Choose the best answer. These clues use the ideas in new ways."));
+    const list=el("div","choice-list"),feedback=el("div","feedback");feedback.setAttribute("aria-live","polite");
+    const choices=item.o.slice().sort(()=>Math.random()-.5);
+    choices.forEach((answer,i)=>{
+      const b=button("","choice",()=>{});
+      b.append(el("span","choice-letter",String.fromCharCode(65+i)),el("span","",answer));
+      b.addEventListener("click",()=>{
+        if(answered)return;answered=true;
+        list.querySelectorAll("button").forEach(x=>x.disabled=true);
+        if(answer===item.a){b.classList.add("correct");points++;feedback.className="feedback good";feedback.textContent="✅ Great clue solving! "+item.why}
+        else{b.classList.add("wrong");list.querySelectorAll("button").forEach(x=>{if(x.lastChild.textContent===item.a)x.classList.add("correct")});feedback.className="feedback try";feedback.textContent="Good try! The best answer is: "+item.a+". "+item.why}
+        next.hidden=false;setProgress();
+      });
+      list.append(b);
+    });
+    const actions=el("div","actions");
+    const next=button(index===finalQuestions.length-1?"Go to the Map Challenge →":"Next clue →","next-button",advance);next.hidden=true;
+    card.append(list,feedback);actions.append(next);card.append(actions);content.replaceChildren(card);setProgress();
+  }
+  function finalRouteQuestion(){
+    const card=el("div","question-card");
+    card.append(el("div","prompt-label","Final Expedition • Map Challenge"));
+    card.append(el("div","prompt","Tap the four journey clues in the order they happened."));
+    card.append(el("div","helper","Tap one clue at a time to fill the numbered spots. Use “Undo last” if you want to change your last pick."));
+    const slots=el("ol","route-order"),available=el("div","route-cards");
+    const options=routeSteps.map((label,id)=>({label,id})).sort(()=>Math.random()-.5);
+    const selected=[];
+    const feedback=el("div","feedback");feedback.setAttribute("aria-live","polite");
+    const actions=el("div","actions");
+    const undo=button("Undo last","secondary",()=>{if(answered||!selected.length)return;selected.pop();drawRoute()});
+    const check=button("Check my route","check-button",()=>{
+      if(answered||selected.length!==routeSteps.length)return;
+      answered=true;
+      const correct=selected.every((item,i)=>item.id===i);
+      available.querySelectorAll("button").forEach(x=>x.disabled=true);undo.disabled=true;check.hidden=true;
+      if(correct){points++;feedback.className="feedback good";feedback.textContent="🗺️ Excellent! You followed the journey from Asia, across Beringia during the Ice Age, then south from Alaska and farther east and south."}
+      else{feedback.className="feedback try";feedback.textContent="Almost! The route goes: Asia → Beringia during the Ice Age → across Beringia into North America → south from Alaska, then east and south."}
+      next.hidden=false;setProgress();
+    });
+    const next=button("Finish the Final Expedition →","next-button",advance);next.hidden=true;
+    function drawRoute(){
+      slots.replaceChildren();
+      routeSteps.forEach((_,i)=>{
+        const slot=el("li","route-slot"+(selected[i]?" filled":""));
+        slot.append(el("span","route-number",String(i+1)));
+        slot.append(el("span","route-label",selected[i]?selected[i].label:"Tap a clue to fill this spot"));
+        slots.append(slot);
+      });
+      available.replaceChildren();
+      options.forEach(option=>{
+        if(selected.some(chosen=>chosen.id===option.id))return;
+        available.append(button(option.label,"route-card",()=>{if(!answered){selected.push(option);drawRoute()}}));
+      });
+      undo.disabled=selected.length===0||answered;
+      check.hidden=selected.length!==routeSteps.length||answered;
+    }
+    drawRoute();
+    actions.append(undo,check,next);card.append(slots,el("div","prompt-label","Journey clues"),available,feedback,actions);
+    content.replaceChildren(card);setProgress();
+  }
   function render(){
     answered=false;
-    if(index>= (mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:regions.length))){finish();return}
-    if(mode==="vocab")fieldQuestion();else if(mode==="quiz")quizQuestion();else regionQuestion();
+    const activityLength=mode==="vocab"?vocab.length:(mode==="quiz"?quiz.length:(mode==="regions"?regions.length:finalQuestions.length+1));
+    if(index>=activityLength){finish();return}
+    if(mode==="vocab")fieldQuestion();else if(mode==="quiz")quizQuestion();else if(mode==="regions")regionQuestion();else if(index<finalQuestions.length)finalChoiceQuestion();else finalRouteQuestion();
   }
   function advance(){index++;render();panel.scrollIntoView({behavior:"smooth",block:"start"})}
   function finish(){
