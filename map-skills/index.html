@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#18375a">
+  <meta name="description" content="A quick, kid-friendly map skills study game with map part matching and a test-style challenge.">
+  <title>Map Skills Mission — Study Quest</title>
+  <style>
+    :root{--ink:#18324f;--muted:#5a6c80;--blue:#2563a5;--blue-dark:#194b7e;--sky:#e5f3ff;--gold:#ffc857;--cream:#fffaf0;--green:#176b47;--green-bg:#e7f8ee;--red:#873c37;--red-bg:#fff0ee;--line:#d7e3ec;--white:#fff;--shadow:0 12px 32px rgba(25,54,83,.1)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#e9f5ff 0,#f5f9fb 450px,#fffaf2 100%);font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+    button,select{font:inherit}
+    button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #d89800;outline-offset:3px}
+    .wrap{width:min(920px,100%);margin:auto;padding:16px 19px 48px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .back-link{display:inline-block;text-decoration:none;color:var(--blue-dark);font-weight:900;background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:13px}
+    .nav-label{font-size:.78rem;font-weight:950;letter-spacing:.08em;color:#526c85}
+    .hero{position:relative;overflow:hidden;border-radius:27px;padding:29px clamp(20px,5vw,42px);color:white;background:linear-gradient(125deg,#184b7a,#2266a3 72%,#3381ba);box-shadow:var(--shadow)}
+    .hero:after{content:"";position:absolute;right:-34px;top:-58px;width:190px;height:190px;border:23px solid rgba(255,255,255,.14);border-radius:50%}
+    h1{position:relative;z-index:1;max-width:650px;font-size:clamp(2.15rem,6vw,3.65rem);letter-spacing:-.04em;line-height:1.04;margin:0 0 11px}
+    .hero p{position:relative;z-index:1;max-width:620px;color:#e9f5ff;line-height:1.55;font-size:1.04rem;font-weight:650;margin:0}
+    .hero-icon{position:absolute;right:32px;bottom:14px;font-size:3.8rem;transform:rotate(-8deg);filter:drop-shadow(0 4px 3px rgba(0,0,0,.2))}
+    .callout{margin:15px 0 20px;padding:13px 15px;border-radius:14px;background:#fff3ca;border:1px solid #eddc9f;color:#584615;line-height:1.5;font-weight:750}
+    .callout strong{color:#42320e}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:20px 2px 11px}
+    .section-head h2{margin:0;font-size:1.28rem;letter-spacing:-.02em}
+    .section-head span{color:var(--muted);font-size:.82rem;font-weight:800}
+    .missions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .mission{display:flex;flex-direction:column;min-height:214px;padding:18px;background:var(--white);border:1px solid var(--line);border-radius:18px;box-shadow:0 5px 14px rgba(29,61,91,.06)}
+    .mission-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--sky);font-size:1.5rem}
+    .mission:nth-child(2) .mission-icon{background:#fff0d7}
+    .mission h3{font-size:1.08rem;margin:12px 0 6px}
+    .mission p{font-size:.92rem;color:var(--muted);line-height:1.5;margin:0 0 13px}
+    .mission small{display:block;color:#526a80;font-size:.78rem;font-weight:850;margin-top:auto;margin-bottom:11px}
+    .primary,.secondary,.choice,.action-button{border:0;border-radius:12px;min-height:54px;padding:12px 14px;font-weight:950;cursor:pointer;touch-action:manipulation}
+    .primary,.action-button{background:var(--blue);color:white;box-shadow:0 3px 0 var(--blue-dark)}
+    .primary:active,.action-button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--blue-dark)}
+    .secondary{background:#edf3f8;color:#294d70;border:1px solid var(--line)}
+    .review{margin-top:15px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:0 16px}
+    .review summary{cursor:pointer;padding:15px 1px;font-weight:950;color:#294d70}
+    .review-body{border-top:1px solid var(--line);padding:11px 1px 16px;color:#465b70;line-height:1.55;font-size:.92rem}
+    .review-body p{margin:5px 0}.review-body strong{color:#203d59}
+    .game-panel{display:none;margin-top:17px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:clamp(16px,4vw,25px);box-shadow:var(--shadow)}
+    .game-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    .game-title{font-size:1.2rem;font-weight:950;margin:0}
+    .score-pill{border-radius:99px;background:#fff3ca;padding:8px 11px;font-size:.83rem;font-weight:950;color:#5c4813}
+    .progress-row{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:.82rem;font-weight:850;margin:15px 0 7px}
+    .track{height:9px;border-radius:99px;background:#e8eef3;overflow:hidden}
+    .track-fill{height:100%;width:0;background:#3b9b6c;border-radius:99px;transition:width .2s}
+    .question{margin:18px 0 13px;padding:clamp(16px,4vw,23px);border-radius:16px;background:#f4f9fe;border:1px solid #dceaf5}
+    .prompt-label{margin-bottom:7px;text-transform:uppercase;letter-spacing:.08em;color:#526d86;font-size:.75rem;font-weight:950}
+    .prompt{font-size:clamp(1.1rem,3vw,1.42rem);line-height:1.4;font-weight:950;color:#203a57}
+    .helper{margin-top:8px;color:var(--muted);font-weight:700;line-height:1.45;font-size:.9rem}
+    .select-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:16px 0}
+    .select-field{background:#fff;border:1px solid #d5e2ec;border-radius:13px;padding:12px}
+    .select-field label{display:block;margin-bottom:7px;color:#4d657c;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;font-weight:950}
+    select{width:100%;min-height:54px;padding:10px 34px 10px 11px;border:2px solid #cbdbe7;border-radius:11px;background:#fff;color:#203a57;font-weight:800;touch-action:manipulation}
+    .parts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:16px 0}
+    .part-choice{min-height:54px;padding:11px;border:2px solid #d1dfeb;border-radius:12px;background:#fff;color:#29435d;text-align:left;font-weight:850;cursor:pointer;touch-action:manipulation}
+    .part-choice[aria-pressed="true"]{border-color:#3678af;background:#e7f3fd;color:#174d7e;box-shadow:0 0 0 2px rgba(54,120,175,.12)}
+    .choice-list{display:grid;gap:9px;margin:16px 0}
+    .choice{text-align:left;background:#fff;border:2px solid #d1dfeb;box-shadow:0 2px 0 #c1d1df;color:#233e5b;line-height:1.35;display:flex;align-items:center;gap:10px;min-height:52px}
+    .choice-letter{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:#eaf2f8;color:#42627f;font-weight:950}
+    .choice.correct{background:var(--green-bg);border-color:#63b985;color:#155e3e}
+    .choice.correct .choice-letter{background:#398d5d;color:white}
+    .choice.wrong{background:var(--red-bg);border-color:#d78d83;color:#873c37}
+    .choice.wrong .choice-letter{background:#bf6358;color:white}
+    .feedback{display:none;padding:12px 13px;border-radius:12px;margin:13px 0;font-weight:850;line-height:1.5}
+    .feedback.good{display:block;background:var(--green-bg);border:1px solid #b9e4ca;color:#155e3e}
+    .feedback.try{display:block;background:#fff3da;border:1px solid #efdaa5;color:#604813}
+    .actions{display:flex;gap:9px;flex-wrap:wrap;margin:13px 0 1px}
+    .actions button{flex:1 1 160px}
+    .finish{text-align:center;padding:24px 8px 10px}
+    .finish-icon{font-size:3.2rem}.finish h2{margin:7px 0;font-size:1.65rem}
+    .finish-score{font-size:1.05rem;color:#335778;font-weight:950}
+    .finish p{max-width:550px;margin:9px auto 17px;color:var(--muted);line-height:1.55;font-weight:700}
+    .footer{text-align:center;margin-top:21px;color:#526b82;font-size:.84rem;font-weight:750}
+    [hidden]{display:none!important}
+    @media(max-width:620px){.wrap{padding:12px 12px 36px}.nav-label{display:none}.hero{padding:23px 75px 23px 19px}.hero-icon{right:17px;font-size:2.8rem;bottom:12px}.missions{grid-template-columns:1fr}.mission{min-height:unset}.mission p{max-width:540px}}
+    @media(max-width:430px){.select-grid,.parts-grid{grid-template-columns:1fr}.section-head span{max-width:130px;text-align:right}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav" aria-label="Site navigation">
+      <a class="back-link" href="../">← Study Quest home</a>
+      <span class="nav-label">MAP SKILLS • CLASSWORK REVIEW</span>
+    </nav>
+    <header class="hero">
+      <h1>Map Skills<br>Mission</h1>
+      <p>Maps have clues! Learn what each part does, then take a short map detective test to see what you know.</p>
+      <span class="hero-icon" aria-hidden="true">🧭</span>
+    </header>
+    <p class="callout"><strong>Ready for tomorrow?</strong> Start with Map Toolbox, then try the Final Map Check. If an answer is tricky, the clue will help you remember it.</p>
+
+    <section id="launcher" aria-labelledby="mission-heading">
+      <div class="section-head"><h2 id="mission-heading">Pick your mission</h2><span>Two short games • about 5 minutes</span></div>
+      <div class="missions">
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🧰</span>
+          <h3>Map Toolbox</h3>
+          <p>Find the five important map parts, then match each tool to the job it does.</p>
+          <small>5 map parts + 4 quick matches</small>
+          <button class="primary" type="button" data-start="toolbox">Open the Toolbox</button>
+        </article>
+        <article class="mission">
+          <span class="mission-icon" aria-hidden="true">🔎</span>
+          <h3>Final Map Check</h3>
+          <p>Answer test-style questions about map types, map clues, and contour lines.</p>
+          <small>7 questions • multiple choice</small>
+          <button class="primary" type="button" data-start="test">Start the Final Check</button>
+        </article>
+      </div>
+
+      <details class="review">
+        <summary>Open the quick review clues</summary>
+        <div class="review-body">
+          <p><strong>Five map parts:</strong> title, compass rose, legend/key, scale, and grid.</p>
+          <p><strong>Remember the jobs:</strong> compass rose = direction; legend/key = symbols and colors; scale = map distance compared with real distance; grid = helps locate places.</p>
+          <p><strong>Map types:</strong> reference maps show locations; thematic maps show specific information; political maps show government boundaries; physical maps show natural features.</p>
+          <p><strong>Elevation clues:</strong> contour lines connect places at the same elevation. A topographic map uses contour lines to show elevation.</p>
+          <p><strong>A map:</strong> a drawing or picture showing the relative size and position of features on Earth.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="game-panel" class="game-panel" aria-labelledby="game-title">
+      <div class="game-top">
+        <h2 id="game-title" class="game-title">Map game</h2>
+        <button id="back-button" class="secondary" type="button">← Choose a mission</button>
+        <span id="score-pill" class="score-pill" aria-live="polite">⭐ 0 correct</span>
+      </div>
+      <div class="progress-row"><span id="step-label">Ready</span><span id="percent-label">Take your time</span></div>
+      <div class="track" role="progressbar" aria-label="Mission progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progress-fill" class="track-fill"></div></div>
+      <div id="activity-content"></div>
+    </section>
+    <footer class="footer">Read the clue, think it through, and give it a try. You’ve got this! 🌟</footer>
+  </main>
+<script>
+  const partNames=["Title","Compass rose","Legend/key","Scale","Grid"];
+  const partChoices=[...partNames,"Map border","Page number","Picture caption"];
+  const functions=[
+    {label:"Shows which way is north, south, east, and west",answer:"Compass rose",choices:["Compass rose","Legend/key","Scale","Grid"]},
+    {label:"Explains what the map's symbols and colors mean",answer:"Legend/key",choices:["Legend/key","Scale","Grid","Title"]},
+    {label:"Compares a distance on the map with the real distance",answer:"Scale",choices:["Grid","Scale","Compass rose","Legend/key"]},
+    {label:"Helps you find where a place is on the map",answer:"Grid",choices:["Title","Compass rose","Grid","Scale"]}
+  ];
+  const questions=[
+    {q:"What is a map?",a:"A drawing or picture showing the relative size and position of features on Earth.",o:["A drawing or picture showing the relative size and position of features on Earth.","A list of every place name in a country.","A picture that only shows weather.","A set of directions for building a road."],why:"A map shows where features are and how large they are compared with one another."},
+    {q:"What is the difference between a reference map and a thematic map?",a:"Reference maps show locations; thematic maps show specific information.",o:["Reference maps show locations; thematic maps show specific information.","Reference maps show only mountains; thematic maps show only borders.","They are the same kind of map.","Thematic maps show directions; reference maps show elevation."],why:"A reference map helps you find locations. A thematic map shares a certain kind of information about places."},
+    {q:"Which kind of map shows borders between states or countries?",a:"Political map",o:["Political map","Physical map","Topographic map","Thematic map"],why:"Political maps show government and political boundaries."},
+    {q:"You want to see mountains, rivers, and other natural features. Which map would help?",a:"Physical map",o:["Physical map","Political map","Thematic map","A map scale"],why:"Physical maps show natural features of Earth."},
+    {q:"A map uses colors to show how much rain different places get. What kind of map is it?",a:"Thematic map",o:["Thematic map","Reference map","Political map","Topographic map"],why:"A thematic map shows specific information about places, such as rainfall."},
+    {q:"What do contour lines connect on a map?",a:"Points with the same elevation",o:["Points with the same elevation","Places with the same name","Roads that cross a river","Places the same distance from the map edge"],why:"Every point along a contour line has the same elevation."},
+    {q:"Which map uses contour lines to show elevation?",a:"Topographic map",o:["Topographic map","Political map","Reference map","Thematic map"],why:"Topographic maps use contour lines to show the shape and elevation of land."}
+  ];
+  const modes={toolbox:"🧰 Map Toolbox",test:"🔎 Final Map Check"};
+  let mode="",step=0,score=0,total=0,answered=false,selectedParts=[];
+  const launcher=document.getElementById("launcher"),panel=document.getElementById("game-panel"),content=document.getElementById("activity-content"),bar=document.querySelector(".track");
+  function node(tag,className,text){const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n}
+  function btn(text,className,action){const b=node("button",className,text);b.type="button";b.addEventListener("click",action);return b}
+  function start(which){mode=which;step=0;score=0;answered=false;selectedParts=[];total=which==="toolbox"?5:questions.length;launcher.hidden=true;panel.style.display="block";document.getElementById("game-title").textContent=modes[mode];render();panel.scrollIntoView({behavior:"smooth",block:"start"})}
+  function back(){panel.style.display="none";launcher.hidden=false;content.replaceChildren();launcher.scrollIntoView({behavior:"smooth",block:"start"})}
+  document.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>start(b.dataset.start)));
+  document.getElementById("back-button").addEventListener("click",back);
+  function progress(){const length=mode==="toolbox"?5:questions.length;const complete=Math.min(step+(answered?1:0),length);const pct=Math.round(complete/length*100);document.getElementById("step-label").textContent=mode==="toolbox"?(step===0?"Map parts • 1 challenge":"Tool match • "+step+" of 4"):("Question "+(step+1)+" of "+length);document.getElementById("percent-label").textContent=complete?score+" / "+complete+" right so far":"You can do it!";document.getElementById("score-pill").textContent="⭐ "+score+" correct";document.getElementById("progress-fill").style.width=pct+"%";bar.setAttribute("aria-valuenow",String(pct))}
+  function render(){answered=false;if(mode==="toolbox"){if(step===0)partsChallenge();else if(step<5)functionChallenge();else finish()}else{if(step<questions.length)testQuestion();else finish()}}
+  function partsChallenge(){selectedParts=[];const card=node("div","question"),feedback=node("div","feedback");feedback.setAttribute("aria-live","polite");card.append(node("div","prompt-label","Map Toolbox • Choose the five"),node("div","prompt","Tap all five important parts found on a map."),node("div","helper","Choose five. A few silly extras are mixed in—pick only the real map parts."));const grid=node("div","parts-grid"),buttons=[];partChoices.forEach(label=>{const b=btn(label,"part-choice",()=>{if(answered)return;const exists=selectedParts.includes(label);if(exists)selectedParts=selectedParts.filter(x=>x!==label);else if(selectedParts.length<5)selectedParts.push(label);b.setAttribute("aria-pressed",String(!exists));counter.textContent=selectedParts.length+" of 5 selected"});b.setAttribute("aria-pressed","false");buttons.push(b);grid.append(b)});const counter=node("div","helper","0 of 5 selected");const check=btn("Check my map parts","action-button",()=>{if(answered)return;if(selectedParts.length!==5){feedback.className="feedback try";feedback.textContent="Pick exactly five parts first. You have "+selectedParts.length+" selected.";return}answered=true;buttons.forEach(b=>{b.disabled=true;if(partNames.includes(b.textContent))b.classList.add("correct");else if(selectedParts.includes(b.textContent))b.classList.add("wrong")});const perfect=partNames.every(x=>selectedParts.includes(x))&&selectedParts.every(x=>partNames.includes(x));if(perfect){score++;feedback.className="feedback good";feedback.textContent="🎉 You found all five! Title, compass rose, legend/key, scale, and grid."}else{feedback.className="feedback try";feedback.textContent="Good try! The five are: title, compass rose, legend/key, scale, and grid. Look at the green choices, then keep going."}next.hidden=false;progress()});const next=btn("Match the map tools →","action-button",()=>{step=1;render()});next.hidden=true;card.append(grid,counter,feedback);const actions=node("div","actions");actions.append(check,next);card.append(actions);content.replaceChildren(card);progress()}
+  function functionChallenge(){const item=functions[step-1],card=node("div","question"),feedback=node("div","feedback");feedback.setAttribute("aria-live","polite");card.append(node("div","prompt-label","Map Toolbox • Tool match "+step+" of 4"),node("div","prompt",item.label));const field=node("div","select-field"),label=node("label","","Choose the map part"),select=document.createElement("select");select.setAttribute("aria-label","Choose the map part that does this job");const blank=document.createElement("option");blank.value="";blank.textContent="Choose one…";select.append(blank);item.choices.forEach(choice=>{const op=document.createElement("option");op.value=choice;op.textContent=choice;select.append(op)});field.append(label,select);card.append(field,feedback);const actions=node("div","actions"),check=btn("Check my match","action-button",()=>{if(answered)return;if(!select.value){feedback.className="feedback try";feedback.textContent="Choose one map part from the menu first.";return}answered=true;select.disabled=true;if(select.value===item.answer){score++;feedback.className="feedback good";feedback.textContent="✅ Yes! The "+item.answer+" does that job."}else{feedback.className="feedback try";feedback.textContent="Close! The answer is "+item.answer+". Read the clue one more time to help it stick."}next.hidden=false;progress()});const next=btn(step===4?"See my toolbox score →":"Next tool →","action-button",()=>{step++;render()});next.hidden=true;actions.append(check,next);card.append(actions);content.replaceChildren(card);progress()}
+  function testQuestion(){const item=questions[step],card=node("div","question"),list=node("div","choice-list"),feedback=node("div","feedback");card.append(node("div","prompt-label","Final Map Check • Question "+(step+1)),node("div","prompt",item.q),node("div","helper","Choose the best answer. You’ll get a helpful clue after you answer."));feedback.setAttribute("aria-live","polite");const choices=item.o.slice().sort(()=>Math.random()-.5);choices.forEach((answer,i)=>{const b=btn("","choice",()=>{});b.append(node("span","choice-letter",String.fromCharCode(65+i)),node("span","",answer));b.addEventListener("click",()=>{if(answered)return;answered=true;list.querySelectorAll("button").forEach(x=>x.disabled=true);if(answer===item.a){b.classList.add("correct");score++;feedback.className="feedback good";feedback.textContent="✅ That's right! "+item.why}else{b.classList.add("wrong");list.querySelectorAll("button").forEach(x=>{if(x.lastChild.textContent===item.a)x.classList.add("correct")});feedback.className="feedback try";feedback.textContent="Good try! The answer is: "+item.a+". "+item.why}next.hidden=false;progress()});list.append(b)});const actions=node("div","actions"),next=btn(step===questions.length-1?"See my test score →":"Next question →","action-button",()=>{step++;render()});next.hidden=true;card.append(list,feedback);actions.append(next);card.append(actions);content.replaceChildren(card);progress()}
+  function finish(){const pct=Math.round(score/total*100),card=node("div","finish"),icon=pct>=90?"🏆":pct>=65?"🌟":"💪";card.append(node("div","finish-icon",icon),node("h2","",pct>=90?"Map master!":pct>=65?"Great map work!":"Good practice—try again!"),node("div","finish-score","You got "+score+" out of "+total+" right on your first try ("+pct+"%)."));const message=pct>=90?"You know these map clues really well. Try the other mission to keep them fresh.":pct>=65?"You’re getting there! Read the quick review for any tricky clues, then play again.":"Practice makes these clues easier. Check the quick review, then give it another try.";card.append(node("p","",message));const actions=node("div","actions");actions.append(btn("Play this mission again ↻","primary",()=>start(mode)),btn("Choose another mission","secondary",back));card.append(actions);content.replaceChildren(card);document.getElementById("step-label").textContent="Mission complete";document.getElementById("percent-label").textContent=pct+"%";document.getElementById("progress-fill").style.width="100%";bar.setAttribute("aria-valuenow","100");document.getElementById("score-pill").textContent="⭐ "+score+" / "+total}
+</script>
+</body>
+</html>
