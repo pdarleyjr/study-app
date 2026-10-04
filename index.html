@@ -24,15 +24,16 @@
     .section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:4px 0 15px}
     .section-title h2{font-size:1.28rem;margin:0;letter-spacing:-.02em}
     .section-title span{font-size:.86rem;color:var(--muted);font-weight:750}
-    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:18px}
     .card{position:relative;overflow:hidden;border:2px solid rgba(24,38,75,.09);border-radius:25px;padding:23px;background:white;box-shadow:0 10px 22px rgba(27,43,80,.08);min-height:270px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
     .card:hover{transform:translateY(-4px);box-shadow:0 17px 30px rgba(27,43,80,.13)}
     .card:after{content:"";position:absolute;width:155px;height:155px;border-radius:50%;right:-54px;top:-55px;opacity:.72}
     .card.prayer:after{background:var(--pink)}
     .card.social:after{background:var(--yellow)}
+    .card.map:after{background:var(--mint)}
     .card-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
     .icon{width:59px;height:59px;border-radius:19px;display:grid;place-items:center;font-size:1.9rem}
-    .prayer .icon{background:#fff0f2}.social .icon{background:#fff8dd}
+    .prayer .icon{background:#fff0f2}.social .icon{background:#fff8dd}.map .icon{background:#eaf7ef}
     .badge{position:relative;z-index:1;border-radius:99px;background:#f1f3fb;color:#445075;padding:7px 10px;font-size:.72rem;font-weight:950;letter-spacing:.05em}
     .badge.new{background:#e2f7ea;color:#12603d}
     .card h3{position:relative;z-index:1;margin:17px 0 7px;font-size:1.42rem;letter-spacing:-.025em}
@@ -59,7 +60,7 @@
       <div class="sparkles" aria-hidden="true">⭐ 🧠 🚀</div>
     </section>
     <section aria-labelledby="games">
-      <div class="section-title"><h2 id="games">Choose your next mission</h2><span>Two adventures ready to play</span></div>
+      <div class="section-title"><h2 id="games">Choose your next mission</h2><span>Three adventures ready to play</span></div>
       <div class="cards">
         <article class="card prayer">
           <div class="card-head"><span class="icon" aria-hidden="true">🙏</span><span class="badge">SPANISH • MEMORY</span></div>
@@ -74,6 +75,13 @@
           <p>Explore Unit 1 Lessons 2 &amp; 3. Match the vocabulary, answer test-style questions, and build the three-region chart.</p>
           <div class="facts"><span class="fact">📚 3 study missions</span><span class="fact">📱 iPad friendly</span></div>
           <a class="go" href="social-studies-unit1/">Start the Social Studies quest&nbsp; →</a>
+        </article>
+        <article class="card map">
+          <div class="card-head"><span class="icon" aria-hidden="true">🧭</span><span class="badge new">NEW • QUICK REVIEW</span></div>
+          <h3>Map Skills Mission</h3>
+          <p>Practice map parts, map types, symbols, scale, grids, and contour lines with a quick matching game and final test.</p>
+          <div class="facts"><span class="fact">🧰 Map part matcher</span><span class="fact">🔎 7 test questions</span><span class="fact">📱 Touch friendly</span></div>
+          <a class="go" href="map-skills/">Start the Map Skills game&nbsp; →</a>
         </article>
       </div>
     </section>
