@@ -40,10 +40,11 @@
     .card p{position:relative;z-index:1;color:var(--muted);line-height:1.55;margin:0 0 18px;font-weight:620}
     .facts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;margin-bottom:17px;position:relative;z-index:1}
     .fact{background:#f5f6fa;padding:7px 9px;border-radius:10px;color:#4f5b79;font-size:.76rem;font-weight:850}
-    .go{position:relative;z-index:1;text-decoration:none;background:var(--navy);color:white;padding:13px 15px;border-radius:14px;text-align:center;font-weight:950;box-shadow:0 4px 0 #0b1532;transition:transform .14s}
+    .go{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:54px;text-decoration:none;background:var(--navy);color:white;padding:13px 15px;border-radius:14px;text-align:center;font-weight:950;box-shadow:0 4px 0 #0b1532;transition:transform .14s;touch-action:manipulation}
     .go:active{transform:translateY(3px);box-shadow:0 1px 0 #0b1532}
     .footer{text-align:center;color:var(--muted);font-size:.85rem;font-weight:700;padding-top:28px}
     @media(max-width:680px){.page{padding:18px 15px 32px}.hero{padding:39px 3px 26px}.cards{grid-template-columns:1fr}.card{min-height:245px}.tag{font-size:.72rem}}
+    @media(hover:none) and (pointer:coarse){.card:hover{transform:none;box-shadow:0 10px 22px rgba(27,43,80,.08)}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
   </style>
 </head>
