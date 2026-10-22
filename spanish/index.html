@@ -2,11 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#4F46E5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Study Quest">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+    <script defer src="../assets/app.js"></script>
     <title>Padre Nuestro - Multiple Choice Quiz Arcade</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;900&display=swap');
-
         :root {
             --primary: #4338CA;
             --primary-light: #EEF2FF;
@@ -21,19 +27,64 @@
 
         * {
             box-sizing: border-box;
-            user-select: none;
+        }
+
+        /* Buttons should not get selected by accident; text stays selectable. */
+        button {
             -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            font-family: inherit;
+        }
+
+        :where(button, a):focus-visible {
+            outline: 4px solid #FBBF24;
+            outline-offset: 3px;
+        }
+
+        [tabindex="-1"]:focus {
+            outline: none;
+        }
+
+        .vh {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(50%);
+            white-space: nowrap;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            min-height: 48px;
+            padding: 10px 16px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #312E81;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
         }
 
         body {
-            font-family: 'Nunito', sans-serif;
+            font-family: ui-rounded, 'Arial Rounded MT Bold', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
             margin: 0;
-            padding: 16px;
+            padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
             color: var(--text-dark);
         }
 
@@ -42,7 +93,6 @@
             border-radius: 28px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
             width: 100%;
-            max-width: 580px;
             padding: 24px;
             position: relative;
             overflow: hidden;
@@ -59,6 +109,7 @@
         }
 
         .nav-btn {
+            min-height: 64px;
             background: #F1F5F9;
             border: 2px solid #E2E8F0;
             border-radius: 14px;
@@ -95,7 +146,7 @@
         }
 
         .mode-title {
-            font-family: 'Fredoka', cursive;
+            font-family: ui-rounded, 'Arial Rounded MT Bold', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
             font-size: 1.3rem;
             color: var(--text-dark);
             margin: 0;
@@ -181,6 +232,7 @@
             border: 2px solid #CBD5E1;
             box-shadow: 0 3px 0 #94A3B8;
             border-radius: 16px;
+            min-height: 60px;
             padding: 14px 18px;
             font-size: 1.05rem;
             font-weight: 800;
@@ -257,16 +309,41 @@
         }
 
         .next-btn {
+            min-height: 54px;
             background: var(--primary);
             color: white;
             border: none;
             box-shadow: 0 3px 0 #312E81;
-            padding: 12px 24px;
+            padding: 12px 26px;
             border-radius: 14px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 900;
             cursor: pointer;
             display: none;
+        }
+
+        .next-btn.show {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .next-btn.alt {
+            background: #EEF2FF;
+            color: #312E81;
+            box-shadow: 0 3px 0 #C7D2FE;
+            border: 2px solid #C7D2FE;
+        }
+
+        .report-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .report-actions a {
+            text-decoration: none;
         }
 
         .next-btn:active {
@@ -295,7 +372,7 @@
         }
 
         .grade-letter {
-            font-family: 'Fredoka', cursive;
+            font-family: ui-rounded, 'Arial Rounded MT Bold', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
             font-size: 2.8rem;
             color: #92400E;
             line-height: 1;
@@ -305,6 +382,21 @@
             font-size: 0.9rem;
             font-weight: 900;
             color: #B45309;
+        }
+
+        @media (min-width: 768px) {
+            .arcade-card { padding: 32px; }
+            .q-text { font-size: 1.55rem; }
+            .mc-btn { font-size: 1.15rem; }
+            .nav-btn { font-size: 0.95rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
         }
 
         /* Confetti Overlay */
@@ -321,39 +413,45 @@
 </head>
 <body>
 
+<div class="vh" id="live" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<main class="shell">
+<a class="back-link" href="../">← Study Quest home</a>
+<h1 class="vh">Padre Nuestro quiz arcade</h1>
+
 <div class="arcade-card">
-    <canvas id="confettiCanvas"></canvas>
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
     <!-- Game Navigation -->
-    <div class="mode-nav">
-        <button class="nav-btn active" onclick="loadMode('fill')">
-            <span class="icon">🔍</span>Blanks
+    <nav class="mode-nav" aria-label="Choose a game">
+        <button type="button" class="nav-btn active" data-mode="fill" aria-pressed="true">
+            <span class="icon" aria-hidden="true">🔍</span>Blanks
         </button>
-        <button class="nav-btn" onclick="loadMode('sequence')">
-            <span class="icon">➡️</span>Next Line
+        <button type="button" class="nav-btn" data-mode="sequence" aria-pressed="false">
+            <span class="icon" aria-hidden="true">➡️</span>Next Line
         </button>
-        <button class="nav-btn" onclick="loadMode('meaning')">
-            <span class="icon">🌐</span>Meaning
+        <button type="button" class="nav-btn" data-mode="meaning" aria-pressed="false">
+            <span class="icon" aria-hidden="true">🌐</span>Meaning
         </button>
-        <button class="nav-btn" onclick="loadMode('exam')">
-            <span class="icon">📝</span>Test Mode
+        <button type="button" class="nav-btn" data-mode="exam" aria-pressed="false">
+            <span class="icon" aria-hidden="true">📝</span>Test Mode
         </button>
-    </div>
+    </nav>
 
     <!-- Top Status Bar -->
     <div class="quiz-header">
-        <h2 class="mode-title" id="modeTitle">Missing Word</h2>
+        <h2 class="mode-title" id="modeTitle" tabindex="-1">Missing Word</h2>
         <div class="score-badge">⭐ Score: <span id="scoreDisplay">0</span></div>
     </div>
 
     <!-- Progress Tracker -->
-    <div class="progress-track">
+    <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
         <div class="progress-fill" id="progressBar"></div>
     </div>
 
     <!-- Quiz Question Area -->
     <div id="quizContent">
-        <div class="question-box" id="questionBox">
+        <div class="question-box" id="questionBox" tabindex="-1">
             <div class="q-sub" id="qSub">Question 1</div>
             <div class="q-text" id="qPrompt">Loading...</div>
         </div>
@@ -363,7 +461,7 @@
 
         <!-- Next Question Button -->
         <div class="bottom-action">
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question ➔</button>
+            <button type="button" class="next-btn" id="nextBtn">Next Question ➔</button>
         </div>
     </div>
 
@@ -373,12 +471,17 @@
             <div class="grade-letter" id="reportGrade">A+</div>
             <div class="grade-score" id="reportScore">10 / 10</div>
         </div>
-        <h2 style="font-family: 'Fredoka', cursive; margin: 0 0 8px 0;" id="reportMsg">Super Star!</h2>
+        <h2 style="font-family: ui-rounded, 'Arial Rounded MT Bold', 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif; margin: 0 0 8px 0;" id="reportMsg">Super Star!</h2>
         <p style="color: var(--text-muted); font-weight: 800; margin-bottom: 24px;" id="reportSub">You are totally ready for the test!</p>
-        <button class="next-btn" style="display: inline-block; margin: 0 auto;" onclick="loadMode('exam')">Try Again 🔄</button>
+        <div class="report-actions">
+            <button type="button" class="next-btn show" id="againBtn">Play again 🔄</button>
+            <button type="button" class="next-btn alt show" id="testBtn">Try the Practice Test 📝</button>
+            <a class="next-btn alt show" href="../">Back to home</a>
+        </div>
     </div>
 
 </div>
+</main>
 
 <script>
     // Master database of the Spanish Our Father
@@ -638,6 +741,20 @@
         }
     ];
 
+    // Fair shuffle (Fisher-Yates) so every order is equally likely
+    function shuffle(list) {
+        const a = [...list];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const live = document.getElementById('live');
+    function announce(text) { live.textContent = ''; setTimeout(() => { live.textContent = text; }, 30); }
+
     // State Variables
     let currentMode = 'fill';
     let currentPool = [];
@@ -653,24 +770,24 @@
         document.getElementById('scoreDisplay').innerText = score;
 
         // Nav tabs highlight
-        const buttons = document.querySelectorAll('.nav-btn');
-        buttons[0].classList.toggle('active', mode === 'fill');
-        buttons[1].classList.toggle('active', mode === 'sequence');
-        buttons[2].classList.toggle('active', mode === 'meaning');
-        buttons[3].classList.toggle('active', mode === 'exam');
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            const on = b.dataset.mode === mode;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-pressed', String(on));
+        });
 
         document.getElementById('quizContent').style.display = 'block';
         document.getElementById('reportCard').style.display = 'none';
 
         if (mode === 'fill') {
             document.getElementById('modeTitle').innerText = "🔍 Missing Word";
-            currentPool = [...fillQuestions].sort(() => Math.random() - 0.5);
+            currentPool = shuffle(fillQuestions);
         } else if (mode === 'sequence') {
             document.getElementById('modeTitle').innerText = "➡️ What Comes Next?";
-            currentPool = [...sequenceQuestions].sort(() => Math.random() - 0.5);
+            currentPool = shuffle(sequenceQuestions);
         } else if (mode === 'meaning') {
             document.getElementById('modeTitle').innerText = "🌐 Meaning Match";
-            currentPool = [...meaningQuestions].sort(() => Math.random() - 0.5);
+            currentPool = shuffle(meaningQuestions);
         } else if (mode === 'exam') {
             document.getElementById('modeTitle').innerText = "📝 Practice Test";
             currentPool = [...examQuestions]; // Set order for test
@@ -679,13 +796,23 @@
         renderQuestion();
     }
 
+    function startMode(mode) {
+        loadMode(mode);
+        document.getElementById('modeTitle').focus({ preventScroll: true });
+    }
+
+    function setProgress(percent) {
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('progressTrack').setAttribute('aria-valuenow', String(Math.round(percent)));
+    }
+
     function renderQuestion() {
         answered = false;
-        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('nextBtn').classList.remove('show');
         
         const qData = currentPool[qIndex];
         const progressPercent = ((qIndex) / currentPool.length) * 100;
-        document.getElementById('progressBar').style.width = progressPercent + '%';
+        setProgress(progressPercent);
 
         document.getElementById('qSub').innerText = `Question ${qIndex + 1} of ${currentPool.length}`;
         
@@ -699,16 +826,18 @@
 
         // Shuffle options so the correct answer isn't predictable
         const letters = ['A', 'B', 'C', 'D'];
-        const shuffledOptions = [...qData.options].sort(() => Math.random() - 0.5);
+        const shuffledOptions = shuffle(qData.options);
 
         shuffledOptions.forEach((optText, i) => {
             const btn = document.createElement('button');
+            btn.type = 'button';
             btn.className = 'mc-btn';
+            btn.dataset.answer = optText;
             btn.innerHTML = `
-                <span class="mc-letter">${letters[i]}</span>
+                <span class="mc-letter" aria-hidden="true">${letters[i]}</span>
                 <span style="flex-grow: 1;">${optText}</span>
             `;
-            btn.onclick = () => selectOption(btn, optText, qData.correct);
+            btn.addEventListener('click', () => selectOption(btn, optText, qData.correct));
             optionsList.appendChild(btn);
         });
     }
@@ -720,26 +849,36 @@
         const allButtons = document.querySelectorAll('.mc-btn');
         allButtons.forEach(b => b.style.pointerEvents = 'none');
 
+        const mark = (b, good) => {
+            b.classList.add(good ? 'correct' : 'wrong');
+            b.querySelector('.mc-letter').textContent = good ? '✓' : '✕';
+        };
+
         if (selectedText === correctText) {
-            clickedBtn.classList.add('correct');
+            mark(clickedBtn, true);
             score += 10;
             document.getElementById('scoreDisplay').innerText = score;
             triggerConfetti();
+            announce('Correct! Great job.');
         } else {
-            clickedBtn.classList.add('wrong');
+            mark(clickedBtn, false);
             const card = document.querySelector('.arcade-card');
-            card.classList.add('shake');
-            setTimeout(() => card.classList.remove('shake'), 400);
+            if (!reduceMotion.matches) {
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 400);
+            }
 
             // Highlight the right one so he immediately learns
             allButtons.forEach(b => {
-                if (b.innerText.includes(correctText)) {
-                    b.classList.add('correct');
-                }
+                if (b.dataset.answer === correctText) mark(b, true);
             });
+            announce('Not quite. The correct answer is ' + correctText.replace(/<[^>]*>/g, '') + '.');
         }
 
-        document.getElementById('nextBtn').style.display = 'inline-block';
+        const next = document.getElementById('nextBtn');
+        next.textContent = qIndex < currentPool.length - 1 ? 'Next Question ➔' : 'See my score ➔';
+        next.classList.add('show');
+        next.focus({ preventScroll: true });
     }
 
     function nextQuestion() {
@@ -752,40 +891,44 @@
     }
 
     function showFinalScreen() {
-        document.getElementById('progressBar').style.width = '100%';
+        setProgress(100);
         triggerConfetti();
 
-        if (currentMode === 'exam') {
-            document.getElementById('quizContent').style.display = 'none';
-            const report = document.getElementById('reportCard');
-            report.style.display = 'block';
+        document.getElementById('quizContent').style.display = 'none';
+        const report = document.getElementById('reportCard');
+        report.style.display = 'block';
 
-            const maxScore = currentPool.length * 10;
-            const percentage = Math.round((score / maxScore) * 100);
-            document.getElementById('reportScore').innerText = `${score / 10} / ${currentPool.length}`;
+        const maxScore = currentPool.length * 10;
+        const percentage = Math.round((score / maxScore) * 100);
+        document.getElementById('reportScore').innerText = `${score / 10} / ${currentPool.length}`;
 
-            const gradeLetter = document.getElementById('reportGrade');
-            const msg = document.getElementById('reportMsg');
-            const sub = document.getElementById('reportSub');
+        const gradeLetter = document.getElementById('reportGrade');
+        const msg = document.getElementById('reportMsg');
+        const sub = document.getElementById('reportSub');
 
-            if (percentage >= 90) {
-                gradeLetter.innerText = "A+";
-                msg.innerText = "🏆 EXCELLENT JOB!";
-                sub.innerText = "You have memorized the prayer in Spanish!";
-            } else if (percentage >= 70) {
-                gradeLetter.innerText = "B";
-                msg.innerText = "👍 GREAT EFFORT!";
-                sub.innerText = "You almost have it down 100%!";
-            } else {
-                gradeLetter.innerText = "C";
-                msg.innerText = "💪 KEEP PRACTICING!";
-                sub.innerText = "Try the 'Blanks' mode to review the words!";
-            }
+        if (percentage >= 90) {
+            gradeLetter.innerText = "A+";
+            msg.innerText = "🏆 Excellent job!";
+            sub.innerText = currentMode === 'exam' ? "You have memorized the prayer in Spanish!" : "You really know this one. Try the Practice Test next!";
+        } else if (percentage >= 70) {
+            gradeLetter.innerText = "B";
+            msg.innerText = "👍 Great effort!";
+            sub.innerText = "You almost have it down 100%! Play again to get there.";
         } else {
-            alert(`🎉 Mode Complete! Great job! You scored ${score} points!`);
-            loadMode(currentMode);
+            gradeLetter.innerText = "C";
+            msg.innerText = "💪 Keep practicing!";
+            sub.innerText = "Try the 'Blanks' game to review the words, then come back.";
         }
+        announce(`${msg.innerText} You got ${score / 10} out of ${currentPool.length}.`);
+        if (window.StudyQuest) StudyQuest.record('spanish', percentage);
+        msg.setAttribute('tabindex', '-1');
+        msg.focus({ preventScroll: true });
     }
+
+    document.querySelectorAll('.nav-btn').forEach(b => b.addEventListener('click', () => startMode(b.dataset.mode)));
+    document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+    document.getElementById('againBtn').addEventListener('click', () => startMode(currentMode));
+    document.getElementById('testBtn').addEventListener('click', () => startMode('exam'));
 
     // ==========================================
     // ZERO-SOUND VISUAL CONFETTI CANNON
@@ -801,6 +944,7 @@
     window.addEventListener('resize', resizeCanvas);
 
     function triggerConfetti() {
+        if (reduceMotion.matches) return;
         resizeCanvas();
         particles = [];
         const colors = ['#10B981', '#6366F1', '#F59E0B', '#EC4899', '#3B82F6'];

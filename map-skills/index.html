@@ -2,18 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#18375a">
   <meta name="description" content="A quick, kid-friendly map skills study game with map part matching and a test-style challenge.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Study Quest">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <script defer src="../assets/app.js"></script>
   <title>Map Skills Mission — Study Quest</title>
   <style>
     :root{--ink:#18324f;--muted:#5a6c80;--blue:#2563a5;--blue-dark:#194b7e;--sky:#e5f3ff;--gold:#ffc857;--cream:#fffaf0;--green:#176b47;--green-bg:#e7f8ee;--red:#873c37;--red-bg:#fff0ee;--line:#d7e3ec;--white:#fff;--shadow:0 12px 32px rgba(25,54,83,.1)}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#e9f5ff 0,#f5f9fb 450px,#fffaf2 100%);font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+    body{margin:0;min-height:100vh;min-height:100dvh;background:linear-gradient(180deg,#e9f5ff 0,#f5f9fb 450px,#fffaf2 100%);font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
     button,select{font:inherit}
     button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #d89800;outline-offset:3px}
-    .wrap{width:min(920px,100%);margin:auto;padding:16px 19px 48px}
+    .wrap{width:min(920px,100%);margin:auto;padding:max(16px,env(safe-area-inset-top)) max(19px,env(safe-area-inset-right)) max(48px,env(safe-area-inset-bottom)) max(19px,env(safe-area-inset-left))}
+    [tabindex="-1"]:focus{outline:none}
+    .skip{position:absolute;left:12px;top:-64px;background:#fff;color:var(--ink);padding:12px 16px;border-radius:12px;font-weight:900;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,.2);text-decoration:none}
+    .skip:focus{top:max(12px,env(safe-area-inset-top))}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
     .back-link{display:inline-flex;align-items:center;min-height:54px;text-decoration:none;color:var(--blue-dark);font-weight:900;background:#fff;border:1px solid var(--line);padding:10px 13px;border-radius:13px;touch-action:manipulation}
     .nav-label{font-size:.78rem;font-weight:950;letter-spacing:.08em;color:#526c85}
@@ -63,6 +73,11 @@
     .choice-list{display:grid;gap:9px;margin:16px 0}
     .choice{text-align:left;background:#fff;border:2px solid #d1dfeb;box-shadow:0 2px 0 #c1d1df;color:#233e5b;line-height:1.35;display:flex;align-items:center;gap:10px;min-height:54px}
     .choice-letter{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:8px;background:#eaf2f8;color:#42627f;font-weight:950}
+    .part-choice.correct{border-color:#63b985;background:var(--green-bg);color:#155e3e}
+    .part-choice.wrong{border-color:#d78d83;background:var(--red-bg);color:#873c37}
+    .part-choice.correct:before{content:"✓ ";font-weight:950}
+    .part-choice.wrong:before{content:"✕ ";font-weight:950}
+    .part-choice:disabled{cursor:default}
     .choice.correct{background:var(--green-bg);border-color:#63b985;color:#155e3e}
     .choice.correct .choice-letter{background:#398d5d;color:white}
     .choice.wrong{background:var(--red-bg);border-color:#d78d83;color:#873c37}
@@ -78,12 +93,13 @@
     .finish p{max-width:550px;margin:9px auto 17px;color:var(--muted);line-height:1.55;font-weight:700}
     .footer{text-align:center;margin-top:21px;color:#526b82;font-size:.84rem;font-weight:750}
     [hidden]{display:none!important}
-    @media(max-width:620px){.wrap{padding:12px 12px 36px}.nav-label{display:none}.hero{padding:23px 75px 23px 19px}.hero-icon{right:17px;font-size:2.8rem;bottom:12px}.missions{grid-template-columns:1fr}.mission{min-height:unset}.mission p{max-width:540px}}
+    @media(max-width:620px){.wrap{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(36px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}.nav-label{display:none}.hero{padding:23px 75px 23px 19px}.hero-icon{right:17px;font-size:2.8rem;bottom:12px}.missions{grid-template-columns:1fr}.mission{min-height:unset}.mission p{max-width:540px}}
     @media(max-width:430px){.select-grid,.parts-grid{grid-template-columns:1fr}.section-head span{max-width:130px;text-align:right}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
   </style>
 </head>
 <body>
+  <a class="skip" href="#launcher">Skip to the missions</a>
   <main class="wrap">
     <nav class="nav" aria-label="Site navigation">
       <a class="back-link" href="../">← Study Quest home</a>
@@ -129,7 +145,7 @@
 
     <section id="game-panel" class="game-panel" aria-labelledby="game-title">
       <div class="game-top">
-        <h2 id="game-title" class="game-title">Map game</h2>
+        <h2 id="game-title" class="game-title" tabindex="-1">Map game</h2>
         <button id="back-button" class="secondary" type="button">← Choose a mission</button>
         <span id="score-pill" class="score-pill" aria-live="polite">⭐ 0 correct</span>
       </div>
@@ -160,9 +176,11 @@
   const modes={toolbox:"🧰 Map Toolbox",test:"🔎 Final Map Check"};
   let mode="",step=0,score=0,total=0,answered=false,selectedParts=[];
   const launcher=document.getElementById("launcher"),panel=document.getElementById("game-panel"),content=document.getElementById("activity-content"),bar=document.querySelector(".track");
+  function shuf(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+  function markChoice(b,good){b.classList.add(good?"correct":"wrong");const l=b.querySelector(".choice-letter");if(l)l.textContent=good?"✓":"✕"}
   function node(tag,className,text){const n=document.createElement(tag);if(className)n.className=className;if(text!==undefined)n.textContent=text;return n}
   function btn(text,className,action){const b=node("button",className,text);b.type="button";b.addEventListener("click",action);return b}
-  function start(which){mode=which;step=0;score=0;answered=false;selectedParts=[];total=which==="toolbox"?5:questions.length;launcher.hidden=true;panel.style.display="block";document.getElementById("game-title").textContent=modes[mode];render();panel.scrollIntoView({behavior:"smooth",block:"start"})}
+  function start(which){mode=which;step=0;score=0;answered=false;selectedParts=[];total=which==="toolbox"?5:questions.length;launcher.hidden=true;panel.style.display="block";document.getElementById("game-title").textContent=modes[mode];render();panel.scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("game-title").focus({preventScroll:true})}
   function back(){panel.style.display="none";launcher.hidden=false;content.replaceChildren();launcher.scrollIntoView({behavior:"smooth",block:"start"})}
   document.querySelectorAll("[data-start]").forEach(b=>b.addEventListener("click",()=>start(b.dataset.start)));
   document.getElementById("back-button").addEventListener("click",back);
@@ -170,8 +188,8 @@
   function render(){answered=false;if(mode==="toolbox"){if(step===0)partsChallenge();else if(step<5)functionChallenge();else finish()}else{if(step<questions.length)testQuestion();else finish()}}
   function partsChallenge(){selectedParts=[];const card=node("div","question"),feedback=node("div","feedback");feedback.setAttribute("aria-live","polite");card.append(node("div","prompt-label","Map Toolbox • Choose the five"),node("div","prompt","Tap all five important parts found on a map."),node("div","helper","Choose five. A few silly extras are mixed in—pick only the real map parts."));const grid=node("div","parts-grid"),buttons=[];partChoices.forEach(label=>{const b=btn(label,"part-choice",()=>{if(answered)return;const exists=selectedParts.includes(label);if(exists)selectedParts=selectedParts.filter(x=>x!==label);else if(selectedParts.length<5)selectedParts.push(label);b.setAttribute("aria-pressed",String(!exists));counter.textContent=selectedParts.length+" of 5 selected"});b.setAttribute("aria-pressed","false");buttons.push(b);grid.append(b)});const counter=node("div","helper","0 of 5 selected");const check=btn("Check my map parts","action-button",()=>{if(answered)return;if(selectedParts.length!==5){feedback.className="feedback try";feedback.textContent="Pick exactly five parts first. You have "+selectedParts.length+" selected.";return}answered=true;check.hidden=true;buttons.forEach(b=>{b.disabled=true;if(partNames.includes(b.textContent))b.classList.add("correct");else if(selectedParts.includes(b.textContent))b.classList.add("wrong")});const perfect=partNames.every(x=>selectedParts.includes(x))&&selectedParts.every(x=>partNames.includes(x));if(perfect){score++;feedback.className="feedback good";feedback.textContent="🎉 You found all five! Title, compass rose, legend/key, scale, and grid."}else{feedback.className="feedback try";feedback.textContent="Good try! The five are: title, compass rose, legend/key, scale, and grid. Look at the green choices, then keep going."}next.hidden=false;progress()});const next=btn("Match the map tools →","action-button",()=>{step=1;render()});next.hidden=true;card.append(grid,counter,feedback);const actions=node("div","actions");actions.append(check,next);card.append(actions);content.replaceChildren(card);progress()}
   function functionChallenge(){const item=functions[step-1],card=node("div","question"),feedback=node("div","feedback");feedback.setAttribute("aria-live","polite");card.append(node("div","prompt-label","Map Toolbox • Tool match "+step+" of 4"),node("div","prompt",item.label));const field=node("div","select-field"),label=node("label","","Choose the map part"),select=document.createElement("select");select.setAttribute("aria-label","Choose the map part that does this job");const blank=document.createElement("option");blank.value="";blank.textContent="Choose one…";select.append(blank);item.choices.forEach(choice=>{const op=document.createElement("option");op.value=choice;op.textContent=choice;select.append(op)});field.append(label,select);card.append(field,feedback);const actions=node("div","actions"),check=btn("Check my match","action-button",()=>{if(answered)return;if(!select.value){feedback.className="feedback try";feedback.textContent="Choose one map part from the menu first.";return}answered=true;check.hidden=true;select.disabled=true;if(select.value===item.answer){score++;feedback.className="feedback good";feedback.textContent="✅ Yes! The "+item.answer+" does that job."}else{feedback.className="feedback try";feedback.textContent="Close! The answer is "+item.answer+". Read the clue one more time to help it stick."}next.hidden=false;progress()});const next=btn(step===4?"See my toolbox score →":"Next tool →","action-button",()=>{step++;render()});next.hidden=true;actions.append(check,next);card.append(actions);content.replaceChildren(card);progress()}
-  function testQuestion(){const item=questions[step],card=node("div","question"),list=node("div","choice-list"),feedback=node("div","feedback");card.append(node("div","prompt-label","Final Map Check • Question "+(step+1)),node("div","prompt",item.q),node("div","helper","Choose the best answer. You’ll get a helpful clue after you answer."));feedback.setAttribute("aria-live","polite");const choices=item.o.slice().sort(()=>Math.random()-.5);choices.forEach((answer,i)=>{const b=btn("","choice",()=>{});b.append(node("span","choice-letter",String.fromCharCode(65+i)),node("span","",answer));b.addEventListener("click",()=>{if(answered)return;answered=true;list.querySelectorAll("button").forEach(x=>x.disabled=true);if(answer===item.a){b.classList.add("correct");score++;feedback.className="feedback good";feedback.textContent="✅ That's right! "+item.why}else{b.classList.add("wrong");list.querySelectorAll("button").forEach(x=>{if(x.lastChild.textContent===item.a)x.classList.add("correct")});feedback.className="feedback try";feedback.textContent="Good try! The answer is: "+item.a+". "+item.why}next.hidden=false;progress()});list.append(b)});const actions=node("div","actions"),next=btn(step===questions.length-1?"See my test score →":"Next question →","action-button",()=>{step++;render()});next.hidden=true;card.append(list,feedback);actions.append(next);card.append(actions);content.replaceChildren(card);progress()}
-  function finish(){const pct=Math.round(score/total*100),card=node("div","finish"),icon=pct>=90?"🏆":pct>=65?"🌟":"💪";card.append(node("div","finish-icon",icon),node("h2","",pct>=90?"Map master!":pct>=65?"Great map work!":"Good practice—try again!"),node("div","finish-score","You got "+score+" out of "+total+" right on your first try ("+pct+"%)."));const message=pct>=90?"You know these map clues really well. Try the other mission to keep them fresh.":pct>=65?"You’re getting there! Read the quick review for any tricky clues, then play again.":"Practice makes these clues easier. Check the quick review, then give it another try.";card.append(node("p","",message));const actions=node("div","actions");actions.append(btn("Play this mission again ↻","primary",()=>start(mode)),btn("Choose another mission","secondary",back));card.append(actions);content.replaceChildren(card);document.getElementById("step-label").textContent="Mission complete";document.getElementById("percent-label").textContent=pct+"%";document.getElementById("progress-fill").style.width="100%";bar.setAttribute("aria-valuenow","100");document.getElementById("score-pill").textContent="⭐ "+score+" / "+total}
+  function testQuestion(){const item=questions[step],card=node("div","question"),list=node("div","choice-list"),feedback=node("div","feedback");card.append(node("div","prompt-label","Final Map Check • Question "+(step+1)),node("div","prompt",item.q),node("div","helper","Choose the best answer. You’ll get a helpful clue after you answer."));feedback.setAttribute("aria-live","polite");const choices=shuf(item.o);choices.forEach((answer,i)=>{const b=btn("","choice",()=>{});b.append(node("span","choice-letter",String.fromCharCode(65+i)),node("span","",answer));b.addEventListener("click",()=>{if(answered)return;answered=true;list.querySelectorAll("button").forEach(x=>x.disabled=true);if(answer===item.a){markChoice(b,true);score++;feedback.className="feedback good";feedback.textContent="✅ That's right! "+item.why}else{markChoice(b,false);list.querySelectorAll("button").forEach(x=>{if(x.lastChild.textContent===item.a)markChoice(x,true)});feedback.className="feedback try";feedback.textContent="Good try! The answer is: "+item.a+". "+item.why}next.hidden=false;progress()});list.append(b)});const actions=node("div","actions"),next=btn(step===questions.length-1?"See my test score →":"Next question →","action-button",()=>{step++;render()});next.hidden=true;card.append(list,feedback);actions.append(next);card.append(actions);content.replaceChildren(card);progress()}
+  function finish(){const pct=Math.round(score/total*100),card=node("div","finish"),icon=pct>=90?"🏆":pct>=65?"🌟":"💪";card.append(node("div","finish-icon",icon),node("h2","",pct>=90?"Map master!":pct>=65?"Great map work!":"Good practice—try again!"),node("div","finish-score","You got "+score+" out of "+total+" right on your first try ("+pct+"%)."));const message=pct>=90?"You know these map clues really well. Try the other mission to keep them fresh.":pct>=65?"You’re getting there! Read the quick review for any tricky clues, then play again.":"Practice makes these clues easier. Check the quick review, then give it another try.";card.append(node("p","",message));const actions=node("div","actions");actions.append(btn("Play this mission again ↻","primary",()=>start(mode)),btn("Choose another mission","secondary",back));card.append(actions);content.replaceChildren(card);document.getElementById("step-label").textContent="Mission complete";document.getElementById("percent-label").textContent=pct+"%";document.getElementById("progress-fill").style.width="100%";bar.setAttribute("aria-valuenow","100");document.getElementById("score-pill").textContent="⭐ "+score+" / "+total;if(window.StudyQuest)StudyQuest.record("map-skills",pct)}
 </script>
 </body>
 </html>

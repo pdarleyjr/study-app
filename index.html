@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#18264b">
   <meta name="description" content="A happy little hub for interactive study games.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Study Quest">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <script defer src="assets/app.js"></script>
   <title>Study Quest — Pick a Study Game</title>
   <style>
     :root{--navy:#18264b;--muted:#5c6680;--paper:#fffdf8;--blue:#dceeff;--pink:#ffe3e3;--yellow:#fff0b8;--mint:#dbf6e9;--purple:#6452cb;--orange:#ffb354}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--navy);background:radial-gradient(circle at 8% 10%,#fff7d6 0 10%,transparent 29%),radial-gradient(circle at 93% 18%,#dcecff 0 12%,transparent 32%),linear-gradient(145deg,#fbf5ff,#f1f8ff 54%,#fff9ed)}
+    body{margin:0;min-height:100vh;min-height:100dvh;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--navy);background:radial-gradient(circle at 8% 10%,#fff7d6 0 10%,transparent 29%),radial-gradient(circle at 93% 18%,#dcecff 0 12%,transparent 32%),linear-gradient(145deg,#fbf5ff,#f1f8ff 54%,#fff9ed)}
     a{color:inherit}
-    .page{width:min(1060px,100%);margin:auto;padding:26px 22px 42px}
+    .page{width:min(1060px,100%);margin:auto;padding:max(26px,env(safe-area-inset-top)) max(22px,env(safe-area-inset-right)) max(42px,env(safe-area-inset-bottom)) max(22px,env(safe-area-inset-left))}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px}
     .brand{display:flex;align-items:center;gap:11px;font-size:1.02rem;font-weight:950;letter-spacing:.02em}
     .brand-mark{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:var(--navy);color:white;font-size:1.45rem;box-shadow:0 5px 0 #0c1531}
@@ -24,32 +31,44 @@
     .section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:4px 0 15px}
     .section-title h2{font-size:1.28rem;margin:0;letter-spacing:-.02em}
     .section-title span{font-size:.86rem;color:var(--muted);font-weight:750}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:18px}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
     .card{position:relative;overflow:hidden;border:2px solid rgba(24,38,75,.09);border-radius:25px;padding:23px;background:white;box-shadow:0 10px 22px rgba(27,43,80,.08);min-height:270px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
     .card:hover{transform:translateY(-4px);box-shadow:0 17px 30px rgba(27,43,80,.13)}
     .card:after{content:"";position:absolute;width:155px;height:155px;border-radius:50%;right:-54px;top:-55px;opacity:.72}
     .card.prayer:after{background:var(--pink)}
     .card.social:after{background:var(--yellow)}
     .card.map:after{background:var(--mint)}
+    .card.states:after{background:#e6deff}
     .card-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
     .icon{width:59px;height:59px;border-radius:19px;display:grid;place-items:center;font-size:1.9rem}
-    .prayer .icon{background:#fff0f2}.social .icon{background:#fff8dd}.map .icon{background:#eaf7ef}
+    .prayer .icon{background:#fff0f2}.social .icon{background:#fff8dd}.map .icon{background:#eaf7ef}.states .icon{background:#f0ebff}
     .badge{position:relative;z-index:1;border-radius:99px;background:#f1f3fb;color:#445075;padding:7px 10px;font-size:.72rem;font-weight:950;letter-spacing:.05em}
     .badge.new{background:#e2f7ea;color:#12603d}
+    .badge.fresh{background:#ffe9a8;color:#6a4700}
     .card h3{position:relative;z-index:1;margin:17px 0 7px;font-size:1.42rem;letter-spacing:-.025em}
     .card p{position:relative;z-index:1;color:var(--muted);line-height:1.55;margin:0 0 18px;font-weight:620}
     .facts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;margin-bottom:17px;position:relative;z-index:1}
     .fact{background:#f5f6fa;padding:7px 9px;border-radius:10px;color:#4f5b79;font-size:.76rem;font-weight:850}
-    .go{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:54px;text-decoration:none;background:var(--navy);color:white;padding:13px 15px;border-radius:14px;text-align:center;font-weight:950;box-shadow:0 4px 0 #0b1532;transition:transform .14s;touch-action:manipulation}
-    .go:active{transform:translateY(3px);box-shadow:0 1px 0 #0b1532}
+    .go{display:flex;align-items:center;justify-content:center;min-height:54px;text-decoration:none;background:var(--navy);color:white;padding:13px 15px;border-radius:14px;text-align:center;font-weight:950;box-shadow:0 4px 0 #0b1532;transition:transform .14s;touch-action:manipulation}
+    .go:active{box-shadow:0 1px 0 #0b1532}
+    .go:after{content:"";position:absolute;inset:0;z-index:2}
+    .card{isolation:isolate}
+    .card:has(.go:focus-visible){outline:4px solid #d89800;outline-offset:4px}
+    .go:focus-visible{outline:none}
+    .card:active{transform:translateY(2px)}
+    .fact.best{background:#fff0b8;color:#6a4700}
+    .skip{position:absolute;left:12px;top:-60px;background:#fff;color:var(--navy);padding:12px 16px;border-radius:12px;font-weight:900;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+    .skip:focus{top:max(12px,env(safe-area-inset-top))}
+    main:focus{outline:none}
     .footer{text-align:center;color:var(--muted);font-size:.85rem;font-weight:700;padding-top:28px}
-    @media(max-width:680px){.page{padding:18px 15px 32px}.hero{padding:39px 3px 26px}.cards{grid-template-columns:1fr}.card{min-height:245px}.tag{font-size:.72rem}}
+    @media(max-width:680px){.page{padding:max(18px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(15px,env(safe-area-inset-left))}.hero{padding:39px 3px 26px}.cards{grid-template-columns:1fr}.card{min-height:245px}.tag{font-size:.72rem}.topbar{flex-wrap:wrap}}
     @media(hover:none) and (pointer:coarse){.card:hover{transform:none;box-shadow:0 10px 22px rgba(27,43,80,.08)}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
   </style>
 </head>
 <body>
-  <main class="page">
+  <a class="skip" href="#games">Skip to the games</a>
+  <main class="page" id="main">
     <header class="topbar">
       <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>STUDY QUEST</span></div>
       <span class="tag">Choose a game • Learn as you go</span>
@@ -61,32 +80,49 @@
       <div class="sparkles" aria-hidden="true">⭐ 🧠 🚀</div>
     </section>
     <section aria-labelledby="games">
-      <div class="section-title"><h2 id="games">Choose your next mission</h2><span>Three adventures ready to play</span></div>
+      <div class="section-title"><h2 id="games">Choose your next mission</h2><span>Four adventures ready to play</span></div>
       <div class="cards">
+        <article class="card states">
+          <div class="card-head"><span class="icon" aria-hidden="true">🗽</span><span class="badge fresh">NEW • STATES &amp; CAPITALS</span></div>
+          <h3>Northeast States &amp; Capitals</h3>
+          <p>Find all 11 Northeast states on the map, match each capital, and spell every name. Earn passport stamps and become a Northeast Master!</p>
+          <div class="facts"><span class="fact">📍 Find the state</span><span class="fact">🏛️ Capital match</span><span class="fact">🔤 Spelling games</span><span class="fact best" data-best="northeast-states" hidden></span></div>
+          <a class="go" href="northeast-states/">Play States &amp; Capitals&nbsp; →</a>
+        </article>
         <article class="card prayer">
           <div class="card-head"><span class="icon" aria-hidden="true">🙏</span><span class="badge">SPANISH • MEMORY</span></div>
           <h3>Padre Nuestro</h3>
           <p>Practice the Our Father prayer in Spanish with missing words, “what comes next?”, meaning match, and test mode.</p>
-          <div class="facts"><span class="fact">🔤 Fill the blanks</span><span class="fact">🎯 4 ways to practice</span></div>
+          <div class="facts"><span class="fact">🔤 Fill the blanks</span><span class="fact">🎯 4 ways to practice</span><span class="fact best" data-best="spanish" hidden></span></div>
           <a class="go" href="spanish/">Play the Spanish game&nbsp; →</a>
         </article>
         <article class="card social">
           <div class="card-head"><span class="icon" aria-hidden="true">🗺️</span><span class="badge new">NEW • TEST PREP</span></div>
           <h3>First Americans &amp; Cultural Regions</h3>
           <p>Explore Unit 1 Lessons 2 &amp; 3. Match the vocabulary, answer test-style questions, and build the three-region chart.</p>
-          <div class="facts"><span class="fact">📚 3 study missions</span><span class="fact">📱 iPad friendly</span></div>
+          <div class="facts"><span class="fact">📚 3 study missions</span><span class="fact">📱 iPad friendly</span><span class="fact best" data-best="social-studies-unit1" hidden></span></div>
           <a class="go" href="social-studies-unit1/">Start the Social Studies quest&nbsp; →</a>
         </article>
         <article class="card map">
           <div class="card-head"><span class="icon" aria-hidden="true">🧭</span><span class="badge new">NEW • QUICK REVIEW</span></div>
           <h3>Map Skills Mission</h3>
           <p>Practice map parts, map types, symbols, scale, grids, and contour lines with a quick matching game and final test.</p>
-          <div class="facts"><span class="fact">🧰 Map part matcher</span><span class="fact">🔎 7 test questions</span><span class="fact">📱 iPad friendly taps</span></div>
+          <div class="facts"><span class="fact">🧰 Map part matcher</span><span class="fact">🔎 7 test questions</span><span class="fact">📱 iPad friendly taps</span><span class="fact best" data-best="map-skills" hidden></span></div>
           <a class="go" href="map-skills/">Start the Map Skills game&nbsp; →</a>
         </article>
       </div>
     </section>
     <footer class="footer">You’ve got this! 🌟 Take your time, read each clue, and keep practicing.</footer>
   </main>
+  <script>
+    /* Show each game's best score once the shared script has loaded. */
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!window.StudyQuest) return;
+      document.querySelectorAll("[data-best]").forEach(function (n) {
+        var g = StudyQuest.get(n.getAttribute("data-best"));
+        if (g && g.plays) { n.textContent = "🏆 Best: " + g.best + "%"; n.hidden = false; }
+      });
+    });
+  </script>
 </body>
 </html>

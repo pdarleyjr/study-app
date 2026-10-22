@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Study Quest">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b3f7a"/><stop offset="1" stop-color="#18264b"/></linearGradient></defs>
+  <rect width="512" height="512" fill="url(#g)"/>
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="12"/>
+  <path d="M256 70 L290 222 L442 256 L290 290 L256 442 L222 290 L70 256 L222 222Z" fill="#ffc857"/>
+  <path d="M256 70 L290 222 L222 222Z" fill="#e8553f"/>
+  <circle cx="256" cy="256" r="22" fill="#18264b"/>
+</svg>
