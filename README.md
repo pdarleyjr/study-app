@@ -7,6 +7,7 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 
 | Game | Folder | What it covers |
 | --- | --- | --- |
+| European Exploration Quest | `european-exploration/` | Unit 4 L.4 and Unit 1 L.5: why Europeans sailed, astrolabe/compass/maps, nine explorers, motives, gold and silver, new foods, tobacco. Four short missions plus a final challenge. Has several files (see below). |
 | Northeast States & Capitals | `northeast-states/` | Find the 11 states on a map, match capitals, spell every name, memory match, and a final challenge. Earns passport stamps. |
 | Padre Nuestro | `spanish/` | The Our Father in Spanish: missing words, next line, meaning match, and a practice test. |
 | First Americans & Cultural Regions | `social-studies-unit1/` | Social Studies Unit 1, Lessons 2 and 3. |
@@ -34,6 +35,14 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 3. When a round ends, call `if (window.StudyQuest) StudyQuest.record("my-new-guide", percentCorrect);`.
 4. Add a card for it in the root `index.html` (copy an existing card and add a `data-best="my-new-guide"` badge).
 5. Add the folder to the `PRECACHE` list in `sw.js` so it works offline.
+
+## European Exploration Quest files
+
+- `european-exploration/data.js`: all the content. Every lesson and question has the handout photo it came from in `src`. To add another worksheet, add lessons, questions, and a mission here.
+- `european-exploration/game.js`: the game engine (missions, questions with a hint and second try, matching, sorting, results).
+- `european-exploration/art.js`: hand-drawn SVG pictures. `styles.css`: the look.
+- Finished rounds call `StudyQuest.record("european-exploration", percent)`. Missed questions and per-mission scores are kept under the separate local key `studyquest:european-exploration:v1`.
+- A few handout lines were reworded on purpose: the Americas are "new to Europeans" (not "discovered"), and the Cortés line avoids saying he killed Montezuma II.
 
 ## Map data
 
