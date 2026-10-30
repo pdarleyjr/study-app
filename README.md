@@ -7,6 +7,7 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 
 | Game | Folder | What it covers |
 | --- | --- | --- |
+| Cosmic Quest: Stars & Galaxies | `stars-galaxies/` | Science Unit 3, Lesson 3 plus the Unit 3 Benchmark Review: stars, galaxies, solar system, comets, planets, star charts and orbit diagrams. Four missions, one open-book Chapter Detective, and a 15-question Benchmark Challenge. Has several files (see below). |
 | European Exploration Quest | `european-exploration/` | Unit 4 L.4 and Unit 1 L.5: why Europeans sailed, astrolabe/compass/maps, nine explorers, motives, gold and silver, new foods, tobacco. Four short missions plus a final challenge. Has several files (see below). |
 | Northeast States & Capitals | `northeast-states/` | Find the 11 states on a map, match capitals, spell every name, memory match, and a final challenge. Earns passport stamps. |
 | Padre Nuestro | `spanish/` | The Our Father in Spanish: missing words, next line, meaning match, and a practice test. |
@@ -43,6 +44,14 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 - `european-exploration/art.js`: hand-drawn SVG pictures. `styles.css`: the look.
 - Finished rounds call `StudyQuest.record("european-exploration", percent)`. Missed questions and per-mission scores are kept under the separate local key `studyquest:european-exploration:v1`.
 - A few handout lines were reworded on purpose: the Americas are "new to Europeans" (not "discovered"), and the Cortés line avoids saying he killed Montezuma II.
+
+## Cosmic Quest files
+
+- `stars-galaxies/data.js`: all content. 15 benchmark objectives (one per Unit 3 Benchmark Review question), each with several question variants (`real` = reworded test question, `fresh` = new example), plus supporting chapter questions, lessons, missions, and the open-book tasks. Every question has a `src` (book page or "extra context").
+- `stars-galaxies/game.js`: engine (missions, hint and second try, picture and tap-the-star questions, Benchmark Challenge, practice-my-misses, open-book Chapter Detective). `art-core.js` plus `art-stars.js`, `art-galaxies.js`, `art-system.js`: original SVG pictures. `styles.css`: the look.
+- Only the Chapter Detective is open-book. Every other mode works without the textbook.
+- The Benchmark Challenge result goes to `StudyQuest.record("stars-galaxies", percent)`. Mission stars, skill mastery and missed questions live under the local key `studyquest:stars-galaxies:v1`.
+- The textbook's galaxy percentages (spiral/irregular/elliptical) are the textbook's claims, labelled that way in the game. Solar-system, comet, planet and model questions come from the benchmark itself and are marked as extra context because pages 137-143 do not teach them.
 
 ## Map data
 
