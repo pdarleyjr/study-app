@@ -7,6 +7,7 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 
 | Game | Folder | What it covers |
 | --- | --- | --- |
+| Math Mission: Prime & Fraction Power-Up | `math-mission/` | Closed-book 5th-grade math review: primes, multiples, LCM, LCD, simplifying and equivalent fractions. One-tap 10-minute Morning Mission, a 5-minute review, three mini-games, and a 15-question Test Ready Challenge. See `docs/math-mission-rationale.md`. |
 | Cosmic Quest: Stars & Galaxies | `stars-galaxies/` | Science Unit 3, Lesson 3 plus the Unit 3 Benchmark Review: stars, galaxies, solar system, comets, planets, star charts and orbit diagrams. Four missions, one open-book Chapter Detective, and a 15-question Benchmark Challenge. Has several files (see below). |
 | European Exploration Quest | `european-exploration/` | Unit 4 L.4 and Unit 1 L.5: why Europeans sailed, astrolabe/compass/maps, nine explorers, motives, gold and silver, new foods, tobacco. Four short missions plus a final challenge. Has several files (see below). |
 | Northeast States & Capitals | `northeast-states/` | Find the 11 states on a map, match capitals, spell every name, memory match, and a final challenge. Earns passport stamps. |
@@ -44,6 +45,13 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 - `european-exploration/art.js`: hand-drawn SVG pictures. `styles.css`: the look.
 - Finished rounds call `StudyQuest.record("european-exploration", percent)`. Missed questions and per-mission scores are kept under the separate local key `studyquest:european-exploration:v1`.
 - A few handout lines were reworded on purpose: the Americas are "new to Europeans" (not "discovered"), and the Cortés line avoids saying he killed Montezuma II.
+
+## Math Mission files
+
+- `math-mission/gen.js`: question generators for the 15 skills. Every question is built from numbers, then checked (exactly one correct option, no duplicates). Also holds the short worked examples shown after a miss. Pure functions, so it can be tested in Node.
+- `math-mission/game.js`: engine (Morning Mission, 5-minute review, mini-games, Test Ready Challenge, practice-my-misses, skill tracking). `styles.css`: the look.
+- Skill tracking (`studyquest:math-mission:v1`) keeps first-try success separate from fixed-after-explanation. Results go to `StudyQuest.record("math-mission", percent)` where percent is the share of questions answered correctly on the first try.
+- Everything is closed-book. There is no lookup, notes or open-book mode.
 
 ## Cosmic Quest files
 
