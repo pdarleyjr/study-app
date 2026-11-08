@@ -1,7 +1,7 @@
 /* Study Quest service worker: lets the games open with no Wi-Fi after the first visit.
    Pages: network first (so updates show up), falling back to the saved copy.
    Other files: saved copy first, refreshed in the background. */
-var CACHE = "studyquest-v4";
+var CACHE = "studyquest-v5";
 var SCOPE = self.registration.scope;
 var PRECACHE = [
   "", "index.html", "manifest.webmanifest",
@@ -10,7 +10,11 @@ var PRECACHE = [
   "european-exploration/", "european-exploration/styles.css", "european-exploration/data.js", "european-exploration/art.js", "european-exploration/game.js",
   "stars-galaxies/", "stars-galaxies/styles.css", "stars-galaxies/art-core.js", "stars-galaxies/art-stars.js", "stars-galaxies/art-galaxies.js",
   "stars-galaxies/art-system.js", "stars-galaxies/data.js", "stars-galaxies/game.js",
-  "math-mission/", "math-mission/styles.css", "math-mission/gen.js", "math-mission/game.js"
+  "math-mission/", "math-mission/styles.css", "math-mission/gen.js", "math-mission/game.js",
+  "fifth-grade/", "second-grade/",
+  "second-grade/spanish-days/", "second-grade/spanish-days/styles.css", "second-grade/spanish-days/data.js", "second-grade/spanish-days/speech.js",
+  "second-grade/spanish-days/store.js", "second-grade/spanish-days/ui.js", "second-grade/spanish-days/quiz.js", "second-grade/spanish-days/parent.js",
+  "second-grade/spanish-days/game.js"
 ];
 
 self.addEventListener("install", function (e) {

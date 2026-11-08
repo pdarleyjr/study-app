@@ -1,9 +1,14 @@
 # Study Quest
 
-Interactive study games for a 4th/5th grader, hosted on GitHub Pages:
+Interactive study games for a 5th grader and a 2nd grader, hosted on GitHub Pages:
 **https://pdarleyjr.github.io/study-app/**
 
-Everything is plain HTML, CSS and JavaScript. There is no build step and no server. Each game lives in its own folder as a single `index.html`.
+Everything is plain HTML, CSS and JavaScript. There is no build step and no server. Each game lives in its own folder with an `index.html`.
+
+The home page (`index.html`) shows two big grade cards:
+
+- **5th Grade Study Guides** opens `fifth-grade/index.html`, which lists the seven 5th-grade games below. Those games stay at their original URLs (for example `math-mission/`), so old bookmarks and home-screen links still work.
+- **2nd Grade Study Guides** opens `second-grade/index.html`, which lists the 2nd-grade games. New 2nd-grade games live under `second-grade/<guide>/`.
 
 | Game | Folder | What it covers |
 | --- | --- | --- |
@@ -14,17 +19,20 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 | Padre Nuestro | `spanish/` | The Our Father in Spanish: missing words, next line, meaning match, and a practice test. |
 | First Americans & Cultural Regions | `social-studies-unit1/` | Social Studies Unit 1, Lessons 2 and 3. |
 | Map Skills Mission | `map-skills/` | Map parts, map types, symbols, scale, grids, and contour lines. |
+| Spanish Days of the Week Adventure | `second-grade/spanish-days/` | 2nd grade: the seven days in Spanish (lunes–domingo), order, before/after, listening, parent-checked oral recitation, Monday Morning Quick Review. See `docs/spanish-days-rationale.md`. |
 
 ## Works on iPad, phone, and desktop
 
 - Layouts adapt to tablet (portrait and landscape), phone, and desktop screens.
 - Buttons and tap targets are large (48 px or more), text is readable without zooming, and the games respect the "reduce motion" setting.
 - After the first visit the games open without Wi-Fi (service worker). On an iPad, use Share → Add to Home Screen to get a Study Quest app icon.
-- Progress is saved in the browser on that device only. The home page shows a best score for each game.
+- Progress is saved in the browser on that device only. Each grade page shows a best score for each game, and the home page shows how many 5th-grade games have been played.
 
 ## Shared files
 
-- `index.html`: the home page that links to every game.
+- `index.html`: the home page with the two grade cards (5th grade and 2nd grade).
+- `fifth-grade/index.html`: the list of 5th-grade games, with a best-score badge on each card.
+- `second-grade/index.html`: the list of 2nd-grade games, a one-tap Monday Morning Quick Review button, and a "coming soon" row.
 - `assets/app.js`: saves best scores (`StudyQuest.record(gameId, percent)`) and registers the service worker.
 - `sw.js`: offline support. Bump `CACHE` in this file when you want every device to refresh its saved copy.
 - `manifest.webmanifest` and `assets/icon*.png`: home-screen icon and app name.
@@ -32,11 +40,20 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 
 ## Adding another study guide
 
-1. Create a folder such as `my-new-guide/` with an `index.html`.
-2. In the `<head>`, copy the manifest, icon, and `<script defer src="../assets/app.js">` lines from any existing game.
+1. Create the folder. A 2nd-grade game goes in `second-grade/my-new-guide/`. A 5th-grade game goes in a top-level folder such as `my-new-guide/`, like the existing ones.
+2. In the `<head>`, copy the manifest, icon, and `app.js` lines from any game at the same depth. A top-level game uses `../`; a game in `second-grade/` uses `../../` (for example `<script defer src="../../assets/app.js"></script>`).
 3. When a round ends, call `if (window.StudyQuest) StudyQuest.record("my-new-guide", percentCorrect);`.
-4. Add a card for it in the root `index.html` (copy an existing card and add a `data-best="my-new-guide"` badge).
-5. Add the folder to the `PRECACHE` list in `sw.js` so it works offline.
+4. Add a card for it on its grade page: `second-grade/index.html` (copy a `.guide` card, set its `href`, and set `data-best="my-new-guide"`) or `fifth-grade/index.html` (copy a `.card`, use an `href` such as `../my-new-guide/`, and add a `data-best` badge). The root `index.html` only has the two grade cards and does not need a new card.
+5. Add the folder (and any extra files it loads) to the `PRECACHE` list in `sw.js` so it works offline, for example `"second-grade/my-new-guide/"`. Bump `CACHE` too.
+
+## Spanish Days of the Week files (2nd grade)
+
+- `second-grade/spanish-days/data.js`: the seven days (Monday first, accents, sound-it-out spelling, picture, move) and every question builder (después/antes, translation, listening, missing day, Challenge, Quick Review). Pure functions; `node --test` from the repo root runs `tests/spanish-days.test.js`, which checks spelling, every before/after pair (including domingo → lunes), unique choices, and that the Challenge always covers all seven days.
+- `speech.js`: Spanish audio through the browser's own text-to-speech. It picks an `es-*` voice (preferring ones that work offline). If the device has none, the game shows sound-it-out spellings instead. There is no microphone use.
+- `store.js`: progress under its own key `studyquest:spanish-days:v1` (first try, used a hint, and fixed after feedback are kept separately for each question). The Challenge's first-try percent goes to `StudyQuest.record("spanish-days", percent)`.
+- `ui.js` (shared pieces and the train ordering board), `quiz.js` (question runner: hints, second try, missed items come back 2-3 questions later), `game.js` (screens; `#quick`, `#parent`, `#meet` and so on open a screen directly), `parent.js` (grown-ups page and printable review card), `styles.css`.
+- Spoken recitation is checked by a grown-up tapping each card. It is never scored from a microphone.
+- Why it is built this way: `docs/spanish-days-rationale.md`.
 
 ## European Exploration Quest files
 

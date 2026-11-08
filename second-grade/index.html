@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffcf4a">
+  <meta name="description" content="2nd grade study games: Spanish Days of the Week and more fun lessons to tap and play.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Study Quest">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <script defer src="../assets/app.js"></script>
+  <title>2nd Grade Study Guides — Study Quest</title>
+  <style>
+    :root{--ink:#2a1405;--ink-soft:#5a2f12;--navy:#18264b;--teal:#0b6e76;--teal-dark:#06474d;--coral:#ff7a59;--sun:#ffd23f;--focus:#1d4ed8}
+    *{box-sizing:border-box}
+    html{font-size:112.5%}
+    body{margin:0;min-height:100vh;min-height:100dvh;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:1rem;color:var(--ink);background:radial-gradient(circle at 10% 8%,#fff6c9 0 14%,transparent 34%),radial-gradient(circle at 92% 22%,#d8f4f1 0 12%,transparent 32%),linear-gradient(160deg,#fffaf0,#fff3e4 50%,#eefaf8)}
+    a{color:inherit}
+    .page{width:min(900px,100%);margin:auto;padding:max(20px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(40px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px;min-height:56px;font-size:.95rem;font-weight:950;letter-spacing:.02em;color:var(--navy);text-decoration:none;border-radius:16px}
+    .brand-mark{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:var(--navy);color:#fff;font-size:1.4rem;box-shadow:0 5px 0 #0c1531}
+    .back{display:inline-flex;align-items:center;gap:8px;min-height:56px;padding:12px 22px;border-radius:99px;background:#fff;border:3px solid #f2c98a;color:var(--ink);font-weight:950;font-size:1.05rem;text-decoration:none;box-shadow:0 4px 0 #e9b56a;touch-action:manipulation}
+    .back:active{transform:translateY(3px);box-shadow:0 1px 0 #e9b56a}
+
+    .hero{display:flex;align-items:center;gap:18px;padding:28px 4px 22px}
+    .hero svg{flex:0 0 auto;width:118px;height:118px}
+    .hero h1{margin:0;font-size:clamp(2rem,6.4vw,3.1rem);line-height:1.05;letter-spacing:-.04em}
+    .hero p{margin:8px 0 0;font-size:clamp(1.3rem,4vw,1.6rem);font-weight:900;color:var(--teal)}
+
+    /* Big one-tap quick review */
+    .quick{display:flex;align-items:center;gap:16px;min-height:112px;padding:20px 24px;border-radius:28px;text-decoration:none;background:linear-gradient(135deg,#ffd23f,#ffb03b);color:var(--ink);border:4px solid #e99a1d;box-shadow:0 7px 0 #c97a0c;touch-action:manipulation;transition:transform .14s}
+    .quick:hover{transform:translateY(-2px)}
+    .quick:active{transform:translateY(5px);box-shadow:0 2px 0 #c97a0c}
+    .quick .sun{font-size:3rem;line-height:1}
+    .quick strong{display:block;font-size:clamp(1.45rem,4.6vw,2rem);line-height:1.1;letter-spacing:-.02em}
+    .quick small{display:block;margin-top:4px;font-size:1.05rem;font-weight:800;color:var(--ink-soft)}
+    .quick .arrow{margin-left:auto;flex:0 0 auto;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#fff;font-size:1.6rem;font-weight:950}
+
+    h2.label{margin:34px 0 14px;font-size:1.35rem;letter-spacing:-.01em}
+
+    /* Guide cards: the whole card is one big link (the .go:after overlay) */
+    .guides{display:grid;gap:18px}
+    .guide{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:6px 18px;align-items:center;padding:24px;border-radius:28px;background:#fff;border:4px solid #9fe0e3;box-shadow:0 8px 0 #7cc9cd;transition:transform .16s}
+    .guide:hover{transform:translateY(-3px)}
+    .guide:active{transform:translateY(4px);box-shadow:0 3px 0 #7cc9cd}
+    .guide:has(.go:focus-visible){outline:5px solid var(--focus);outline-offset:5px}
+    .guide .text{grid-column:1;min-width:0}
+    .guide .art{grid-column:2;grid-row:1/span 2;pointer-events:none}
+    .guide .art svg{display:block;width:100%;height:auto}
+    .guide h3{margin:0;font-size:clamp(1.5rem,4.4vw,1.9rem);line-height:1.1;letter-spacing:-.025em}
+    .guide .es{margin:6px 0 0;font-size:1.2rem;font-weight:900;color:var(--teal)}
+    .guide .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+    .chip{padding:7px 12px;border-radius:12px;background:#eefaf8;color:#0b5a61;font-size:.95rem;font-weight:850}
+    .chip.best{background:#fff0b8;color:#6a4700}
+    .guide .go{grid-column:1;display:flex;align-items:center;justify-content:center;min-height:60px;margin-top:6px;padding:14px 18px;border-radius:18px;background:var(--teal);color:#fff;font-size:1.25rem;font-weight:950;text-decoration:none;box-shadow:0 5px 0 var(--teal-dark);touch-action:manipulation}
+    .guide .go:after{content:"";position:absolute;inset:0;z-index:2}
+    .guide .go:focus-visible{outline:none}
+
+    /* Coming soon: plain text, not links */
+    .soon{margin-top:30px;padding:18px 20px;border-radius:22px;border:3px dashed #d9c6ae;background:rgba(255,255,255,.6)}
+    .soon h2{margin:0 0 12px;font-size:1.1rem;color:var(--ink-soft)}
+    .soon ul{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+    .soon li{display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 16px;border-radius:99px;background:#f6efe6;color:#6b4a2e;font-weight:850;font-size:1rem}
+    .soon li span{opacity:.65}
+
+    .grownups{margin-top:26px;text-align:center}
+    .grownups a{display:inline-flex;align-items:center;gap:8px;min-height:56px;padding:12px 20px;border-radius:16px;color:var(--navy);font-weight:850;font-size:1rem;text-decoration:underline;text-underline-offset:4px;touch-action:manipulation}
+    .grownups a:hover{background:rgba(255,255,255,.7)}
+
+    a:focus-visible{outline:5px solid var(--focus);outline-offset:4px}
+    .skip{position:absolute;left:12px;top:-80px;background:#fff;color:var(--navy);padding:14px 18px;border-radius:12px;font-weight:900;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+    .skip:focus{top:max(12px,env(safe-area-inset-top))}
+    main:focus{outline:none}
+
+    @media(max-width:680px){
+      .hero{padding:20px 0 18px;gap:12px}
+      .hero svg{width:84px;height:84px}
+      .quick{padding:18px;gap:12px;min-height:104px}
+      .quick .sun{font-size:2.4rem}
+      .quick .arrow{display:none}
+      .guide{grid-template-columns:1fr;padding:20px}
+      .guide .art{grid-column:1;grid-row:auto;order:-1;max-width:260px}
+      .guide .go{grid-column:1}
+    }
+    @media(hover:none) and (pointer:coarse){.guide:hover,.quick:hover{transform:none}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.guide:hover,.guide:active,.quick:hover,.quick:active,.back:active{transform:none}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#lessons">Skip to the lessons</a>
+  <main class="page" id="main">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Study Quest home"><span class="brand-mark" aria-hidden="true">✦</span><span>STUDY QUEST</span></a>
+      <a class="back" href="../"><span aria-hidden="true">←</span> All grades</a>
+    </header>
+
+    <section class="hero" aria-labelledby="welcome">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><g stroke="#ff9f1c" stroke-width="7" stroke-linecap="round"><path d="M60 6 V20"/><path d="M60 100 V114"/><path d="M6 60 H20"/><path d="M100 60 H114"/><path d="M22 22 L32 32"/><path d="M88 88 L98 98"/><path d="M98 22 L88 32"/><path d="M32 88 L22 98"/></g><circle cx="60" cy="60" r="34" fill="#ffd23f" stroke="#ffb000" stroke-width="4"/><circle cx="48" cy="55" r="5" fill="#2a1405"/><circle cx="72" cy="55" r="5" fill="#2a1405"/><circle cx="50" cy="53" r="1.6" fill="#fff"/><circle cx="74" cy="53" r="1.6" fill="#fff"/><circle cx="40" cy="67" r="5" fill="#ff8a7a" opacity=".75"/><circle cx="80" cy="67" r="5" fill="#ff8a7a" opacity=".75"/><path d="M48 69 Q60 82 72 69" fill="none" stroke="#2a1405" stroke-width="4" stroke-linecap="round"/></svg>
+      <div>
+        <h1 id="welcome">2nd Grade Study Guides</h1>
+        <p>Pick a fun lesson!</p>
+      </div>
+    </section>
+
+    <a class="quick" href="spanish-days/#quick">
+      <span class="sun" aria-hidden="true">☀️</span>
+      <span><strong>Monday Morning Quick Review</strong><small>Spanish days, quick practice</small></span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+
+    <h2 class="label" id="lessons">Lessons</h2>
+    <div class="guides">
+      <!--
+        To add another 2nd grade guide: copy one .guide card below,
+        set the .go link's href to the new folder (e.g. "my-guide/"),
+        and set data-best on the best-score chip to the id the game
+        passes to StudyQuest.record("my-guide", percent).
+        Then remove that subject from the "coming soon" list.
+      -->
+      <article class="guide">
+        <div class="text">
+          <h3>Spanish Days of the Week Adventure</h3>
+          <p class="es" lang="es">los días de la semana</p>
+          <div class="chips">
+            <span class="chip">🚂 7 days</span>
+            <span class="chip">👂 Listen &amp; say</span>
+            <span class="chip best" data-best="spanish-days" hidden></span>
+          </div>
+        </div>
+        <div class="art" aria-hidden="true"><svg viewBox="0 0 230 110" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M4 98 H226" stroke="#c9a77c" stroke-width="4" stroke-linecap="round"/><g font-family="ui-rounded,system-ui,sans-serif" font-weight="900" font-size="14" text-anchor="middle"><rect x="6" y="40" width="46" height="44" rx="9" fill="#ff7a59"/><rect x="14" y="24" width="14" height="18" rx="3" fill="#2a1405"/><rect x="34" y="48" width="12" height="12" rx="3" fill="#d8f4f1"/><circle cx="18" cy="90" r="8" fill="#2a1405"/><circle cx="42" cy="90" r="8" fill="#2a1405"/><circle cx="18" cy="12" r="5" fill="#e8e1d8"/><circle cx="26" cy="5" r="4" fill="#e8e1d8"/><rect x="56" y="54" width="22" height="30" rx="6" fill="#ffd23f"/><text x="67" y="74" fill="#2a1405">L</text><rect x="81" y="54" width="22" height="30" rx="6" fill="#0b6e76"/><text x="92" y="74" fill="#fff">M</text><rect x="106" y="54" width="22" height="30" rx="6" fill="#8b5cf6"/><text x="117" y="74" fill="#fff">X</text><rect x="131" y="54" width="22" height="30" rx="6" fill="#ff7a59"/><text x="142" y="74" fill="#2a1405">J</text><rect x="156" y="54" width="22" height="30" rx="6" fill="#3fa34d"/><text x="167" y="74" fill="#fff">V</text><rect x="181" y="54" width="22" height="30" rx="6" fill="#1d6fb8"/><text x="192" y="74" fill="#fff">S</text><rect x="206" y="54" width="22" height="30" rx="6" fill="#e0447a"/><text x="217" y="74" fill="#fff">D</text></g><g fill="#2a1405"><circle cx="62" cy="90" r="5"/><circle cx="72" cy="90" r="5"/><circle cx="87" cy="90" r="5"/><circle cx="97" cy="90" r="5"/><circle cx="112" cy="90" r="5"/><circle cx="122" cy="90" r="5"/><circle cx="137" cy="90" r="5"/><circle cx="147" cy="90" r="5"/><circle cx="162" cy="90" r="5"/><circle cx="172" cy="90" r="5"/><circle cx="187" cy="90" r="5"/><circle cx="197" cy="90" r="5"/><circle cx="212" cy="90" r="5"/><circle cx="222" cy="90" r="5"/></g></svg></div>
+        <a class="go" href="spanish-days/">Play&nbsp; →</a>
+      </article>
+    </div>
+
+    <section class="soon" aria-labelledby="soon-title">
+      <h2 id="soon-title">More lessons coming soon</h2>
+      <ul>
+        <li><span aria-hidden="true">🔢</span> Math</li>
+        <li><span aria-hidden="true">🔤</span> Spelling</li>
+        <li><span aria-hidden="true">📖</span> Reading</li>
+        <li><span aria-hidden="true">🔬</span> Science</li>
+      </ul>
+    </section>
+
+    <p class="grownups"><a href="spanish-days/#parent"><span aria-hidden="true">👪</span> Grown-ups: progress &amp; tips</a></p>
+  </main>
+  <script>
+    /* Show each guide's best score once the shared script has loaded. */
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!window.StudyQuest) return;
+      document.querySelectorAll("[data-best]").forEach(function (n) {
+        var g = StudyQuest.get(n.getAttribute("data-best"));
+        if (g && g.plays) { n.textContent = "🏆 Best: " + g.best + "%"; n.hidden = false; }
+      });
+    });
+  </script>
+</body>
+</html>

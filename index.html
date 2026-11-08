@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#18264b">
-  <meta name="description" content="A happy little hub for interactive study games.">
+  <meta name="description" content="Study Quest: interactive study games for 5th grade and 2nd grade. Pick a grade to start.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Study Quest">
@@ -12,9 +12,9 @@
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <script defer src="assets/app.js"></script>
-  <title>Study Quest — Pick a Study Game</title>
+  <title>Study Quest — Pick Your Grade</title>
   <style>
-    :root{--navy:#18264b;--muted:#5c6680;--paper:#fffdf8;--blue:#dceeff;--pink:#ffe3e3;--yellow:#fff0b8;--mint:#dbf6e9;--purple:#6452cb;--orange:#ffb354}
+    :root{--navy:#18264b;--muted:#5c6680;--paper:#fffdf8;--teal:#0b6e76;--coral:#ff7a59;--sun:#ffd23f}
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;min-height:100dvh;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--navy);background:radial-gradient(circle at 8% 10%,#fff7d6 0 10%,transparent 29%),radial-gradient(circle at 93% 18%,#dcecff 0 12%,transparent 32%),linear-gradient(145deg,#fbf5ff,#f1f8ff 54%,#fff9ed)}
     a{color:inherit}
@@ -23,145 +23,107 @@
     .brand{display:flex;align-items:center;gap:11px;font-size:1.02rem;font-weight:950;letter-spacing:.02em}
     .brand-mark{width:43px;height:43px;border-radius:15px;display:grid;place-items:center;background:var(--navy);color:white;font-size:1.45rem;box-shadow:0 5px 0 #0c1531}
     .tag{background:#fff;border:1px solid #e6e6ed;border-radius:99px;padding:8px 13px;color:var(--muted);font-size:.8rem;font-weight:900}
-    .hero{text-align:center;padding:53px 12px 33px}
+    .hero{text-align:center;padding:48px 12px 30px}
     .eyebrow{display:inline-block;border-radius:99px;background:#fff0b8;color:#725019;padding:8px 13px;font-size:.78rem;font-weight:950;letter-spacing:.09em;text-transform:uppercase}
-    h1{font-size:clamp(2.25rem,7vw,4.25rem);line-height:1.03;letter-spacing:-.055em;margin:16px auto 12px;max-width:780px}
-    .hero p{max-width:600px;margin:0 auto;color:var(--muted);font-size:clamp(1rem,2.5vw,1.2rem);line-height:1.65;font-weight:650}
-    .sparkles{font-size:1.25rem;letter-spacing:.25em;margin-top:18px}
-    .section-title{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:4px 0 15px}
-    .section-title h2{font-size:1.28rem;margin:0;letter-spacing:-.02em}
-    .section-title span{font-size:.86rem;color:var(--muted);font-weight:750}
-    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .card{position:relative;overflow:hidden;border:2px solid rgba(24,38,75,.09);border-radius:25px;padding:23px;background:white;box-shadow:0 10px 22px rgba(27,43,80,.08);min-height:270px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-    .card:hover{transform:translateY(-4px);box-shadow:0 17px 30px rgba(27,43,80,.13)}
-    .card:after{content:"";position:absolute;width:155px;height:155px;border-radius:50%;right:-54px;top:-55px;opacity:.72}
-    .card.prayer:after{background:var(--pink)}
-    .card.social:after{background:var(--yellow)}
-    .card.map:after{background:var(--mint)}
-    .card.states:after{background:#e6deff}
-    .card.featured{grid-column:1/-1;min-height:0;background:linear-gradient(125deg,#0c3e5f,#14628f);border-color:#0c3e5f;color:#fff}
-    .card.featured:after{background:rgba(255,255,255,.12)}
-    .card.featured.cosmic{background:linear-gradient(125deg,#16124a,#4b2b94);border-color:#16124a}
-    .card.featured.mathm{background:linear-gradient(125deg,#0b2545,#1d6fb8);border-color:#0b2545}
-    .featured.mathm .go{background:#ffa24d;color:#3a1600;box-shadow:0 4px 0 #a64a0a}
-    .featured.cosmic .go{background:#ffd166;color:#2b1d00;box-shadow:0 4px 0 #a8710a}
-    .featured .icon{background:rgba(255,255,255,.18)}
-    .featured .badge{background:#ffe9a8;color:#6a4700}
-    .card.featured h3{font-size:1.65rem;color:#fff}
-    .card.featured p{color:#e4f1fb;max-width:620px}
-    .featured .deco{position:absolute;right:26px;bottom:22px;width:min(300px,32%);z-index:1;pointer-events:none}
-    .featured .deco svg{display:block;width:100%;height:auto}
-    @media(max-width:860px){.featured .deco{display:none}}
-    .featured .fact{background:rgba(255,255,255,.16);color:#fff}
-    .featured .fact.best{background:#fff0b8;color:#6a4700}
-    .featured .go{background:#ffb354;color:#14213d;box-shadow:0 4px 0 #b3711d;max-width:420px}
-    .featured .go:active{box-shadow:0 1px 0 #b3711d}
-    .card-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between}
-    .icon{width:59px;height:59px;border-radius:19px;display:grid;place-items:center;font-size:1.9rem}
-    .featured .icon{background:rgba(255,255,255,.18)}.prayer .icon{background:#fff0f2}.social .icon{background:#fff8dd}.map .icon{background:#eaf7ef}.states .icon{background:#f0ebff}
-    .badge{position:relative;z-index:1;border-radius:99px;background:#f1f3fb;color:#445075;padding:7px 10px;font-size:.72rem;font-weight:950;letter-spacing:.05em}
-    .badge.new{background:#e2f7ea;color:#12603d}
-    .badge.fresh{background:#ffe9a8;color:#6a4700}
-    .card h3{position:relative;z-index:1;margin:17px 0 7px;font-size:1.42rem;letter-spacing:-.025em}
-    .card p{position:relative;z-index:1;color:var(--muted);line-height:1.55;margin:0 0 18px;font-weight:620}
-    .facts{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;margin-bottom:17px;position:relative;z-index:1}
-    .fact{background:#f5f6fa;padding:7px 9px;border-radius:10px;color:#4f5b79;font-size:.76rem;font-weight:850}
-    .go{display:flex;align-items:center;justify-content:center;min-height:54px;text-decoration:none;background:var(--navy);color:white;padding:13px 15px;border-radius:14px;text-align:center;font-weight:950;box-shadow:0 4px 0 #0b1532;transition:transform .14s;touch-action:manipulation}
-    .go:active{box-shadow:0 1px 0 #0b1532}
+    h1{font-size:clamp(2.25rem,7vw,4rem);line-height:1.03;letter-spacing:-.055em;margin:16px auto 12px;max-width:780px}
+    .hero p{max-width:560px;margin:0 auto;color:var(--muted);font-size:clamp(1rem,2.5vw,1.2rem);line-height:1.65;font-weight:650}
+
+    .grades{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+    .grade{position:relative;isolation:isolate;overflow:hidden;border-radius:30px;padding:26px;min-height:400px;display:flex;flex-direction:column;border:3px solid transparent;transition:transform .18s,box-shadow .18s}
+    .grade:hover{transform:translateY(-5px)}
+    .grade:active{transform:translateY(2px)}
+    .grade:has(.go:focus-visible){outline:4px solid #d89800;outline-offset:5px}
+    .grade-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .deco{flex:0 0 auto;width:132px;pointer-events:none}
+    .deco svg{display:block;width:100%;height:auto}
+    .badge{border-radius:99px;padding:8px 12px;font-size:.74rem;font-weight:950;letter-spacing:.06em}
+    .grade h2{margin:6px 0 8px;font-size:clamp(1.7rem,3.4vw,2.2rem);line-height:1.08;letter-spacing:-.035em}
+    .grade p{margin:0 0 18px;line-height:1.55;font-weight:650;max-width:440px}
+    .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;margin-bottom:18px}
+    .fact{padding:8px 11px;border-radius:11px;font-size:.84rem;font-weight:850}
+    .go{display:flex;align-items:center;justify-content:center;min-height:58px;text-decoration:none;padding:14px 16px;border-radius:16px;text-align:center;font-weight:950;font-size:1.08rem;transition:transform .14s;touch-action:manipulation}
     .go:after{content:"";position:absolute;inset:0;z-index:2}
-    .card{isolation:isolate}
-    .card:has(.go:focus-visible){outline:4px solid #d89800;outline-offset:4px}
     .go:focus-visible{outline:none}
-    .card:active{transform:translateY(2px)}
-    .fact.best{background:#fff0b8;color:#6a4700}
+
+    /* 5th grade: grown-up adventure */
+    .grade.fifth{background:linear-gradient(140deg,#0b2545,#16437a 55%,#1d6fb8);border-color:#0b2545;color:#fff;box-shadow:0 12px 24px rgba(27,43,80,.16)}
+    .grade.fifth:hover{box-shadow:0 18px 32px rgba(27,43,80,.2)}
+    .fifth .badge{background:#ffe9a8;color:#6a4700}
+    .fifth p{color:#e4f1fb}
+    .fifth .fact{background:rgba(255,255,255,.15);color:#fff}
+    .fifth .fact.best{background:#fff0b8;color:#6a4700}
+    .fifth .go{background:#ffb354;color:#14213d;box-shadow:0 5px 0 #b3711d}
+    .fifth .go:active{box-shadow:0 1px 0 #b3711d}
+
+    /* 2nd grade: sunny and friendly */
+    .grade.second{background:linear-gradient(150deg,#fff3b0,#ffd9a0 48%,#ffb8a3);border-color:#ffc06b;color:#3b1d0a;box-shadow:0 12px 24px rgba(27,43,80,.12)}
+    .grade.second:hover{box-shadow:0 18px 32px rgba(27,43,80,.17)}
+    .second .badge{background:#0b6e76;color:#fff}
+    .second h2{color:#2a1405}
+    .second p{color:#5a2f12;font-size:1.12rem}
+    .second .fact{background:#fff;color:#0b5a61;border:2px solid #9fe0e3;font-size:.95rem}
+    .second .fact.best{background:#fff0b8;color:#6a4700;border-color:#f2cf5a}
+    .second .go{background:var(--teal);color:#fff;box-shadow:0 5px 0 #06474d;font-size:1.2rem;min-height:62px}
+    .second .go:active{box-shadow:0 1px 0 #06474d}
+
     .skip{position:absolute;left:12px;top:-60px;background:#fff;color:var(--navy);padding:12px 16px;border-radius:12px;font-weight:900;z-index:10;box-shadow:0 4px 14px rgba(0,0,0,.2)}
     .skip:focus{top:max(12px,env(safe-area-inset-top))}
     main:focus{outline:none}
-    .footer{text-align:center;color:var(--muted);font-size:.85rem;font-weight:700;padding-top:28px}
-    @media(max-width:680px){.page{padding:max(18px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(15px,env(safe-area-inset-left))}.hero{padding:39px 3px 26px}.cards{grid-template-columns:1fr}.card{min-height:245px}.tag{font-size:.72rem}.topbar{flex-wrap:wrap}}
-    @media(hover:none) and (pointer:coarse){.card:hover{transform:none;box-shadow:0 10px 22px rgba(27,43,80,.08)}}
-    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+    .footer{text-align:center;color:var(--muted);font-size:.85rem;font-weight:700;padding-top:30px}
+    @media(max-width:860px){.grade{min-height:400px}.deco{width:108px}}
+    @media(max-width:680px){.page{padding:max(18px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(15px,env(safe-area-inset-left))}.hero{padding:36px 3px 24px}.grades{grid-template-columns:1fr;gap:20px}.grade{min-height:0;padding:22px}.tag{font-size:.72rem}.topbar{flex-wrap:wrap}.deco{width:96px}}
+    @media(hover:none) and (pointer:coarse){.grade:hover{transform:none}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}.grade:hover,.grade:active{transform:none}}
   </style>
 </head>
 <body>
-  <a class="skip" href="#games">Skip to the games</a>
+  <a class="skip" href="#grades">Skip to the grades</a>
   <main class="page" id="main">
     <header class="topbar">
       <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span>STUDY QUEST</span></div>
-      <span class="tag">Choose a game • Learn as you go</span>
+      <span class="tag">Choose a grade • Learn as you go</span>
     </header>
     <section class="hero" aria-labelledby="welcome">
       <span class="eyebrow">Your study clubhouse</span>
-      <h1 id="welcome">Small quests.<br>Big test-day confidence.</h1>
-      <p>Pick a study game, try your best, and learn a little more with every question. You can come back and play as many times as you like!</p>
-      <div class="sparkles" aria-hidden="true">⭐ 🧠 🚀</div>
+      <h1 id="welcome">Who’s studying today?</h1>
+      <p>Pick your grade to see your study games. You can come back and play as many times as you like!</p>
     </section>
-    <section aria-labelledby="games">
-      <div class="section-title"><h2 id="games">Choose your next mission</h2><span id="game-count">Seven adventures ready to play</span></div>
-      <div class="cards">
-        <article class="card featured mathm">
-          <div class="card-head"><span class="icon" aria-hidden="true">🤖</span><span class="badge fresh">NEW • MATH TEST PREP</span></div>
-          <h3>Math Mission: Prime &amp; Fraction Power-Up</h3>
-          <p>A short, closed-book review of prime numbers, multiples, LCM, LCD, simplifying fractions and equivalent fractions. Tap one big button for a 10-minute morning mission, or take the 5-minute version.</p>
-          <div class="facts"><span class="fact">⏱️ 10-minute mission</span><span class="fact">⚡ 5-minute option</span><span class="fact">🏆 Test Ready Challenge</span><span class="fact best" data-best="math-mission" hidden></span></div>
-          <a class="go" href="math-mission/">Start Math Mission&nbsp; →</a>
-          <div class="deco" aria-hidden="true"><svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect x="30" y="30" width="86" height="86" rx="16" fill="#ffa24d"/><text x="73" y="90" font-size="52" font-weight="900" text-anchor="middle" fill="#3a1600" font-family="system-ui,sans-serif">12</text><rect x="150" y="30" width="86" height="86" rx="16" fill="#b6f23c"/><text x="193" y="72" font-size="34" font-weight="900" text-anchor="middle" fill="#1a2a00" font-family="system-ui,sans-serif">2</text><rect x="168" y="78" width="50" height="5" rx="2" fill="#1a2a00"/><text x="193" y="110" font-size="34" font-weight="900" text-anchor="middle" fill="#1a2a00" font-family="system-ui,sans-serif">3</text><circle cx="262" cy="140" r="14" fill="#8b5cf6"/><circle cx="40" cy="146" r="9" fill="#ffd23f"/></svg></div>
+    <section aria-labelledby="grades">
+      <h2 id="grades" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Pick a grade</h2>
+      <div class="grades">
+        <article class="grade fifth">
+          <div class="grade-head"><span class="badge">GRADE 5</span><div class="deco" aria-hidden="true"><svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="30" cy="26" r="2.2" fill="#fff"/><circle cx="190" cy="16" r="1.8" fill="#fff"/><circle cx="200" cy="120" r="2" fill="#fff"/><circle cx="20" cy="170" r="1.6" fill="#fff"/><circle cx="110" cy="110" r="70" fill="rgba(255,255,255,.1)" stroke="#ffd98a" stroke-width="5"/><circle cx="110" cy="110" r="54" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="4 8"/><path d="M110 52 L124 110 L110 168 L96 110 Z" fill="#fff8e7"/><path d="M110 52 L124 110 L96 110 Z" fill="#ffb354"/><circle cx="110" cy="110" r="8" fill="#0b2545" stroke="#ffd98a" stroke-width="3"/><text x="110" y="34" font-size="16" font-weight="900" text-anchor="middle" fill="#ffd98a" font-family="system-ui,sans-serif">N</text></svg></div></div>
+          <h2>5th Grade Study Guides</h2>
+          <p>Math, science, social studies, states &amp; capitals, map skills and Spanish. Test-prep missions with challenges at the end.</p>
+          <div class="facts">
+            <span class="fact">📚 7 study adventures</span>
+            <span class="fact best" id="fifth-played" hidden></span>
+          </div>
+          <a class="go" href="fifth-grade/">Open 5th grade guides&nbsp; →</a>
         </article>
-        <article class="card featured cosmic">
-          <div class="card-head"><span class="icon" aria-hidden="true">🚀</span><span class="badge fresh">NEW • SCIENCE BENCHMARK PREP</span></div>
-          <h3>Cosmic Quest: Stars &amp; Galaxies</h3>
-          <p>Blast off on four space missions about stars, galaxies, the solar system, comets and planets. Read star charts and orbit diagrams, then try a 15-question Benchmark Challenge. Includes one open-book Chapter Detective game.</p>
-          <div class="facts"><span class="fact">⭐ Star charts &amp; diagrams</span><span class="fact">📖 1 open-book detective game</span><span class="fact">🏆 Benchmark Challenge</span><span class="fact best" data-best="stars-galaxies" hidden></span></div>
-          <a class="go" href="stars-galaxies/">Launch Cosmic Quest&nbsp; →</a>
-          <div class="deco" aria-hidden="true"><svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="40" cy="30" r="2" fill="#fff"/><circle cx="120" cy="18" r="1.6" fill="#fff"/><circle cx="250" cy="22" r="2" fill="#fff"/><circle cx="210" cy="140" r="1.6" fill="#fff"/><circle cx="70" cy="150" r="1.8" fill="#fff"/><ellipse cx="200" cy="85" rx="70" ry="18" fill="none" stroke="#ffd98a" stroke-width="7" transform="rotate(-18 200 85)" opacity=".85"/><circle cx="200" cy="85" r="38" fill="#ff9d6c"/><path d="M164 80 q36 -12 72 2" fill="none" stroke="#e06f4a" stroke-width="5"/><path d="M166 98 q34 10 68 -4" fill="none" stroke="#e8825a" stroke-width="4"/><g transform="translate(60 100) rotate(40)"><path d="M0 -26 q10 12 8 30 h-16 q-2 -18 8 -30z" fill="#f4f7ff"/><circle cx="0" cy="-6" r="4" fill="#5ee7ff"/><path d="M-8 4 l-8 10 8 -2z M8 4 l8 10 -8 -2z" fill="#ff6bd6"/><path d="M-4 6 q4 22 8 0z" fill="#ffd166"/></g></svg></div>
-        </article>
-        <article class="card featured">
-          <div class="card-head"><span class="icon" aria-hidden="true">⛵</span><span class="badge fresh">NEW • SOCIAL STUDIES ADVENTURE</span></div>
-          <h3>European Exploration Quest</h3>
-          <p>Sail across the Atlantic, meet nine explorers, steer with the compass and astrolabe, and learn what changed when Europeans and Native Americans met. Four short missions and a final challenge.</p>
-          <div class="facts"><span class="fact">🧑‍✈️ 9 explorers</span><span class="fact">🧭 Compass &amp; astrolabe puzzles</span><span class="fact">🏆 Final challenge</span><span class="fact best" data-best="european-exploration" hidden></span></div>
-          <a class="go" href="european-exploration/">Start the Exploration Quest&nbsp; →</a>
-          <div class="deco" aria-hidden="true"><svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="236" cy="46" r="24" fill="#f2b632"/><path d="M20 120 Q50 90 90 108 T150 100" fill="none" stroke="#f4e2b3" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round" opacity=".7"/><g transform="translate(160 96) scale(1.05)"><path d="M-44 0 L44 0 L30 20 L-30 20 Z" fill="#8a5a2b"/><rect x="-3" y="-66" width="6" height="68" fill="#5a3a1a"/><path d="M-4 -62 Q-44 -40 -38 -8 L-4 -8 Z" fill="#fff8e7"/><path d="M4 -62 Q42 -42 36 -10 L4 -10 Z" fill="#fff8e7"/><path d="M3 -66 L26 -59 L3 -52 Z" fill="#c8412f"/></g><path d="M0 128 q18 -9 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 V170 H0 Z" fill="#1f6a9a"/><path d="M0 148 q18 -9 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 V170 H0 Z" fill="#164f78"/></svg></div>
-        </article>
-        <article class="card states">
-          <div class="card-head"><span class="icon" aria-hidden="true">🗽</span><span class="badge fresh">NEW • STATES &amp; CAPITALS</span></div>
-          <h3>Northeast States &amp; Capitals</h3>
-          <p>Find all 11 Northeast states on the map, match each capital, and spell every name. Earn passport stamps and become a Northeast Master!</p>
-          <div class="facts"><span class="fact">📍 Find the state</span><span class="fact">🏛️ Capital match</span><span class="fact">🔤 Spelling games</span><span class="fact best" data-best="northeast-states" hidden></span></div>
-          <a class="go" href="northeast-states/">Play States &amp; Capitals&nbsp; →</a>
-        </article>
-        <article class="card prayer">
-          <div class="card-head"><span class="icon" aria-hidden="true">🙏</span><span class="badge">SPANISH • MEMORY</span></div>
-          <h3>Padre Nuestro</h3>
-          <p>Practice the Our Father prayer in Spanish with missing words, “what comes next?”, meaning match, and test mode.</p>
-          <div class="facts"><span class="fact">🔤 Fill the blanks</span><span class="fact">🎯 4 ways to practice</span><span class="fact best" data-best="spanish" hidden></span></div>
-          <a class="go" href="spanish/">Play the Spanish game&nbsp; →</a>
-        </article>
-        <article class="card social">
-          <div class="card-head"><span class="icon" aria-hidden="true">🗺️</span><span class="badge new">NEW • TEST PREP</span></div>
-          <h3>First Americans &amp; Cultural Regions</h3>
-          <p>Explore Unit 1 Lessons 2 &amp; 3. Match the vocabulary, answer test-style questions, and build the three-region chart.</p>
-          <div class="facts"><span class="fact">📚 3 study missions</span><span class="fact">📱 iPad friendly</span><span class="fact best" data-best="social-studies-unit1" hidden></span></div>
-          <a class="go" href="social-studies-unit1/">Start the Social Studies quest&nbsp; →</a>
-        </article>
-        <article class="card map">
-          <div class="card-head"><span class="icon" aria-hidden="true">🧭</span><span class="badge new">NEW • QUICK REVIEW</span></div>
-          <h3>Map Skills Mission</h3>
-          <p>Practice map parts, map types, symbols, scale, grids, and contour lines with a quick matching game and final test.</p>
-          <div class="facts"><span class="fact">🧰 Map part matcher</span><span class="fact">🔎 7 test questions</span><span class="fact">📱 iPad friendly taps</span><span class="fact best" data-best="map-skills" hidden></span></div>
-          <a class="go" href="map-skills/">Start the Map Skills game&nbsp; →</a>
+        <article class="grade second">
+          <div class="grade-head"><span class="badge">GRADE 2</span><div class="deco" aria-hidden="true"><svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" focusable="false"><g stroke="#ff9f1c" stroke-width="9" stroke-linecap="round"><path d="M110 18 V40"/><path d="M110 180 V202"/><path d="M18 110 H40"/><path d="M180 110 H202"/><path d="M45 45 L60 60"/><path d="M160 160 L175 175"/><path d="M175 45 L160 60"/><path d="M60 160 L45 175"/></g><circle cx="110" cy="110" r="62" fill="#ffd23f" stroke="#ffb000" stroke-width="5"/><circle cx="88" cy="100" r="8" fill="#3b1d0a"/><circle cx="132" cy="100" r="8" fill="#3b1d0a"/><circle cx="91" cy="97" r="2.6" fill="#fff"/><circle cx="135" cy="97" r="2.6" fill="#fff"/><circle cx="74" cy="122" r="9" fill="#ff8a7a" opacity=".75"/><circle cx="146" cy="122" r="9" fill="#ff8a7a" opacity=".75"/><path d="M88 126 Q110 148 132 126" fill="none" stroke="#3b1d0a" stroke-width="6" stroke-linecap="round"/></svg></div></div>
+          <h2>2nd Grade Study Guides</h2>
+          <p>Fun lessons to tap and play!</p>
+          <div class="facts">
+            <span class="fact">🚂 Spanish Days of the Week</span>
+            <span class="fact best" data-best="spanish-days" hidden></span>
+          </div>
+          <a class="go" href="second-grade/">Let’s play!&nbsp; →</a>
         </article>
       </div>
     </section>
     <footer class="footer">You’ve got this! 🌟 Take your time, read each clue, and keep practicing.</footer>
   </main>
   <script>
-    /* Show each game's best score once the shared script has loaded. */
+    /* Show how many 5th grade guides have been played, and the 2nd grade best score. */
     document.addEventListener("DOMContentLoaded", function () {
-      var count = document.querySelectorAll(".cards .card").length, words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
-      var label = document.getElementById("game-count");
-      if (label && count) label.textContent = (words[count] || count) + " adventure" + (count === 1 ? "" : "s") + " ready to play";
       if (!window.StudyQuest) return;
+      var all = StudyQuest.all();
+      var fifth = ["math-mission", "stars-galaxies", "european-exploration", "northeast-states", "spanish", "social-studies-unit1", "map-skills"];
+      var played = fifth.filter(function (id) { return all[id] && all[id].plays; }).length;
+      var label = document.getElementById("fifth-played");
+      if (label && played) { label.textContent = "🏆 " + played + " of " + fifth.length + " played"; label.hidden = false; }
       document.querySelectorAll("[data-best]").forEach(function (n) {
         var g = StudyQuest.get(n.getAttribute("data-best"));
         if (g && g.plays) { n.textContent = "🏆 Best: " + g.best + "%"; n.hidden = false; }

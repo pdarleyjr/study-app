@@ -1,7 +1,7 @@
 {
   "name": "Study Quest",
   "short_name": "Study Quest",
-  "description": "Interactive study games: Spanish, Social Studies, Map Skills, and Northeast States & Capitals.",
+  "description": "Interactive study games for 5th grade (math, science, social studies, states & capitals, map skills, Spanish) and 2nd grade (Spanish Days of the Week).",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
