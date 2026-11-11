@@ -19,14 +19,8 @@
   var EMOJI = { Reading: "📖", Religion: "🕊️", Math: "➗", Science: "🔬" };
   var expired = false, timers = [];
 
-  function doneMap() { var d = st.get().done; return d && typeof d === "object" ? d : {}; }
-  function setDone(id, on) {
-    st.update(function (s) {
-      var d = Object.assign({}, s.done && typeof s.done === "object" ? s.done : {});
-      if (on) d[id] = Date.now(); else delete d[id];
-      s.done = d; return s;
-    });
-  }
+  function doneMap() { return P.effectiveDone(st.get()); }
+  function setDone(id, on) { st.set(P.withTick(st.get(), id, on, Date.now())); }
   function range(it) { return P.formatTime(it.start) + " – " + P.formatTime(it.end); }
 
   var LABEL = {
@@ -67,7 +61,7 @@
     var list = h("ol", { class: "pl-list", "aria-label": "Today’s schedule" });
     items.forEach(function (it) { list.appendChild(row(it, t, done)); });
     kids.push(list);
-    kids.push(h("p", { class: "pl-note" }, "Times are a guide. Nothing is locked: do things in any order and tick them off when you finish."));
+    kids.push(h("p", { class: "pl-note" }, "Times are a guide. Do the activities in any order you like and tick each one off when you finish. Tapped one by mistake? Tap it again to untick."));
     if (full) kids.push(h("p", { class: "pl-linkrow" }, h("a", { class: "qk-btn qk-btn-ghost", href: base + "fifth-grade/" }, "← Back to the 5th-grade page")));
     else kids.push(h("p", { class: "pl-linkrow" }, h("a", { class: "qk-btn qk-btn-ghost", href: base + "todays-plan/" }, "Open full-screen plan")));
 

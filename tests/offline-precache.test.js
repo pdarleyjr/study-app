@@ -41,5 +41,5 @@ test("homework photos are precached for offline checking", () => {
 });
 
 test("cache name was bumped for this release", () => {
-  assert.match(sw, /var CACHE = "studyquest-v6";/);
+  assert.match(sw, /var CACHE = "studyquest-v7";/);
 });

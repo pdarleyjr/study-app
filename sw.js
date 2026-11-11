@@ -1,7 +1,7 @@
 /* Study Quest service worker: lets the games open with no Wi-Fi after the first visit.
    Pages: network first (so updates show up), falling back to the saved copy.
    Other files: saved copy first, refreshed in the background. */
-var CACHE = "studyquest-v6";
+var CACHE = "studyquest-v7";
 var SCOPE = self.registration.scope;
 var PRECACHE = [
   "", "index.html", "manifest.webmanifest",
@@ -65,7 +65,7 @@ self.addEventListener("fetch", function (e) {
   }
 
   e.respondWith(
-    caches.match(req).then(function (hit) {
+    caches.match(req, { ignoreSearch: true }).then(function (hit) { // "?v=2" version tags still match the precached file
       var refresh = fetch(req).then(function (res) {
         if (res && res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }
         return res;
