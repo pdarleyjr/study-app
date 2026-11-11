@@ -94,9 +94,9 @@
         <article class="grade fifth">
           <div class="grade-head"><span class="badge">GRADE 5</span><div class="deco" aria-hidden="true"><svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" focusable="false"><circle cx="30" cy="26" r="2.2" fill="#fff"/><circle cx="190" cy="16" r="1.8" fill="#fff"/><circle cx="200" cy="120" r="2" fill="#fff"/><circle cx="20" cy="170" r="1.6" fill="#fff"/><circle cx="110" cy="110" r="70" fill="rgba(255,255,255,.1)" stroke="#ffd98a" stroke-width="5"/><circle cx="110" cy="110" r="54" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="4 8"/><path d="M110 52 L124 110 L110 168 L96 110 Z" fill="#fff8e7"/><path d="M110 52 L124 110 L96 110 Z" fill="#ffb354"/><circle cx="110" cy="110" r="8" fill="#0b2545" stroke="#ffd98a" stroke-width="3"/><text x="110" y="34" font-size="16" font-weight="900" text-anchor="middle" fill="#ffd98a" font-family="system-ui,sans-serif">N</text></svg></div></div>
           <h2>5th Grade Study Guides</h2>
-          <p>Math, science, social studies, states &amp; capitals, map skills and Spanish. Test-prep missions with challenges at the end.</p>
+          <p>Math, science, religion, reading, social studies, states &amp; capitals, map skills and Spanish. Test-prep missions with challenges at the end.</p>
           <div class="facts">
-            <span class="fact">📚 7 study adventures</span>
+            <span class="fact">📚 11 study adventures</span>
             <span class="fact best" id="fifth-played" hidden></span>
           </div>
           <a class="go" href="fifth-grade/">Open 5th grade guides&nbsp; →</a>
@@ -120,7 +120,7 @@
     document.addEventListener("DOMContentLoaded", function () {
       if (!window.StudyQuest) return;
       var all = StudyQuest.all();
-      var fifth = ["math-mission", "stars-galaxies", "european-exploration", "northeast-states", "spanish", "social-studies-unit1", "map-skills"];
+      var fifth = ["fractions-review", "sacraments-quest", "matter-lab", "wild-robot-quest", "math-mission", "stars-galaxies", "european-exploration", "northeast-states", "spanish", "social-studies-unit1", "map-skills"];
       var played = fifth.filter(function (id) { return all[id] && all[id].plays; }).length;
       var label = document.getElementById("fifth-played");
       if (label && played) { label.textContent = "🏆 " + played + " of " + fifth.length + " played"; label.hidden = false; }

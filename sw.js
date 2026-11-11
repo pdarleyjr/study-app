@@ -1,11 +1,20 @@
 /* Study Quest service worker: lets the games open with no Wi-Fi after the first visit.
    Pages: network first (so updates show up), falling back to the saved copy.
    Other files: saved copy first, refreshed in the background. */
-var CACHE = "studyquest-v5";
+var CACHE = "studyquest-v6";
 var SCOPE = self.registration.scope;
 var PRECACHE = [
   "", "index.html", "manifest.webmanifest",
   "assets/app.js", "assets/icon.svg", "assets/icon-192.png", "assets/icon-512.png", "assets/apple-touch-icon.png",
+  "assets/quest-kit.js", "assets/quest-kit.css",
+  "todays-plan/", "todays-plan/styles.css", "todays-plan/plan-data.js", "todays-plan/plan.js",
+  "fractions-review/", "fractions-review/styles.css", "fractions-review/data.js", "fractions-review/app.js",
+  "fractions-review/homework/mixed-numbers-worksheet-p47.png",
+  "sacraments-quest/", "sacraments-quest/styles.css", "sacraments-quest/data.js", "sacraments-quest/app.js",
+  "sacraments-quest/homework/about-the-sacraments-p46.jpg", "sacraments-quest/homework/sacraments-in-review-p47.png",
+  "sacraments-quest/homework/unit1-review-p45.jpg",
+  "matter-lab/", "matter-lab/styles.css", "matter-lab/data.js", "matter-lab/app.js",
+  "wild-robot-quest/", "wild-robot-quest/styles.css", "wild-robot-quest/data.js", "wild-robot-quest/app.js",
   "spanish/", "social-studies-unit1/", "map-skills/", "northeast-states/",
   "european-exploration/", "european-exploration/styles.css", "european-exploration/data.js", "european-exploration/art.js", "european-exploration/game.js",
   "stars-galaxies/", "stars-galaxies/styles.css", "stars-galaxies/art-core.js", "stars-galaxies/art-stars.js", "stars-galaxies/art-galaxies.js",

@@ -1,0 +1,37 @@
+/* Religion Quest: Sacraments — module styles (on top of ../assets/quest-kit.css) */
+.sq-hero-art{position:absolute;right:18px;bottom:6px;width:min(190px,26%);opacity:.9;pointer-events:none}
+@media(max-width:700px){.sq-hero-art{display:none}}
+.sq-steps-note{color:var(--qk-muted);font-weight:700;margin:4px 0 0}
+.sq-homework-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:700px){.sq-homework-tiles{grid-template-columns:1fr}}
+.sq-homework-tiles .qk-imgcard{border-width:3px;border-color:var(--qk-accent)}
+.sq-homework-tiles .qk-imgcard img{max-height:420px}
+.sq-small-card{max-width:340px}
+.sq-small-card .qk-imgcard img{max-height:200px}
+.sq-checks{list-style:none;margin:10px 0;padding:0;display:grid;gap:8px}
+.sq-checks label{display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 14px;border:2px solid var(--qk-line);border-radius:14px;background:#fbfcff;font-weight:850;cursor:pointer}
+.sq-checks input{width:26px;height:26px;accent-color:var(--qk-accent);flex:none}
+.sq-checks label:has(input:checked){background:var(--qk-good-bg);border-color:var(--qk-good)}
+.sq-steps-list{margin:8px 0;padding-left:22px;font-weight:700}
+.sq-steps-list li{margin:4px 0}
+.sq-sacs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:800px){.sq-sacs{grid-template-columns:1fr}}
+.sq-sac{border:2px solid var(--qk-line);border-top:8px solid var(--qk-accent);border-radius:18px;padding:12px 14px;background:#fff}
+.sq-sac h3{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.sq-sac svg{width:40px;height:40px;flex:none}
+.sq-sac ul{margin:0;padding-left:20px;font-weight:650}
+.sq-sac li{margin:4px 0}
+.sq-vocab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:700px){.sq-vocab{grid-template-columns:1fr}}
+.sq-vocab .qk-reveal strong{display:block;font-size:1.05rem}
+.sq-vocab .qk-reveal .sq-def{display:block;margin-top:6px;font-weight:650}
+.sq-sort-clue{font-size:clamp(1.2rem,3.6vw,1.6rem);font-weight:950;text-align:center;padding:16px;border-radius:18px;background:var(--qk-accent-soft);border:3px dashed var(--qk-accent);margin:10px 0}
+.sq-sort-btns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:560px){.sq-sort-btns{grid-template-columns:1fr}}
+.sq-sort-score{font-weight:900;color:var(--qk-muted)}
+.sq-missed-list{list-style:none;padding:0;margin:8px 0;display:grid;gap:10px}
+.sq-missed-list li{border:2px solid var(--qk-line);border-radius:16px;padding:10px 14px;background:#fff}
+.sq-timer-row{display:flex;justify-content:flex-end;margin:6px 0}
+.sq-vocab .sq-def[hidden]{display:none}
+.qk a.qk-btn-primary{color:var(--qk-accent-ink)}
+@media(max-width:900px){.sq-hero-art{display:none}}

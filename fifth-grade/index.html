@@ -11,7 +11,12 @@
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/quest-kit.css">
+  <link rel="stylesheet" href="../todays-plan/styles.css">
   <script defer src="../assets/app.js"></script>
+  <script defer src="../assets/quest-kit.js"></script>
+  <script defer src="../todays-plan/plan-data.js"></script>
+  <script defer src="../todays-plan/plan.js"></script>
   <title>5th Grade Study Guides — Study Quest</title>
   <style>
     :root{--navy:#18264b;--muted:#5c6680;--paper:#fffdf8;--blue:#dceeff;--pink:#ffe3e3;--yellow:#fff0b8;--mint:#dbf6e9;--purple:#6452cb;--orange:#ffb354}
@@ -83,6 +88,14 @@
     .skip:focus{top:max(12px,env(safe-area-inset-top))}
     main:focus{outline:none}
     .footer{text-align:center;color:var(--muted);font-size:.85rem;font-weight:700;padding-top:28px}
+    .cards.new-guides{margin-bottom:34px}
+    .card.g-math:after{background:#ffe3c9}.card.g-religion:after{background:#fbd9e4}.card.g-science:after{background:#cdf1ea}.card.g-reading:after{background:#d9f0d4}
+    .g-math .icon{background:#fff0e2}.g-religion .icon{background:#fbe7ee}.g-science .icon{background:#dff6f1}.g-reading .icon{background:#e5f5e3}
+    .g-math{border-top:7px solid #e46a12}.g-religion{border-top:7px solid #8c1d40}.g-science{border-top:7px solid #0f8a7a}.g-reading{border-top:7px solid #2f7d32}
+    .g-math .go{background:#e46a12;box-shadow:0 4px 0 #a64a0a}.g-religion .go{background:#8c1d40;box-shadow:0 4px 0 #5c0f28}.g-science .go{background:#0f8a7a;box-shadow:0 4px 0 #0a5c51}.g-reading .go{background:#2f7d32;box-shadow:0 4px 0 #1d5420}
+    .subject{position:relative;z-index:1;display:inline-block;border-radius:99px;padding:6px 11px;font-size:.74rem;font-weight:950;letter-spacing:.07em;text-transform:uppercase}
+    .g-math .subject{background:#fff0e2;color:#7a3507}.g-religion .subject{background:#fbe7ee;color:#5c0f28}.g-science .subject{background:#dff6f1;color:#0a5c51}.g-reading .subject{background:#e5f5e3;color:#1d5420}
+    .card .icon svg{width:36px;height:36px;display:block}
     @media(max-width:680px){.page{padding:max(18px,env(safe-area-inset-top)) max(15px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(15px,env(safe-area-inset-left))}.hero{padding:39px 3px 26px}.cards{grid-template-columns:1fr}.card{min-height:245px}.tag{font-size:.72rem}.topbar{flex-wrap:wrap}}
     @media(hover:none) and (pointer:coarse){.card:hover{transform:none;box-shadow:0 10px 22px rgba(27,43,80,.08)}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
@@ -100,6 +113,40 @@
       <h1 id="welcome">Small quests.<br>Big test-day confidence.</h1>
       <p>Pick a study game, try your best, and learn a little more with every question. You can come back and play as many times as you like!</p>
       <div class="sparkles" aria-hidden="true">⭐ 🧠 🚀</div>
+    </section>
+    <section id="todays-plan" data-mode="dashboard" aria-labelledby="pl-title"></section>
+    <section aria-labelledby="new-guides">
+      <div class="section-title"><h2 id="new-guides">New study guides</h2><span>Four short guides for today</span></div>
+      <div class="cards new-guides">
+        <article class="card g-math">
+          <div class="card-head"><span class="icon" aria-hidden="true"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect x="3" y="3" width="30" height="30" rx="8" fill="#e46a12"/><text x="18" y="16" font-size="12" font-weight="900" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif">3</text><rect x="9" y="18" width="18" height="2.5" rx="1" fill="#fff"/><text x="18" y="31" font-size="12" font-weight="900" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif">4</text></svg></span><span class="subject">Math</span></div>
+          <h3>Fractions: Quick Review</h3>
+          <p>Mixed numbers and fractions that are 1 or more. Check your homework, review the big ideas, then try a short quiz.</p>
+          <div class="facts"><span class="fact">⏱️ 25 min with homework check</span><span class="fact best" data-best="fractions-review" hidden></span></div>
+          <a class="go" href="../fractions-review/">Start Fractions Review&nbsp; →</a>
+        </article>
+        <article class="card g-religion">
+          <div class="card-head"><span class="icon" aria-hidden="true"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect x="14.5" y="3" width="7" height="30" rx="2" fill="#8c1d40"/><rect x="6" y="11" width="24" height="7" rx="2" fill="#8c1d40"/><circle cx="18" cy="14.5" r="2" fill="#ffd98a"/></svg></span><span class="subject">Religion</span></div>
+          <h3>Religion Quest: Sacraments</h3>
+          <p>Unit 1 Review, pages 45–47. Check your homework, review the Sacraments of Initiation, then take a quiz.</p>
+          <div class="facts"><span class="fact">⏱️ 25 min with homework check</span><span class="fact best" data-best="sacraments-quest" hidden></span></div>
+          <a class="go" href="../sacraments-quest/">Start Religion Quest&nbsp; →</a>
+        </article>
+        <article class="card g-science">
+          <div class="card-head"><span class="icon" aria-hidden="true"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M13 3h10v3h-2v8l8 15a3 3 0 0 1-2.6 4.5H9.6A3 3 0 0 1 7 29l8-15V6h-2z" fill="#0f8a7a"/><circle cx="16" cy="26" r="2.2" fill="#fff"/><circle cx="21.5" cy="23" r="1.6" fill="#fff"/></svg></span><span class="subject">Science</span></div>
+          <h3>Matter Lab: Solids, Liquids &amp; Gases</h3>
+          <p>A 10-minute interactive lab on states of matter, then a 15-minute challenge with a second chance on missed questions.</p>
+          <div class="facts"><span class="fact">⏱️ 10-min lab + 15-min challenge</span><span class="fact best" data-best="matter-lab" hidden></span></div>
+          <a class="go" href="../matter-lab/">Open the Matter Lab&nbsp; →</a>
+        </article>
+        <article class="card g-reading">
+          <div class="card-head"><span class="icon" aria-hidden="true"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect x="8" y="10" width="20" height="17" rx="5" fill="#2f7d32"/><circle cx="14" cy="18" r="3" fill="#fff"/><circle cx="22" cy="18" r="3" fill="#fff"/><rect x="16.5" y="4" width="3" height="6" fill="#2f7d32"/><circle cx="18" cy="4" r="2" fill="#ffb354"/><rect x="13" y="28" width="10" height="4" rx="2" fill="#2f7d32"/></svg></span><span class="subject">Reading</span></div>
+          <h3>Wild Robot Quest: The Truth &amp; The Allies</h3>
+          <p>Chapters 38–39 of <em>The Wild Robot Escapes</em>. Read a short interactive summary, then check what you remember.</p>
+          <div class="facts"><span class="fact">⏱️ 10 min with quiz</span><span class="fact best" data-best="wild-robot-quest" hidden></span></div>
+          <a class="go" href="../wild-robot-quest/">Start Wild Robot Quest&nbsp; →</a>
+        </article>
+      </div>
     </section>
     <section aria-labelledby="games">
       <div class="section-title"><h2 id="games">Choose your next mission</h2><span id="game-count">Seven adventures ready to play</span></div>
@@ -163,7 +210,7 @@
   <script>
     /* Show each game's best score once the shared script has loaded. */
     document.addEventListener("DOMContentLoaded", function () {
-      var count = document.querySelectorAll(".cards .card").length, words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+      var count = document.querySelectorAll(".cards .card").length, words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"];
       var label = document.getElementById("game-count");
       if (label && count) label.textContent = (words[count] || count) + " adventure" + (count === 1 ? "" : "s") + " ready to play";
       if (!window.StudyQuest) return;
