@@ -278,8 +278,31 @@
       if (container.scrollIntoView && i > 0) container.scrollIntoView({ block: "start", behavior: reducedMotion() ? "auto" : "smooth" });
     }
 
+    /* Save the first-try score as soon as the main round ends (before any fix-it round), so closing the
+       page early never loses it. finish() later only adds the "corrected" count; it never changes the score. */
+    var saved = false;
+    function tally() {
+      var total = questions.length;
+      var first = questions.filter(function (q) { return results[q.id] && results[q.id].first; }).length;
+      var fixed = questions.filter(function (q) { return results[q.id] && !results[q.id].first && results[q.id].fixed; }).length;
+      var missedIds = questions.filter(function (q) { return !(results[q.id] && results[q.id].first); }).map(function (q) { return q.id; });
+      return { firstTry: first, total: total, pct: Math.round(first / total * 100), corrected: fixed, missed: missedIds, at: Date.now() };
+    }
+    function persist(result) {
+      var name = opts.quizName || "quiz";
+      if (opts.storeKey) store(opts.storeKey).update(function (d) {
+        d.quiz = d.quiz || {};
+        var prev = d.quiz[name] || { best: 0, attempts: 0 };
+        d.quiz[name] = { best: Math.max(prev.best || 0, result.pct), attempts: (prev.attempts || 0) + (saved ? 0 : 1), last: result };
+        return d;
+      });
+      if (!saved && opts.id && root.StudyQuest) root.StudyQuest.record(opts.id, result.pct);
+      saved = true;
+    }
+
     function summary() {
       var missed = questions.filter(function (q) { return !results[q.id] || !results[q.id].first; });
+      persist(tally());
       if (!missed.length) return finish();
       head.innerHTML = ""; body.innerHTML = "";
       var right = questions.length - missed.length;
@@ -293,19 +316,9 @@
     }
 
     function finish() {
-      var total = questions.length;
-      var first = questions.filter(function (q) { return results[q.id] && results[q.id].first; }).length;
-      var fixed = questions.filter(function (q) { return results[q.id] && !results[q.id].first && results[q.id].fixed; }).length;
-      var missedIds = questions.filter(function (q) { return !(results[q.id] && results[q.id].first); }).map(function (q) { return q.id; });
-      var pct = Math.round(first / total * 100);
-      var result = { firstTry: first, total: total, pct: pct, corrected: fixed, missed: missedIds, at: Date.now() };
-      if (opts.storeKey) store(opts.storeKey).update(function (d) {
-        d.quiz = d.quiz || {};
-        var prev = d.quiz[opts.quizName || "quiz"] || { best: 0, attempts: 0 };
-        d.quiz[opts.quizName || "quiz"] = { best: Math.max(prev.best || 0, pct), attempts: (prev.attempts || 0) + 1, last: result };
-        return d;
-      });
-      if (opts.id && root.StudyQuest) root.StudyQuest.record(opts.id, pct);
+      var result = tally();
+      persist(result);
+      var total = result.total, first = result.firstTry, fixed = result.corrected, missedIds = result.missed, pct = result.pct;
       head.innerHTML = ""; body.innerHTML = "";
       var msg = pct >= 90 ? "Outstanding! 🌟" : pct >= 70 ? "Great job! 💪" : "Good effort — practice makes progress! 🌱";
       var panel = h("section", { class: "qk-panel qk-center qk-result" },

@@ -7,7 +7,7 @@ Everything is plain HTML, CSS and JavaScript. There is no build step and no serv
 
 The home page (`index.html`) shows two big grade cards:
 
-- **5th Grade Study Guides** opens `fifth-grade/index.html`, which lists the seven 5th-grade games below. Those games stay at their original URLs (for example `math-mission/`), so old bookmarks and home-screen links still work.
+- **5th Grade Study Guides** opens `fifth-grade/index.html`, which shows Today's Plan (while it is active), the four newer guides (see "Newer 5th-grade guides" below) and the seven original 5th-grade games below. Those games stay at their original URLs (for example `math-mission/`), so old bookmarks and home-screen links still work.
 - **2nd Grade Study Guides** opens `second-grade/index.html`, which lists the 2nd-grade games. New 2nd-grade games live under `second-grade/<guide>/`.
 
 | Game | Folder | What it covers |
@@ -81,3 +81,20 @@ The home page (`index.html`) shows two big grade cards:
 ## Map data
 
 The state outlines in `northeast-states/` come from US Census Bureau boundary data (public domain, via the `us-atlas` package). They were projected with an Albers projection and simplified so the whole game stays one small file.
+
+## Newer 5th-grade guides (November 2026)
+
+Four guides share a small toolkit, `assets/quest-kit.js` + `assets/quest-kit.css` (quiz runner with first-try scoring and one fix-it round, full-screen zoom/pan image viewer, step bar, safe storage, confetti). The build contract is `docs/new-guides-contract.md`; source notes are in `docs/sources/`.
+
+| Guide | Folder | What it covers |
+| --- | --- | --- |
+| Fractions: Quick Review | `fractions-review/` | Mixed numbers and fractions ≥ 1 (workbook p.47). 25 min: check homework against the original answer photo (odd problems only), visual review cards, 8-question quiz, fix your misses. |
+| Religion Quest: Sacraments | `sacraments-quest/` | Unit 1 Review pp. 45–47. 25 min: check pages 46–47 against the original answer photos, Sacraments of Initiation + vocabulary review and sorting game, 10-question quiz. |
+| Matter Lab: Solids, Liquids & Gases | `matter-lab/` | HMH Florida Science pp. 231–241 (SC.5.P.8.1). `#lesson`: 10-minute lab (Particle Explorer, Heat & Cool Lab, Density Detective, Matter Detective). `#challenge`: 15-minute Science Challenge. |
+| Wild Robot Quest: The Truth & The Allies | `wild-robot-quest/` | *The Wild Robot Escapes* chapters 38–39 (family summary of pp. 103–107). 10 minutes: chapter cards, tap-through timeline, big ideas, 6-question quiz. |
+
+- **Homework photos** live in `fractions-review/homework/` and `sacraments-quest/homework/`. They are the family's original files, byte-for-byte; `tests/source-images.test.js` checks their SHA-256. Never edit, re-encode or replace them.
+- **Scores:** each quiz calls `StudyQuest.record(<folder name>, firstTryPercent)`. Answers fixed in the fix-it round are saved as "corrected" in the guide's own key (`studyquest:<folder>:v1`) and never raise the score.
+- **Today's Plan** (`todays-plan/`): a one-day checklist for Wed Nov 11, 2026 shown at the top of `fifth-grade/` and full-screen at `todays-plan/`. All times live in `todays-plan/plan-data.js`. Ticks are saved under `studyquest:plan:2026-11-11:v1`, separate from scores. From **2026-11-13 00:00 Eastern** the plan disappears by itself (checked on load, on return to the tab, and every 30 s). The guides and all scores stay. `?now=<ISO time>` previews another time. For a future day, copy `plan-data.js` with new items, a new `id`/`storageKey` and a new `expiresAt`.
+- All progress is stored in this browser on this device only (no accounts, no cloud sync).
+- Tests: `node --test tests/*.test.js`.

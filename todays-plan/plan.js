@@ -30,7 +30,7 @@
   function range(it) { return P.formatTime(it.start) + " – " + P.formatTime(it.end); }
 
   var LABEL = {
-    done: ["✓", "Done ✓"], now: ["▶", "Now"], next: ["➜", "Next"],
+    done: ["✓", "Done"], now: ["▶", "Now"], next: ["➜", "Next"],
     upcoming: ["•", "Coming up"], later: ["↺", "Still to do"]
   };
   function badge(status) { return h("span", { class: "pl-status pl-" + status }, h("span", { "aria-hidden": "true" }, LABEL[status][0] + " "), LABEL[status][1]); }

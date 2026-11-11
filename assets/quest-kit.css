@@ -16,6 +16,7 @@ body.qk-reading{--qk-accent:#2f7d32;--qk-accent-shelf:#1d5420;--qk-accent-soft:#
 body.qk-plan{--qk-accent:#6452cb;--qk-accent-shelf:#3f319a;--qk-accent-soft:#efeaff;--qk-hero-a:#18264b;--qk-hero-b:#6452cb}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important} /* kit classes set display; the hidden attribute must still win */
 html.qk-noscroll,html.qk-noscroll body{overflow:hidden}
 body.qk{margin:0;min-height:100vh;min-height:100dvh;font-family:var(--qk-font);color:var(--qk-ink);line-height:1.5;
   background:radial-gradient(circle at 8% 6%,#fff7d6 0 9%,transparent 28%),radial-gradient(circle at 94% 14%,var(--qk-accent-soft) 0 12%,transparent 34%),linear-gradient(150deg,#fbf7ff,#f2f8ff 55%,#fff9ef)}
@@ -38,6 +39,9 @@ body.qk{margin:0;min-height:100vh;min-height:100dvh;font-family:var(--qk-font);c
 .qk-eyebrow{display:inline-block;border-radius:99px;background:rgba(255,255,255,.18);padding:7px 12px;font-size:.78rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
 .qk-hero-art{position:absolute;right:18px;bottom:10px;width:min(240px,30%);opacity:.95;pointer-events:none}
 @media(max-width:700px){.qk-hero-art{display:none}}
+/* Hero art never covers the title or subtitle: hidden below 1000px, and the text keeps clear of it above that. */
+@media(max-width:1000px){.qk-hero .qk-hero-art,.qk-hero .fr-hero-art,.qk-hero .sq-hero-art,.qk-hero .wr-hero-art{display:none}}
+@media(min-width:1001px){.qk-hero:has([class*="hero-art"]) h1,.qk-hero:has([class*="hero-art"]) p{max-width:calc(100% - 260px)}}
 
 /* panels and layout */
 .qk-panel{background:var(--qk-card);border:2px solid var(--qk-line);border-radius:var(--qk-radius);padding:clamp(16px,3.4vw,26px);box-shadow:var(--qk-shadow);margin:14px 0}

@@ -49,16 +49,16 @@
 
     ideas: [
       { id: "compassion", icon: "💛", label: "Compassion", text: "Caring about other people's feelings and wanting to help. Jaya and Jad were not scared of Roz. They understood her and chose to protect her." },
-      { id: "allies", icon: "🤝", label: "Allies", text: "Allies work together to help and protect someone. Jaya, Jad and Brightbill are Roz's allies." },
+      { id: "allies", icon: "🤝", label: "Allies", text: "Allies work together to help and protect someone. Jaya and Jad are not just Roz's friends anymore. They are her allies." },
       { id: "different", icon: "🌈", label: "Different is not defective", text: "Roz says she is not broken, just different. Being different does not mean something is wrong with you." },
-      { id: "teamwork", icon: "💪", label: "Teamwork, courage, loyalty", text: "Friendship, teamwork and courage help solve hard problems. Jad stays loyal to Roz because she once saved his life." }
+      { id: "teamwork", icon: "💪", label: "Teamwork, courage, loyalty", text: "Friendship, teamwork and courage help solve hard problems. Jad wants to help Roz because she once saved his life." }
     ],
 
     vocab: [
       { word: "compassion", def: "Caring about other people's feelings and wanting to help them." },
       { word: "allies", def: "People who work together to help and protect someone." },
       { word: "defective", def: "Not working the way something is supposed to." },
-      { word: "migrate", def: "To fly south for the winter. The wintering grounds are where the geese spend it." }
+      { word: "migrate", def: "To travel to another place when the season changes. Brightbill leads his flock south to their wintering grounds, where they spend the winter." }
     ],
 
     remember: {

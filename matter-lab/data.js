@@ -207,7 +207,10 @@
   ];
   /* numeric check shared by the page and the tests */
   function checkNumber(input, expected) {
-    var m = String(input).replace(/,/g, ".").match(/-?\d*\.?\d+/);
+    var s0 = String(input).replace(/,/g, ".");
+    var div = s0.match(/(\d*\.?\d+)\s*[\/÷]\s*(\d*\.?\d+)/); // "60/100" or "60 ÷ 100" is also fine
+    if (div && parseFloat(div[2]) !== 0) return Math.abs(parseFloat(div[1]) / parseFloat(div[2]) - expected) < 0.005;
+    var m = s0.match(/-?\d*\.?\d+/);
     return !!m && Math.abs(parseFloat(m[0]) - expected) < 0.005;
   }
   CHALLENGE.forEach(function (q) { if (q.type === "short") q.check = function (s) { return checkNumber(s, q.numericAnswer); }; });

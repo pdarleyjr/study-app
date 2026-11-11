@@ -94,16 +94,16 @@ var SacramentsData = (function () {
 
   /* kind: id = identify-the-sacrament, mc, match, tf, app = application. vocab = vocab ids behind the question. */
   var quiz = [
-    { id: "q1", kind: "mc", type: "mc", vocab: ["bishop"],
-      prompt: "Who is the usual minister of Confirmation?",
-      choices: ["The bishop", "A catechumen", "A godparent", "An altar server"], answer: 0,
-      explain: "The bishop is the usual minister of Confirmation." },
+    { id: "q1", kind: "mc", type: "mc", vocab: ["sacraments"],
+      prompt: "Baptism, Confirmation, and the Eucharist are called the Sacraments of what?",
+      choices: ["Initiation", "Benediction", "Liturgy", "Worship"], answer: 0,
+      explain: "They are the Sacraments of Initiation. In Baptism we begin the Christian life, Confirmation strengthens us to grow in it, and the Eucharist nourishes God's life in us." },
     { id: "q2", kind: "id", type: "mc", vocab: ["sacraments"],
       prompt: "Which sacrament uses water as its chief sign and makes us children of God?",
       choices: ["Confirmation", "Baptism", "Eucharist", "Benediction"], answer: 1,
       explain: "In Baptism, water is the chief sign. It makes us children of God and members of the Church." },
     { id: "q3", kind: "id", type: "mc", vocab: ["chrism", "bishop"],
-      prompt: "The bishop places his hand over a person and anoints with Chrism. Which sacrament is this?",
+      prompt: "The bishop, the usual minister of this sacrament, places his hand over a person and anoints with Chrism. Which sacrament is this?",
       choices: ["Baptism", "Eucharist", "Confirmation", "OCIA"], answer: 2,
       explain: "This is Confirmation. It strengthens the gift of the Holy Spirit first received in Baptism." },
     { id: "q4", kind: "id", type: "mc", vocab: ["fast", "altar"],
