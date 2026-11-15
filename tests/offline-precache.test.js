@@ -9,7 +9,7 @@ const path = require("node:path");
 const ROOT = path.join(__dirname, "..");
 const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
 const PRECACHE = JSON.parse(sw.match(/var PRECACHE = (\[[\s\S]*?\]);/)[1]);
-const NEW_FOLDERS = ["todays-plan", "fractions-review", "sacraments-quest", "matter-lab", "wild-robot-quest"];
+const NEW_FOLDERS = ["todays-plan", "fractions-review", "sacraments-quest", "matter-lab", "wild-robot-quest", "spanish-unit2"];
 
 function localRefs(htmlFile) {
   const html = fs.readFileSync(path.join(ROOT, htmlFile), "utf8");
@@ -41,5 +41,14 @@ test("homework photos are precached for offline checking", () => {
 });
 
 test("cache name was bumped for this release", () => {
-  assert.match(sw, /var CACHE = "studyquest-v7";/);
+  // v8: Spanish Quest Unit 2 (spanish-unit2/) added on Nov 15, 2026.
+  assert.match(sw, /var CACHE = "studyquest-v8";/);
+});
+
+test("Spanish Unit 2 guide is precached and linked from the 5th grade dashboard", () => {
+  const files = ["styles.css", "data.js", "art.js", "ui.js", "speech.js", "engine.js", "activities.js", "app.js"];
+  for (const f of files) assert.ok(PRECACHE.includes("spanish-unit2/" + f), "spanish-unit2/" + f + " not precached");
+  const dash = fs.readFileSync(path.join(ROOT, "fifth-grade/index.html"), "utf8");
+  assert.ok(dash.includes('href="../spanish-unit2/"'), "dashboard links to ../spanish-unit2/");
+  assert.ok(dash.includes('data-best="spanish-unit2"'), "dashboard shows the Spanish Unit 2 best score");
 });

@@ -19,6 +19,7 @@ The home page (`index.html`) shows two big grade cards:
 | Padre Nuestro | `spanish/` | The Our Father in Spanish: missing words, next line, meaning match, and a practice test. |
 | First Americans & Cultural Regions | `social-studies-unit1/` | Social Studies Unit 1, Lessons 2 and 3. |
 | Map Skills Mission | `map-skills/` | Map parts, map types, symbols, scale, grids, and contour lines. |
+| Spanish Quest: ¿Cómo vivimos? | `spanish-unit2/` | 5th grade Spanish, *Descubre el español con Santillana E*, Unidad 2 (workbook pp. 19–32): housing, places and map directions, clothing/colors/prices, cleaning and household commands, community workers and ESTAR. Tonight's Study Mission, Quick Practice, 24-question Practice Test, 7-minute Morning Warm-Up. See "Spanish Quest files" below. |
 | Spanish Days of the Week Adventure | `second-grade/spanish-days/` | 2nd grade: the seven days in Spanish (lunes–domingo), order, before/after, listening, parent-checked oral recitation, Monday Morning Quick Review. See `docs/spanish-days-rationale.md`. |
 
 ## Works on iPad, phone, and desktop
@@ -77,6 +78,22 @@ The home page (`index.html`) shows two big grade cards:
 - Only the Chapter Detective is open-book. Every other mode works without the textbook.
 - The Benchmark Challenge result goes to `StudyQuest.record("stars-galaxies", percent)`. Mission stars, skill mastery and missed questions live under the local key `studyquest:stars-galaxies:v1`.
 - The textbook's galaxy percentages (spiral/irregular/elliptical) are the textbook's claims, labelled that way in the game. Solar-system, comet, planet and model questions come from the benchmark itself and are marked as extra context because pages 137-143 do not teach them.
+
+## Spanish Quest files (5th grade, Spanish Unit 2)
+
+- `spanish-unit2/data.js`: all content — skills, exam blueprint, ESTAR chart, vocabulary, the fixed neighborhood `MAP`
+  (direction answers are computed from it with `satisfies()`), the question bank (every item has a skill, family,
+  difficulty, hint, explanation and workbook page source) and the four missions. Pure data/functions, testable in Node.
+- `spanish-unit2/engine.js`: deterministic mastery tracking and set builders (diagnostic, practice, 24-question exam,
+  fix-my-mistakes, morning warm-up). First-try correctness is stored separately from answers fixed after feedback.
+- `spanish-unit2/app.js` (screens and question runner), `activities.js` (map explorer, closet, clean-up, ESTAR lab),
+  `ui.js` (components), `art.js` (original SVG art and the map), `speech.js` (optional Spanish text-to-speech, no
+  microphone), `styles.css`, `index.html`.
+- Routes: `#mission`, `#mission/m1`…`m4`, `#practice`, `#test`, `#warmup`, `#fix`, `#progress`, `#sheet`.
+- Progress lives under `studyquest:spanish-unit2:v1`; the Practice Test's first-try percent goes to
+  `StudyQuest.record("spanish-unit2", percent)`. The warm-up never expires.
+- Contract: `docs/spanish-unit2-contract.md`. Sources and uncertainties: `docs/sources/spanish-unit2-sources.md`.
+  Tests: `tests/spanish-unit2.test.js`.
 
 ## Map data
 
