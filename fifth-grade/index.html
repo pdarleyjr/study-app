@@ -55,6 +55,11 @@
     .card.featured.mathm{background:linear-gradient(125deg,#0b2545,#1d6fb8);border-color:#0b2545}
     .featured.mathm .go{background:#ffa24d;color:#3a1600;box-shadow:0 4px 0 #a64a0a}
     .featured.cosmic .go{background:#ffd166;color:#2b1d00;box-shadow:0 4px 0 #a8710a}
+    .card.featured.spanishq{background:linear-gradient(125deg,#6b2410,#b23a0b);border-color:#6b2410}
+    .featured.spanishq p{color:#fff7ed}
+    .featured.spanishq .go{background:#ffd166;color:#3a1600;box-shadow:0 4px 0 #a8710a}
+    .featured.spanishq .go:active{box-shadow:0 1px 0 #a8710a}
+    .cards.quiz-next{grid-template-columns:1fr;margin-bottom:34px}
     .featured .icon{background:rgba(255,255,255,.18)}
     .featured .badge{background:#ffe9a8;color:#6a4700}
     .card.featured h3{font-size:1.65rem;color:#fff}
@@ -115,6 +120,19 @@
       <div class="sparkles" aria-hidden="true">⭐ 🧠 🚀</div>
     </section>
     <section id="todays-plan" data-mode="dashboard" aria-labelledby="pl-title"></section>
+    <section aria-labelledby="quiz-next">
+      <div class="section-title"><h2 id="quiz-next">Spanish quiz coming up</h2><span>Second quarter grammar quiz · Monday, Nov 16</span></div>
+      <div class="cards quiz-next">
+        <article class="card featured spanishq">
+          <div class="card-head"><span class="icon" aria-hidden="true">🏘️</span><span class="badge fresh">NEW • SPANISH QUIZ PREP</span></div>
+          <h3>Spanish Quest: ¿Cómo vivimos?</h3>
+          <p>Unit 2 Grammar Adventure. Find your weak spots, play four short missions (neighborhood map, clothes &amp; colors, clean-up crew, ESTAR lab), then take a practice test. Tomorrow morning, do the 7-minute warm-up.</p>
+          <div class="facts"><span class="fact">⏱️ 30–40 min tonight</span><span class="fact">🗺️ 4 missions</span><span class="fact">🏆 24-question practice test</span><span class="fact">☀️ 7-min morning warm-up</span><span class="fact best" data-best="spanish-unit2" hidden></span></div>
+          <a class="go" href="../spanish-unit2/">Start Spanish Quest&nbsp; →</a>
+          <div class="deco" aria-hidden="true"><svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" focusable="false"><rect x="0" y="118" width="300" height="26" fill="#5b2a12" opacity=".55"/><path d="M0 131h300" stroke="#ffd166" stroke-width="3" stroke-dasharray="14 12"/><rect x="18" y="58" width="70" height="58" rx="6" fill="#fff4e0"/><path d="M12 62l41-30 41 30z" fill="#f59e0b"/><rect x="44" y="84" width="18" height="32" rx="3" fill="#0f766e"/><text x="53" y="78" font-size="13" font-weight="900" text-anchor="middle" fill="#9a3412" font-family="system-ui,sans-serif">PAN</text><rect x="112" y="40" width="76" height="76" rx="6" fill="#ffedd5"/><rect x="141" y="54" width="18" height="40" rx="3" fill="#16a34a"/><rect x="130" y="65" width="40" height="18" rx="3" fill="#16a34a"/><rect x="141" y="98" width="18" height="18" rx="2" fill="#0f766e"/><rect x="210" y="66" width="74" height="50" rx="6" fill="#fff4e0"/><path d="M206 70h82l-6-16h-70z" fill="#e11d48"/><path d="M220 70v-16M234 70v-16M248 70v-16M262 70v-16M276 70v-16" stroke="#fff" stroke-width="5"/><circle cx="234" cy="96" r="7" fill="#f97316"/><circle cx="252" cy="98" r="7" fill="#facc15"/><circle cx="268" cy="96" r="7" fill="#22c55e"/><circle cx="150" cy="156" r="9" fill="#ffd166"/></svg></div>
+        </article>
+      </div>
+    </section>
     <section aria-labelledby="new-guides">
       <div class="section-title"><h2 id="new-guides">New study guides</h2><span>Four short guides for today</span></div>
       <div class="cards new-guides">
@@ -210,7 +228,7 @@
   <script>
     /* Show each game's best score once the shared script has loaded. */
     document.addEventListener("DOMContentLoaded", function () {
-      var count = document.querySelectorAll(".cards .card").length, words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"];
+      var count = document.querySelectorAll(".cards .card").length, words = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen"];
       var label = document.getElementById("game-count");
       if (label && count) label.textContent = (words[count] || count) + " adventure" + (count === 1 ? "" : "s") + " ready to play";
       if (!window.StudyQuest) return;
