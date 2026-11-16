@@ -201,7 +201,7 @@ test("MAP matches the contract exactly; distance/satisfies/relPhrase", () => {
   assert.equal(D.MAP.cols, 5);
   assert.equal(D.MAP.rows, 3);
   assert.equal(D.MAP.street, "Calle Principal");
-  assert.equal(D.MAP.note, "Left and right mean your left and right as you look at the map.");
+  assert.equal(D.MAP.note, "Left and right mean your left and right as you look at the map. For left and right, look only in the same row (the same side of the street).");
   const want = { apartamento: [1, 0], casa: [3, 0], hotel: [0, 1], farmacia: [1, 1], panaderia: [2, 1], tienda: [3, 1], hospital: [4, 1], estacion: [0, 2], mercado: [1, 2], parque: [2, 2], teatro: [3, 2], "centro-comercial": [4, 2] };
   assert.equal(D.MAP.places.length, 12);
   D.MAP.places.forEach((p) => {
@@ -449,9 +449,9 @@ test("Spanish orthography: required accents are never dropped", () => {
     assert.ok(!bad.test(text), where + ": estar verb after a subject pronoun is missing its accent: " + JSON.stringify(text));
   });
   Q.forEach((q) => {
-    /* "¿Cuál palabra está bien escrita?" items teach the accent on purpose: unaccented forms may appear only as
-       wrong choices there, and the right answer must carry the accent. Everywhere else they are banned. */
-    const spelling = /bien escrita/i.test(q.prompt || "");
+    /* "¿Cuál palabra completa bien la oración?" items teach the accent on purpose: unaccented forms may appear
+       only as wrong choices there, and the right answer must carry the accent. Everywhere else they are banned. */
+    const spelling = /completa bien la oración|bien escrita/i.test(q.prompt || "");
     (q.choices || []).forEach((c, i) => {
       const unaccented = /^(esta|estan|estas)$/i.test(c.trim());
       if (spelling) assert.ok(!(unaccented && i === q.answer), qLabel(q) + " the right answer must be accented, got " + JSON.stringify(c));

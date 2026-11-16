@@ -124,7 +124,7 @@ Helpers (pure): `withArticle(placeId)` → "la farmacia"; `dePlace(placeId)` →
 
 ```js
 MAP = { cols: 5, rows: 3, street: "Calle Principal",
-        note: "Left and right mean your left and right as you look at the map.",
+        note: "Left and right mean your left and right as you look at the map. For left and right, look only in the same row (the same side of the street).",
         places: [
           { id: "apartamento", col: 1, row: 0 }, { id: "casa", col: 3, row: 0 },
           { id: "hotel", col: 0, row: 1 }, { id: "farmacia", col: 1, row: 1 }, { id: "panaderia", col: 2, row: 1 },
@@ -296,7 +296,8 @@ skillMastery(progress, skillId) -> { level, score, n }
 weakestSkills(progress, DATA, count) -> [skillId]     // learning (low score first), new, almost, mastered; ties: area examCount desc
 buildDiagnostic(DATA, rng) -> [qid] (12: one per skill, exam & difficulty ≤ 2, no two adjacent of the same area)
 buildExam(DATA, rng) -> [qid] (DATA.EXAM.total): per area examCount; every skill of an area at least once when
-  examCount ≥ its skill count; only exam items; no family twice; all 4 weeks present; different seeds give different sets
+  examCount ≥ its skill count; only exam items; no family twice (an ESTAR pronoun family may appear twice, since there
+  are 5 pronoun families for 7 ESTAR slots); all 4 weeks present; different seeds give different sets
 buildPractice(DATA, progress, { skills, count = 10, rng }) -> [qid] (weighted to weaker skills, interleaved:
   no two consecutive items of the same skill when avoidable, fewer-seen items first; "tap" items allowed)
 buildFix(DATA, progress, rng, max = 12) -> [qid]      // for items whose last is "wrong" or "hint": first a sibling of

@@ -782,6 +782,8 @@
   function route() {
     var parts = String(location.hash || "#home").replace(/^#/, "").split("/");
     var name = parts[0] || "home", arg = parts[1];
+    /* the big hero is for the home screen; inner screens get a slim one so the activity starts higher up */
+    if (document.body) { document.body.classList.toggle("su-inner", name !== "home"); }
     try {
       if (name === "mission") { return arg ? missionScreen(arg) : hub(); }
       if (name === "practice") { return arg ? practiceRun(arg) : practicePicker(); }

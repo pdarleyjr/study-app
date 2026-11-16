@@ -167,7 +167,7 @@
   /* ---------- the neighborhood map ---------- */
   var MAP = {
     cols: 5, rows: 3, street: "Calle Principal",
-    note: "Left and right mean your left and right as you look at the map.",
+    note: "Left and right mean your left and right as you look at the map. For left and right, look only in the same row (the same side of the street).",
     places: [
       { id: "apartamento", col: 1, row: 0 }, { id: "casa", col: 3, row: 0 },
       { id: "hotel", col: 0, row: 1 }, { id: "farmacia", col: 1, row: 1 }, { id: "panaderia", col: 2, row: 1 },
@@ -267,7 +267,7 @@
   Q("s1-places", 5, "places-need", 1, "Vamos a viajar en tren. Vamos a la ___.", "We are going to travel by train. We go to the ___.", "estación de ferrocarril", ["farmacia", "panadería", "casa"],
     "Where do trains stop?", "Trains stop at <b>la estación de ferrocarril</b> (the train station).", W([21]), { art: pl("estacion") });
   Q("s1-places", 6, "places-picture", 1, "¿Dónde compras comida y ropa?", "Where do you buy food and clothes?", "el centro comercial", ["el hospital", "el teatro", "el parque"],
-    "Look at the picture: many stores under one roof.", "<b>El centro comercial</b> (the mall) has many stores for food and clothes.", W([29, 30]), { art: pl("centro-comercial") });
+    "Think of a big building with many shops inside.", "<b>El centro comercial</b> (the mall) has many stores for food and clothes.", W([29, 30]));
   Q("s1-places", 7, "places-picture", 1, "¿Qué lugar es?", "Which place is it?", "el hospital", ["el hotel", "la casa", "el teatro"],
     "Doctors and nurses work here.", "<b>El hospital</b> is where doctors help sick people.", W([20]), { art: pl("hospital") });
   Q("s1-places", 8, "places-vocab", 1, "«Vecindario» significa ___.", "“Vecindario” means ___.", "neighborhood", ["bakery", "pharmacy", "train station"],
@@ -301,7 +301,7 @@
       promptEn: "Look at the map. Where is the " + placeOf(a).en + " compared to the " + B.en + "?",
       art: { kind: "map", highlight: [a, b] },
       choices: choices, answer: REL_ORDER.indexOf(rel),
-      hint: "Find both buildings on the map. Left and right are your left and right as you look at the map.",
+      hint: "Find both buildings on the map. Left and right are your left and right as you look at the map, in the same row.",
       explain: cap(withArticle(a)) + " está " + relPhrase(rel) + " " + dePlace(b) + ". " + REL_EXPLAIN[rel] + (masc ? " <i>del</i> = <i>de</i> + <i>el</i>." : ""),
       geo: { ask: "rel", a: a, b: b, rels: REL_ORDER.slice() }, source: src || W([20, 21])
     };
@@ -311,14 +311,16 @@
     var wrongs = places.filter(function (p) { return p !== answerPlace; });
     var pos = n % 4, list = wrongs.slice(); list.splice(pos, 0, answerPlace);
     var near = rel === "cerca", far = rel === "lejos";
-    var others = near ? "The other places are all far away (<b>lejos</b>)." : far ? "The other places are all near (<b>cerca</b>)." : "None of the other places is " + REL_EN[rel] + " it.";
+    var side = rel === "izquierda" || rel === "derecha";
+    var others = near ? "The other places are all far away (<b>lejos</b>)." : far ? "The other places are all near (<b>cerca</b>)." :
+      side ? "No other choice is in that row " + REL_EN[rel] + " it." : "None of the other places is " + REL_EN[rel] + " it.";
     var q = {
       id: "s1-directions-" + pad3(n), week: 1, skill: "s1-directions", family: "dir-place", type: "mc", difficulty: diff, exam: true,
       prompt: "¿Qué lugar está " + relPhrase(rel) + " " + dePlace(ref) + "?",
-      promptEn: "Which place is " + REL_EN[rel] + " the " + placeOf(ref).en + "?",
+      promptEn: "Which place is " + REL_EN[rel] + " the " + placeOf(ref).en + (side ? ", in the same row?" : "?"),
       art: { kind: "map", highlight: [ref] },
       choices: list.map(withArticle), answer: pos,
-      hint: "Find the " + placeOf(ref).en + " on the map first. " + (near ? "Near means just a step away." : far ? "Far means at the other end of the map." : "Then look in that direction."),
+      hint: "Find the " + placeOf(ref).en + " on the map first. " + (near ? "Near means just a step away." : far ? "Far means at the other end of the map." : side ? "Then look that way, staying in the same row." : "Then look in that direction."),
       explain: cap(withArticle(answerPlace)) + " está " + relPhrase(rel) + " " + dePlace(ref) + ". " + others,
       geo: { ask: "place", rel: rel, ref: ref, places: list.slice() }, source: W([20, 21, 28])
     };
@@ -330,7 +332,7 @@
       prompt: "Toca el lugar que está " + relPhrase(rel) + " " + dePlace(ref) + ".",
       promptEn: "Tap the place that is " + REL_EN[rel] + " the " + placeOf(ref).en + ".",
       art: { kind: "map", highlight: [ref] },
-      hint: "Find the " + placeOf(ref).en + " first. Then look " + (rel === "izquierda" ? "to its left" : rel === "derecha" ? "to its right" : rel === "enfrente" ? "straight across the street" : "straight up, behind it") + ".",
+      hint: "Find the " + placeOf(ref).en + " first. Then look " + (rel === "izquierda" ? "to its left, in the same row" : rel === "derecha" ? "to its right, in the same row" : rel === "enfrente" ? "straight across the street" : "straight up, behind it") + ".",
       explain: cap(withArticle(target)) + " está " + relPhrase(rel) + " " + dePlace(ref) + ". It is the only place on the map in that spot.",
       geo: { ask: "tap", rel: rel, ref: ref }, target: target, source: W([20, 21, 28])
     };
@@ -385,7 +387,7 @@
     ["una camisa y una falda", "un traje y una corbata", "un vestido y una corbata"],
     "Name each piece you see, one by one.", "The picture shows <b>una blusa</b> (blouse) and <b>un pantalón largo</b> (long pants).", W([22]),
     { art: { kind: "outfit", items: [{ item: "blusa", color: "verde" }, { item: "pantalon-largo", color: "negro" }] } });
-  Q("s2-clothes", 8, "cl-picture", 1, "Es un pantalón ___.", "It is ___ pants.", "corto", ["largo", "corta", "larga"],
+  Q("s2-clothes", 8, "cl-picture", 1, "Es un pantalón ___.", "These are ___ pants.", "corto", ["largo", "corta", "larga"],
     "Look at the length of the pants.", "These are shorts: <b>un pantalón corto</b>. <i>Pantalón</i> is an el-word, so <b>corto</b> (not corta).", W([22]),
     { art: cl("pantalon-corto", "marron") });
   Q("s2-clothes", 9, "cl-article", 1, "___ pantalón es largo.", "___ pants are long.", "El", ["La", "Las", "Una"],
@@ -420,7 +422,7 @@
   Q("s2-colors", 10, "col-picture", 2, "¿Cuál dibujo muestra un pantalón corto amarillo?", "Which picture shows yellow shorts?", "", [],
     "Check the clothing AND the color.", "<b>Un pantalón corto amarillo</b>: short pants that are yellow.", W([22, 24]),
     { pics: [cl("pantalon-corto", "amarillo"), cl("pantalon-corto", "azul"), cl("falda", "amarillo"), cl("camiseta", "amarillo")] });
-  Q("s2-colors", 11, "col-agree", 2, "Una camisa ___ y un pantalón ___.", "A white shirt and white pants.", "blanca / blanco", ["blanco / blanca", "blanca / blanca", "blanco / blanco"],
+  Q("s2-colors", 11, "col-agree", 2, "Los dos son blancos: una camisa ___ y un pantalón ___.", "Both are white: a white shirt and white pants.", "blanca / blanco", ["blanco / blanca", "blanca / blanca", "blanco / blanco"],
     "Match each color to its own word: la camisa, el pantalón.", "<b>La camisa blanca</b> (la-word → -a) and <b>el pantalón blanco</b> (el-word → -o).", W([22]));
   Q("s2-colors", 12, "col-agree", 2, "¿Cuál frase está bien?", "Which phrase is correct?", "la falda rosada", ["la falda rosado", "el falda rosada", "el falda rosado"],
     "Check the el/la word AND the ending of the color.", "<b>La falda rosada</b>: <i>falda</i> is a la-word, so the article is <i>la</i> and the color ends in <b>-a</b>.", W([22]));
@@ -446,7 +448,7 @@
   Q("s2-shopping", 7, "shop-number", 1, "El número 500 se dice ___.", "The number 500 is said ___.", "quinientos", ["cincuenta", "cien", "mil"],
     "It is not 50 and not 100.", "500 = <b>quinientos</b>. 50 = cincuenta. 100 = cien. 1.000 = mil.", W([24]));
   Q("s2-shopping", 8, "shop-currency", 2, "En Paraguay usan ___.", "In Paraguay they use ___.", "guaraníes", ["dólares", "pesos", "euros"],
-    "Think of the ₲ sign.", "In Paraguay the money is the <b>guaraní</b> (plural: guaraníes).", W([23]));
+    "Paraguay is in South America. Its money is not the dollar.", "In Paraguay the money is the <b>guaraní</b> (plural: guaraníes).", W([23]));
   Q("s2-shopping", 9, "shop-currency", 1, "En los Estados Unidos usamos ___.", "In the United States we use ___.", "dólares", ["guaraníes", "pesos", "euros"],
     "Think of the $ sign.", "In the United States the money is the <b>dólar</b> (plural: dólares).", W([23, 24]));
   Q("s2-shopping", 10, "shop-price", 2, "Una camiseta cuesta cinco dólares y otra cuesta cincuenta dólares. La camiseta de cinco dólares es ___.", "One T-shirt costs $5 and another costs $50. The $5 T-shirt is ___.", "barata", ["cara", "grande", "sucia"],
@@ -473,9 +475,9 @@
     "Think of what makes bubbles.", "To wash clothes: <b>agua y jabón</b> (water and soap).", W([25, 27, 31]), { art: tool("jabon") });
   Q("s3-cleaning", 4, "clean-laundry", 1, "La ropa está sucia. ¿Qué hacemos?", "The clothes are dirty. What do we do?", "Lavamos la ropa con agua y jabón.",
     ["Lavamos la ropa con una escoba.", "Limpiamos la ropa con una aspiradora.", "Secamos la ropa con un trapeador."],
-    "Which tools belong with clothes?", "We wash dirty clothes with <b>agua y jabón</b>. A broom, a vacuum and a mop are for floors.", W([27, 31]), { art: scene("ropa-sucia") });
+    "Which tools belong with clothes?", "We wash dirty clothes with <b>agua y jabón</b>. A broom, a vacuum and a mop are for floors and rugs.", W([27, 31]), { art: scene("ropa-sucia") });
   Q("s3-cleaning", 5, "clean-tool", 1, "Usamos la escoba y el trapeador para limpiar el ___.", "We use the broom and the mop to clean the ___.", "piso", ["traje", "corbata", "jabón"],
-    "Brooms and mops work on the ground.", "<b>El piso</b> is the floor. We clean it with a <b>escoba</b>, <b>agua</b> and a <b>trapeador</b>.", W([25, 27]), { art: scene("piso-sucio") });
+    "Brooms and mops work on the ground.", "<b>El piso</b> is the floor. We clean it with <b>la escoba</b> (broom), <b>agua</b> and <b>el trapeador</b> (mop).", W([25, 27]), { art: scene("piso-sucio") });
   Q("s3-cleaning", 6, "clean-verb", 1, "«Lavar» significa ___.", "“Lavar” means ___.", "to wash", ["to dry", "to buy", "to take care of"],
     "Think of water and soap.", "<b>Lavar</b> = to wash.", W([25, 26]));
   Q("s3-cleaning", 7, "clean-verb", 1, "«Secar» significa ___.", "“Secar” means ___.", "to dry", ["to wash", "to sell", "to buy"],
@@ -503,7 +505,7 @@
   Q("s3-commands", 6, "cmd-say", 1, "Tu dormitorio está muy sucio. ¿Qué dice mamá?", "Your bedroom is very dirty. What does Mom say?", "¡Limpia tu dormitorio!", ["¡Lava tu ropa!", "¡Seca el piso!", "¡Cuida tu ropa nueva!"],
     "Which command means to clean?", "A dirty bedroom: <b>¡Limpia tu dormitorio!</b> (Clean your bedroom!)", W([26]), { art: scene("dormitorio-sucio") });
   Q("s3-commands", 7, "cmd-say", 2, "¿Cuál mandato significa «Wash your clothes!»?", "Which command means “Wash your clothes!”?", "¡Lava tu ropa!", ["¡Seca tu ropa!", "¡Limpia tu ropa!", "¡Cuida tu ropa!"],
-    "Which command word starts with L and means wash?", "<b>¡Lava!</b> = wash. <b>¡Seca!</b> = dry. <b>¡Cuida!</b> = take care of. <b>¡Limpia!</b> = clean.", W([26]));
+    "Think of water and soap.", "<b>¡Lava!</b> = wash. <b>¡Seca!</b> = dry. <b>¡Cuida!</b> = take care of. <b>¡Limpia!</b> = clean.", W([26]));
 
   /* ---------- s3-clothes-desc ---------- */
   Q("s3-clothes-desc", 1, "desc-formal", 1, "Vamos al teatro. Necesito ropa ___.", "We are going to the theater. I need ___ clothes.", "elegante", ["informal", "sucia", "corto"],
@@ -568,8 +570,8 @@
   E(32, "estar-ellos", 1, "Ellas ___ en la panadería.", "They (girls) ___ at the bakery.", "están", ["está", "estamos", "estás"], H_P, "<b>Ellas</b> (they, girls) → <b>están</b>.", W([29]));
   E(33, "estar-nosotros", 2, "«Mi familia y yo» significa lo mismo que ___.", "“My family and I” means the same as ___.", "nosotros", ["ellos", "yo", "él"], H_G, "<b>Mi familia y yo</b> = <b>nosotros</b> (we). Any group that includes “yo” is nosotros.", W([29]));
   E(34, "estar-ellos", 2, "«Ana y Luis» significa lo mismo que ___.", "“Ana y Luis” means the same as ___.", "ellos", ["nosotros", "él", "ella"], "Two other people, not including me.", "<b>Ana y Luis</b> = <b>ellos</b> (they), so the verb is <b>están</b>.", W([29]));
-  E(35, "estar-el", 2, "Ana ___ en la tienda. ¿Cuál palabra está bien escrita?", "Ana is at the store. Which word is spelled right?", "está", ["esta", "estas", "estan"], "Accent marks matter in estar.", "<b>Está</b> (with the accent) means “is”. <i>Esta</i> without it means “this”.", W([29]));
-  E(36, "estar-ellos", 2, "Mis amigos ___ en el parque. ¿Cuál palabra está bien escrita?", "My friends are at the park. Which word is spelled right?", "están", ["estan", "esta", "estás"], "Accent marks matter in estar. The they-form has one.", "<b>Están</b> (with the accent) is the they-form.", W([29]));
+  E(35, "estar-el", 2, "Ana ___ en la tienda. ¿Cuál palabra completa bien la oración?", "Ana is at the store. Which word completes the sentence correctly?", "está", ["esta", "estas", "estan"], "Accent marks matter in estar.", "<b>Está</b> (with the accent) means “is”. <i>Esta</i> without it means “this”.", W([29]));
+  E(36, "estar-ellos", 2, "Mis amigos ___ en el parque. ¿Cuál palabra completa bien la oración?", "My friends are at the park. Which word completes the sentence correctly?", "están", ["estan", "esta", "estás"], "Accent marks matter in estar. The they-form has one.", "<b>Están</b> (with the accent) is the they-form.", W([29]));
 
   /* ---------- s4-workers ---------- */
   function wk(id) { return { kind: "worker", id: id }; }
@@ -589,7 +591,7 @@
     "Think about who works with words and stories.", "<b>El escritor</b> writes books.", W([30]), { art: { kind: "thing", id: "libros" } });
   Q("s4-workers", 8, "work-who", 1, "¿Quién vende pan?", "Who sells bread?", "el panadero", ["la farmacéutica", "el escritor", "la vendedora"],
     "Think about who bakes in a bakery.", "<b>El panadero</b> sells bread at the bakery.", W([30]), { art: { kind: "thing", id: "pan" } });
-  Q("s4-workers", 9, "work-sells", 1, "El panadero vende pan en ___.", "The baker sells bread at ___.", "la panadería", ["la farmacia", "la tienda", "el hospital"],
+  Q("s4-workers", 9, "work-sells", 1, "El panadero vende pan en ___.", "The baker sells bread at ___.", "la panadería", ["la farmacia", "el teatro", "el hospital"],
     "Where is bread sold?", "<b>El panadero</b> works in <b>la panadería</b>.", W([30]));
   Q("s4-workers", 10, "work-who", 2, "Una mujer vende medicinas en la farmacia. Ella es ___.", "A woman sells medicine at the pharmacy. She is ___.", "la farmacéutica", ["el farmacéutico", "el panadero", "el escritor"],
     "It is a woman, so use the la-word.", "A woman who sells medicine is <b>la farmacéutica</b>. A man is <i>el farmacéutico</i>.", W([30, 31]));
@@ -611,7 +613,7 @@
     "The subject is “my family and I”.", "<b>Nosotros</b> (we) → <b>estamos</b>.", W([29]), { art: pl("teatro") });
   Q("s4-community", 7, "comm-need", 1, "Mi amigo y yo jugamos fútbol. Nosotros estamos en el ___.", "My friend and I play soccer. We are at the ___.", "parque", ["hospital", "hotel", "teatro"],
     "Where do kids play soccer?", "We play soccer at <b>el parque</b>.", W([21, 29]), { art: { kind: "thing", id: "balon" } });
-  Q("s4-community", 8, "comm-fix", 2, "Laura vende pan en la farmacia. Debe vender pan en la ___.", "Laura sells bread at the pharmacy. She should sell bread at the ___.", "panadería", ["farmacia", "tienda", "estación de ferrocarril"],
+  Q("s4-community", 8, "comm-fix", 2, "Laura vende pan en la farmacia. Debe vender pan en la ___.", "Laura sells bread at the pharmacy. She should sell bread at the ___.", "panadería", ["farmacia", "casa", "estación de ferrocarril"],
     "Where is bread made and sold?", "Bread is sold at <b>la panadería</b>.", W([30]));
   Q("s4-community", 9, "comm-estar", 1, "Los vendedores venden comida. Ellos ___ en el mercado.", "The sellers sell food. They ___ at the market.", "están", ["está", "estamos", "estás"],
     "More than one seller: ellos.", "<b>Los vendedores</b> = <b>ellos</b> → <b>están</b>.", W([29, 30]));
@@ -778,7 +780,7 @@
         { title: "del = de + el", say: "cerca del hotel", art: [pl("hotel"), pl("farmacia")],
           html: "<i>De</i> + <i>el</i> always becomes <b>del</b>.<br>El hotel → <b>cerca del hotel</b> (not “de el hotel”).<br>La farmacia → <b>cerca de la farmacia</b> (no change).<br><b>Tip:</b> el-words use <b>del</b>, la-words use <b>de la</b>." },
         { title: "Near and far", say: "El hospital está lejos del hotel.", art: [{ kind: "map", highlight: ["hotel", "hospital"] }],
-          html: "<b>Cerca</b> = just a step or two away, even across the street.<br><b>Lejos</b> = at the other end of the map.<br>On our map the <b>hotel</b> and the <b>hospital</b> are lejos. The <b>hotel</b> and the <b>farmacia</b> are cerca." }
+          html: "<b>Cerca</b> = about one step away, even straight across the street.<br><b>Lejos</b> = at the other end of the map.<br>On our map the <b>hotel</b> and the <b>hospital</b> are lejos. The <b>hotel</b> and the <b>farmacia</b> are cerca." }
       ],
       practice: [qid("s1-house", 2), qid("s1-house", 7), qid("s1-places", 1), qid("s1-places", 5), qid("s1-places", 13), qid("s1-directions", 1), qid("s1-directions", 10), qid("s1-directions", 13)],
       activity: { type: "map", explore: true, tasks: [qid("s1-directions", 18), qid("s1-directions", 19), qid("s1-directions", 20), qid("s1-directions", 4), qid("s1-directions", 21), qid("s1-directions", 14)] }
@@ -792,7 +794,7 @@
         { title: "Colors", say: "rojo, amarillo, negro, blanco", art: [cl("camisa", "rojo"), cl("camisa", "amarillo"), cl("camisa", "negro"), cl("camisa", "blanco")],
           html: lst("<b>rojo</b> red, <b>amarillo</b> yellow, <b>negro</b> black, <b>blanco</b> white", "<b>anaranjado</b> orange, <b>rosado</b> pink", "<b>azul</b> blue, <b>verde</b> green, <b>marrón</b> brown") },
         { title: "Colors must match", say: "la camisa roja, el pantalón rojo", art: [{ kind: "outfit", items: [{ item: "camisa", color: "rojo" }, { item: "pantalon-largo", color: "rojo" }] }],
-          html: "<b>Rule:</b> la-word → ends in <b>-a</b>. el-word → ends in <b>-o</b>.<br><i>la camisa <b>roja</b></i>, <i>la falda <b>amarilla</b></i><br><i>el pantalón <b>rojo</b></i>, <i>el vestido <b>blanco</b></i><br><b>Never change:</b> <i>azul</i>, <i>verde</i>, <i>marrón</i>. Say <i>la blusa azul</i> and <i>el pantalón azul</i>." },
+          html: "<b>Rule:</b> colors that end in <b>-o</b> (rojo, negro, blanco…) change: la-word → <b>-a</b>, el-word → <b>-o</b>.<br><i>la camisa <b>roja</b></i>, <i>la falda <b>amarilla</b></i><br><i>el pantalón <b>rojo</b></i>, <i>el vestido <b>blanco</b></i><br><b>Never change:</b> <i>azul</i>, <i>verde</i>, <i>marrón</i>. Say <i>la blusa azul</i> and <i>el pantalón azul</i>." },
         { title: "Prices and big numbers", say: "cincuenta, cien, quinientos, mil", art: [money(50, "USD"), money(100, "USD"), money(500, "PYG"), money(1000, "PYG")],
           html: lst("<b>50</b> = <b>cincuenta</b>", "<b>100</b> = <b>cien</b>", "<b>500</b> = <b>quinientos</b>", "<b>1.000</b> = <b>mil</b>") + "<b>$50</b> = <i>cincuenta dólares</i>." },
         { title: "Dollars or guaraníes?", say: "cincuenta dólares", art: [money(50, "USD"), money(500, "PYG")],
@@ -848,6 +850,12 @@
       }
     }
   ];
+
+  /* "I need X — where do I go?" items must make the student retrieve the place: never show the answer's
+     own building as the picture. (Picture-naming items such as "¿Qué lugar es?" keep theirs.) */
+  QUESTIONS.forEach(function (q) {
+    if (q.family === "places-need" && q.art && q.art.kind === "place") delete q.art;
+  });
 
   var DATA = {
     META: META, WEEKS: WEEKS, SKILLS: SKILLS, AREAS: AREAS, EXAM: EXAM, TOPICS: TOPICS,
