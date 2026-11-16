@@ -389,9 +389,9 @@
     "Look at the length of the pants.", "These are shorts: <b>un pantalón corto</b>. <i>Pantalón</i> is an el-word, so <b>corto</b> (not corta).", W([22]),
     { art: cl("pantalon-corto", "marron") });
   Q("s2-clothes", 9, "cl-article", 1, "___ pantalón es largo.", "___ pants are long.", "El", ["La", "Las", "Una"],
-    "Is <i>pantalón</i> an el-word or a la-word?", "<b>Pantalón</b> is an el-word: <b>el pantalón</b>.", W([22]));
+    "Is <i>pantalón</i> a masculine or a feminine word? It does not end in -a.", "<b>Pantalón</b> is an el-word: <b>el pantalón</b>.", W([22]));
   Q("s2-clothes", 10, "cl-article", 1, "___ blusa es nueva.", "___ blouse is new.", "La", ["El", "Los", "Un"],
-    "Is <i>blusa</i> an el-word or a la-word? It ends in -a.", "<b>Blusa</b> is a la-word: <b>la blusa</b>.", W([22]));
+    "Is <i>blusa</i> a masculine or a feminine word? It ends in -a.", "<b>Blusa</b> is a la-word: <b>la blusa</b>.", W([22]));
   Q("s2-clothes", 11, "cl-meaning", 1, "«Ropa» significa ___.", "“Ropa” means ___.", "clothes", ["food", "money", "medicine"],
     "You wear it.", "<b>Ropa</b> means clothes.", W([22]));
   Q("s2-clothes", 12, "cl-meaning", 1, "¿Cuál es ropa?", "Which one is clothing?", "la camiseta", ["la escoba", "el jabón", "la aspiradora"],

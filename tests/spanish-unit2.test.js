@@ -346,7 +346,8 @@ test("makeEstarQuestion for every SUBJECTS x PLACES pair", () => {
     assert.equal(q.family, "estar-" + s.key, L + " family");
     assert.equal(q.type, "mc", L);
     assert.equal(q.exam, false, L + " exam must be false");
-    assert.equal(q.prompt, s.es + " ___ " + D.enPlace(p.id) + ".", L + " prompt");
+    const subject = s.es.charAt(0).toUpperCase() + s.es.slice(1); // sentence-initial capital ("yo" -> "Yo")
+    assert.equal(q.prompt, subject + " ___ " + D.enPlace(p.id) + ".", L + " prompt");
     assert.equal(q.choices.length, 4, L + " choices");
     assert.equal(new Set(q.choices).size, 4, L + " unique choices " + JSON.stringify(q.choices));
     q.choices.forEach((c) => assert.ok(D.ESTAR_FORMS.includes(c), L + " choice " + c + " not in ESTAR_FORMS"));
@@ -447,7 +448,16 @@ test("Spanish orthography: required accents are never dropped", () => {
     banned.forEach((w) => assert.ok(!wholeWord(text, w), where + ": unaccented \"" + w + "\" in " + JSON.stringify(text)));
     assert.ok(!bad.test(text), where + ": estar verb after a subject pronoun is missing its accent: " + JSON.stringify(text));
   });
-  Q.forEach((q) => (q.choices || []).forEach((c, i) => assert.ok(!/^(esta|estan|estas)$/i.test(c.trim()), qLabel(q) + " choice " + i + " " + JSON.stringify(c) + " is an unaccented estar form")));
+  Q.forEach((q) => {
+    /* "¿Cuál palabra está bien escrita?" items teach the accent on purpose: unaccented forms may appear only as
+       wrong choices there, and the right answer must carry the accent. Everywhere else they are banned. */
+    const spelling = /bien escrita/i.test(q.prompt || "");
+    (q.choices || []).forEach((c, i) => {
+      const unaccented = /^(esta|estan|estas)$/i.test(c.trim());
+      if (spelling) assert.ok(!(unaccented && i === q.answer), qLabel(q) + " the right answer must be accented, got " + JSON.stringify(c));
+      else assert.ok(!unaccented, qLabel(q) + " choice " + i + " " + JSON.stringify(c) + " is an unaccented estar form");
+    });
+  });
   D.VOCAB.forEach((v) => assert.ok(!/^(esta|estan|estas|estas en)$/i.test(v.es.trim()), "VOCAB " + v.es + " missing accent"));
 });
 
@@ -559,7 +569,7 @@ test("art: every id in the 4.1 table renders and is labelled without the Spanish
     assert.ok(/aria-hidden="true"/.test(dec) && !/role="img"/.test(dec), w + " decorative render must be aria-hidden and not role=img");
   });
   const sized = ART.render({ kind: "place", id: "hotel" }, { size: 64 });
-  assert.ok(/width="64"/.test(sized) && /height="64"/.test(sized), "opts.size sets width/height");
+  assert.ok(/width="64"/.test(sized) && /height="\d+"/.test(sized), "opts.size sets width (and a proportional height)");
   assert.ok(/viewBox=/.test(ART.render({ kind: "place", id: "hotel" })), "viewBox present");
 });
 
@@ -702,7 +712,14 @@ test("engine: buildExam blueprint", () => {
     qs.forEach((q) => { assert.equal(q.exam, true, "seed " + seed + " " + q.id + " is not an exam item"); assert.equal(q.type, "mc", q.id + " must be mc"); });
     D.AREAS.forEach((a) => assert.equal(qs.filter((q) => a.skills.includes(q.skill)).length, a.examCount, "seed " + seed + " area " + a.id + " count"));
     assert.deepEqual([...new Set(qs.map((q) => q.week))].sort(), [1, 2, 3, 4], "seed " + seed + " must cover weeks 1-4");
-    assert.equal(new Set(qs.map((q) => q.family)).size, qs.length, "seed " + seed + " repeated family: " + qs.map((q) => q.family).join(","));
+    /* ESTAR has 5 pronoun families but 7 exam slots, so an ESTAR family may appear twice (two different
+       sentences); every other family appears at most once. */
+    const famCount = {};
+    qs.forEach((q) => { famCount[q.family] = (famCount[q.family] || 0) + 1; });
+    Object.keys(famCount).forEach((f) => {
+      const estar = qs.find((q) => q.family === f).skill === "s4-estar";
+      assert.ok(famCount[f] <= (estar ? 2 : 1), "seed " + seed + " family " + f + " used " + famCount[f] + " times: " + qs.map((q) => q.family).join(","));
+    });
     D.AREAS.forEach((a) => { if (a.examCount >= a.skills.length) a.skills.forEach((s) => assert.ok(qs.some((q) => q.skill === s), "seed " + seed + " area " + a.id + " missing skill " + s)); });
   }
   assert.deepEqual(E.buildExam(D, E.createRng(7)), E.buildExam(D, E.createRng(7)), "same seed -> same exam");

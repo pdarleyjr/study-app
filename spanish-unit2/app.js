@@ -622,7 +622,7 @@
         var sc = ENG.scoreRun(primary, D);
         if (!recorded) {
           recorded = true;
-          if (window.StudyQuest && typeof window.StudyQuest.record === "function") { window.StudyQuest.record(GAME_ID, sc.pct); }
+          if (window.StudyQuest && typeof window.StudyQuest.record === "function") { window.StudyQuest.record("spanish-unit2", sc.pct); }
           state.exams.push({ at: Date.now(), pct: sc.pct, firstTry: sc.firstTry, total: sc.total, byArea: sc.byArea });
           state.exams = state.exams.slice(-20);
           state.tonight.testDone = true; advance();

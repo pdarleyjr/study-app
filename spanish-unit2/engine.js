@@ -155,11 +155,13 @@
     var total = DATA && DATA.EXAM && DATA.EXAM.total ? DATA.EXAM.total : areas.reduce(function (s, a) { return s + (a.examCount || 0); }, 0);
     var usedId = {}, usedFam = {}, picks = [];
 
-    function take(q, areaId) { usedId[q.id] = true; usedFam[famOf(q)] = true; picks.push({ q: q, area: areaId }); }
-    function firstFree(pool, strict) {
-      var i;
+    function take(q, areaId) { usedId[q.id] = true; usedFam[famOf(q)] = (usedFam[famOf(q)] || 0) + 1; picks.push({ q: q, area: areaId }); }
+    /* strict = family unused; loose = family used at most once (a second, different sentence); any = small banks */
+    function firstFree(pool, strict, any) {
+      var i, n;
       for (i = 0; i < pool.length; i++) {
-        if (!usedId[pool[i].id] && (!strict || !usedFam[famOf(pool[i])])) { return pool[i]; }
+        n = usedFam[famOf(pool[i])] || 0;
+        if (!usedId[pool[i].id] && (any || (strict ? n === 0 : n < 2))) { return pool[i]; }
       }
       return null;
     }
@@ -175,15 +177,16 @@
       }
       while (mine < want && (c = firstFree(pool, true))) { take(c, area.id); mine++; }
       while (mine < want && (c = firstFree(pool, false))) { take(c, area.id); mine++; }
+      while (mine < want && (c = firstFree(pool, false, true))) { take(c, area.id); mine++; }
     });
 
     /* small banks: fill from any exam item, then any item at all */
     var rest = shuffled(all, rng), c2;
     while (picks.length < total && (c2 = firstFree(rest, true))) { take(c2, areaOf(DATA, c2.skill) || "x"); }
-    while (picks.length < total && (c2 = firstFree(rest, false))) { take(c2, areaOf(DATA, c2.skill) || "x"); }
+    while (picks.length < total && (c2 = firstFree(rest, false, true))) { take(c2, areaOf(DATA, c2.skill) || "x"); }
     if (picks.length < total) {
       var any = shuffled(questions(DATA).filter(function (q) { return q.type !== "tap"; }), rng);
-      while (picks.length < total && (c2 = firstFree(any, false))) { take(c2, areaOf(DATA, c2.skill) || "x"); }
+      while (picks.length < total && (c2 = firstFree(any, false, true))) { take(c2, areaOf(DATA, c2.skill) || "x"); }
     }
     picks = picks.slice(0, total);
 
@@ -272,8 +275,11 @@
         var pool = unseen.length ? unseen : list;
         return pool.length ? pool[Math.floor(rng() * pool.length)] : null;
       }
-      c = all.filter(function (x) { return ok(x) && x.family && x.family === q.family && x.prompt !== q.prompt; });
-      sib = pickFrom(c.filter(function (x) { return x.type === q.type; })) || pickFrom(c);
+      c = all.filter(function (x) { return ok(x) && x.family && x.family === q.family; });
+      /* prefer new wording; a same-prompt sibling (e.g. a different picture) is still a new item */
+      var fresh = c.filter(function (x) { return x.prompt !== q.prompt; });
+      sib = pickFrom(fresh.filter(function (x) { return x.type === q.type; })) || pickFrom(fresh) ||
+        pickFrom(c.filter(function (x) { return x.type === q.type; })) || pickFrom(c);
       if (!sib) {
         c = all.filter(function (x) { return ok(x) && x.skill === q.skill && x.prompt !== q.prompt; });
         sib = pickFrom(c.filter(function (x) { return x.type === q.type; })) || pickFrom(c);
