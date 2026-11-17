@@ -1,7 +1,7 @@
 /* Study Quest service worker: lets the games open with no Wi-Fi after the first visit.
    Pages: network first (so updates show up), falling back to the saved copy.
    Other files: saved copy first, refreshed in the background. */
-var CACHE = "studyquest-v9";
+var CACHE = "studyquest-v10";
 var SCOPE = self.registration.scope;
 var PRECACHE = [
   "", "index.html", "manifest.webmanifest",
