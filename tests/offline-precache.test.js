@@ -9,7 +9,7 @@ const path = require("node:path");
 const ROOT = path.join(__dirname, "..");
 const sw = fs.readFileSync(path.join(ROOT, "sw.js"), "utf8");
 const PRECACHE = JSON.parse(sw.match(/var PRECACHE = (\[[\s\S]*?\]);/)[1]);
-const NEW_FOLDERS = ["todays-plan", "fractions-review", "sacraments-quest", "matter-lab", "wild-robot-quest", "spanish-unit2"];
+const NEW_FOLDERS = ["todays-plan", "fractions-review", "sacraments-quest", "matter-lab", "wild-robot-quest", "spanish-unit2", "ave-maria"];
 
 function localRefs(htmlFile) {
   const html = fs.readFileSync(path.join(ROOT, htmlFile), "utf8");
@@ -41,8 +41,8 @@ test("homework photos are precached for offline checking", () => {
 });
 
 test("cache name was bumped for this release", () => {
-  // v8: Spanish Quest Unit 2 (spanish-unit2/) added on Nov 15, 2026.
-  assert.match(sw, /var CACHE = "studyquest-v8";/);
+  // v8: Spanish Quest Unit 2 (spanish-unit2/) added on Nov 15, 2026. v9: Ave María Quest (ave-maria/) on Nov 16.
+  assert.match(sw, /var CACHE = "studyquest-v9";/);
 });
 
 test("Spanish Unit 2 guide is precached and linked from the 5th grade dashboard", () => {
