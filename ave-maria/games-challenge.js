@@ -412,6 +412,251 @@ var G = window.AM_GAMES = window.AM_GAMES || {};
   };
 
   /* =====================================================================
+     6. FILL IN THE BLANK — type the missing words, or pick them from a word bank.
+        Blanks favour shaky and new words. Answers ignore capitals, accents and punctuation (the test is said
+        out loud), but the right spelling is always shown. Wrong answers get one more try with the first letter.
+     ===================================================================== */
+  var BLANK_SIZES = [
+    { id: "some", n: 8, t: "A few blanks", d: "8 missing words" },
+    { id: "lots", n: 16, t: "Lots of blanks", d: "16 missing words" },
+    { id: "all", n: 31, t: "Every word", d: "The whole prayer" }
+  ];
+  var BLANK_MODES = [
+    { id: "type", t: "⌨️ Type it", d: "Write each missing word." },
+    { id: "bank", t: "🧩 Word bank", d: "Tap the right word for each blank." }
+  ];
+  function pickBlanks(ctx, n, r) {
+    var D = ctx.D;
+    if (n >= D.WORDS.length) return D.WORDS.map(function (w) { return w.i; });
+    var groups = { shaky: [], "new": [], strong: [] };
+    shuffle(D.WORDS, r).forEach(function (w) {
+      var s = "new"; try { s = ctx.strength(w.i) || "new"; } catch (e) { /* ignore */ }
+      (groups[s] || groups["new"]).push(w.i);
+    });
+    return groups.shaky.concat(groups["new"], groups.strong).slice(0, n).sort(function (a, b) { return a - b; });
+  }
+  function punctOf(w) { return w.token.slice(w.word.length); }
+
+  G.blanks = function (mount, ctx, opts) {
+    var D = ctx.D, r = D.rng(seed());
+    var B = Base(mount, ctx, "Fill in the blank", "Fill in the missing words of the Ave María.");
+    var pref = load(ctx, "amc_blanksPref", null) || { mode: "type", size: "some" };
+    setup();
+
+    function choiceGroup(label, items, current, onPick) {
+      var box = h("div", { class: "amc-pick", role: "group", "aria-label": label });
+      items.forEach(function (it) {
+        var b = h("button", { type: "button", class: "amc-pickbtn", "aria-pressed": it.id === current ? "true" : "false" },
+          h("span", { class: "amc-pickt" }, it.t), h("span", { class: "amc-pickd" }, it.d));
+        b.addEventListener("click", function () {
+          Array.prototype.forEach.call(box.children, function (x) { x.setAttribute("aria-pressed", "false"); });
+          b.setAttribute("aria-pressed", "true"); onPick(it.id);
+        });
+        box.appendChild(b);
+      });
+      return box;
+    }
+
+    function setup() {
+      B.nofb(); clear(B.body);
+      B.progress("Choose how to play", 0);
+      var mode = pref.mode, size = pref.size;
+      var start = nextBtn(B, "Start →", function () { save(ctx, "amc_blanksPref", { mode: mode, size: size }); play(mode, size); });
+      B.body.appendChild(h("div", { class: "amc-card" },
+        h("p", { class: "amc-q" }, "How do you want to fill the blanks?"),
+        choiceGroup("How to answer", BLANK_MODES, mode, function (id) { mode = id; }),
+        h("p", { class: "amc-q amc-gap" }, "How many blanks?"),
+        choiceGroup("How many blanks", BLANK_SIZES, size, function (id) { size = id; }),
+        h("p", { class: "amc-small" }, "Tip: start with a few blanks, then try every word. Capitals and accent marks don’t count against you."),
+        h("div", { class: "amc-row" }, start)));
+      focusSoon(start);
+    }
+
+    function play(mode, sizeId) {
+      var size = BLANK_SIZES.filter(function (s) { return s.id === sizeId; })[0] || BLANK_SIZES[0];
+      var hidden = pickBlanks(ctx, size.n, r), isHidden = {};
+      hidden.forEach(function (i) { isHidden[i] = true; });
+      var round = 1, slots = {}, hinted = {}, firstRight = 0, active = null, accentTips = [];
+      var typing = mode === "type";
+      B.nofb(); clear(B.body);
+
+      /* ---- the prayer with blanks ---- */
+      var board = h("div", { class: "amc-board amc-fill", role: "group", "aria-label": "The prayer with missing words" });
+      D.LINES.forEach(function (line, li) {
+        var row = h("div", { class: "amc-brow" });
+        D.WORDS.filter(function (w) { return w.line === line.id; }).forEach(function (w) {
+          if (!isHidden[w.i]) { row.appendChild(h("span", { class: "amc-given amc-latin" }, w.token)); return; }
+          var n = hidden.indexOf(w.i) + 1, label = "Blank " + n + " of " + hidden.length + ", line " + (li + 1);
+          var el;
+          if (typing) {
+            el = h("input", { type: "text", class: "amc-in amc-latin", autocomplete: "off", autocapitalize: "none", autocorrect: "off",
+              spellcheck: "false", enterkeyhint: "next", "aria-label": label, style: "width:calc(" + Math.max(4, Math.ceil(w.word.length * 1.2) + 1) + "ch + 26px)" });
+            el.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); focusNext(w.i); } });
+            el.addEventListener("input", paintProgress);
+            el.addEventListener("focus", function () { active = w.i; });
+          } else {
+            el = h("button", { type: "button", class: "amc-slot amc-latin", "aria-label": label + ", empty" }, h("span", { class: "amc-slott" }, " "));
+            el.addEventListener("click", function () { slotTap(w.i); });
+          }
+          var cell = h("span", { class: "amc-cell" }, el, punctOf(w) ? h("span", { class: "amc-punct amc-latin" }, punctOf(w)) : null);
+          slots[w.i] = { w: w, el: el, cell: cell, value: "", state: "open" };
+          row.appendChild(cell);
+        });
+        board.appendChild(row);
+      });
+
+      /* ---- word bank (bank mode): the hidden words + a few decoys, shuffled ---- */
+      var bank = null, chips = [];
+      if (!typing) {
+        bank = h("div", { class: "amc-tiles amc-bank", role: "group", "aria-label": "Word bank" });
+        var words = hidden.map(function (i) { return D.WORDS[i]; });
+        var keys = {}; words.forEach(function (w) { keys[w.key] = 1; });
+        var decoys = [], seenD = {};
+        if (hidden.length < D.WORDS.length) {
+          shuffle(D.WORDS, r).forEach(function (w) { if (decoys.length < 3 && !keys[w.key] && !seenD[w.key]) { seenD[w.key] = 1; decoys.push(w); } });
+        }
+        shuffle(words.concat(decoys), r).forEach(function (w) {
+          var c = h("button", { type: "button", class: "amc-tile amc-latin" }, w.word);
+          var chip = { word: w.word, el: c, used: null };
+          c.addEventListener("click", function () { chipTap(chip); });
+          chips.push(chip); bank.appendChild(c);
+        });
+      }
+
+      var hintBtn = h("button", { type: "button", class: "amc-listen", onclick: hint }, "💡 First letter");
+      var checkBtn = nextBtn(B, "Check my answers ✓", check);
+      B.body.appendChild(h("div", { class: "amc-card" },
+        h("p", { class: "amc-q" }, typing ? "Type the missing words. Press Enter (or Next on the keyboard) to jump to the next blank." :
+          "Tap a blank, then tap its word. Tap a filled blank to empty it."),
+        board,
+        bank ? h("p", { class: "amc-colh amc-gap" }, "Word bank") : null, bank,
+        h("div", { class: "amc-row" }, hintBtn, checkBtn)));
+      paintProgress();
+      if (typing) focusSoon(slots[hidden[0]].el); else select(hidden[0]);
+
+      function open() { return hidden.filter(function (i) { return slots[i].state === "open"; }); }
+      function valueOf(i) { return typing ? slots[i].el.value : slots[i].value; }
+      function paintProgress() {
+        var o = open(), filled = o.filter(function (i) { return D.stripPunct(valueOf(i)).trim(); }).length;
+        var doneCount = hidden.length - o.length;
+        B.progress((round === 1 ? "Filled " : "Fixing: filled ") + filled + " of " + o.length, (doneCount + filled) / hidden.length);
+      }
+      function focusNext(i) {
+        var o = open(), k = o.indexOf(i), nx = null;
+        for (var j = 1; j <= o.length; j++) { var c = o[(k + j) % o.length]; if (!D.stripPunct(valueOf(c)).trim()) { nx = c; break; } }
+        if (nx == null || nx === i) { focusSoon(checkBtn); return; }
+        if (typing) focusSoon(slots[nx].el); else select(nx);
+      }
+
+      /* bank mode */
+      function select(i) {
+        active = i;
+        hidden.forEach(function (k) { slots[k].el.classList.toggle("is-active", k === i && slots[k].state === "open"); });
+      }
+      function setSlot(i, word, chip) {
+        var s = slots[i];
+        if (s.chip) { s.chip.used = null; s.chip.el.disabled = false; s.chip.el.classList.remove("is-done"); }
+        s.value = word || ""; s.chip = chip || null;
+        if (chip) { chip.used = i; chip.el.disabled = true; chip.el.classList.add("is-done"); }
+        s.el.firstChild.textContent = word || " ";
+        s.el.setAttribute("aria-label", s.el.getAttribute("aria-label").replace(/, .*$/, "") + (word ? ", " + word : ", empty"));
+        paintProgress();
+      }
+      function slotTap(i) {
+        if (slots[i].state !== "open") return;
+        if (slots[i].value && active === i) { setSlot(i, ""); return; }
+        select(i);
+      }
+      function chipTap(chip) {
+        if (chip.used != null) return;
+        var target = active != null && slots[active].state === "open" && !slots[active].value ? active :
+          open().filter(function (k) { return !slots[k].value; })[0];
+        if (target == null) target = active != null && slots[active].state === "open" ? active : null;
+        if (target == null) return;
+        setSlot(target, chip.word, chip);
+        focusNext(target);
+      }
+
+      function hint() {
+        var i = active != null && slots[active] && slots[active].state === "open" ? active : open()[0];
+        if (i == null) return;
+        hinted[i] = true;
+        var s = slots[i], letter = s.w.word.charAt(0);
+        if (typing) { s.el.placeholder = letter + "…"; focusSoon(s.el); }
+        else { s.el.classList.add("amc-hinted"); if (!s.value) s.el.firstChild.textContent = letter + "…"; }
+        B.say("hint", "Blank " + (hidden.indexOf(i) + 1) + " starts with “" + letter + "”.");
+      }
+
+      function lock(i, state, shown) {
+        var s = slots[i]; s.state = state;
+        s.el.classList.remove("is-active", "is-wrong", "amc-retry", "amc-hinted");
+        s.el.classList.add(state === "right" ? "is-right" : "is-wrong");
+        s.el.disabled = true; if (typing) s.el.readOnly = true;
+        var mark = h("span", { class: "amc-fillmark", "aria-hidden": "true" }, state === "right" ? "✓" : "✗");
+        s.cell.insertBefore(mark, s.el);
+        if (shown) s.cell.appendChild(h("span", { class: "amc-answer amc-latin" }, "→ " + s.w.word));
+        s.el.setAttribute("aria-label", (s.el.getAttribute("aria-label") || "").replace(/, .*$/, "") + (state === "right" ? ", correct: " : ", the answer is ") + s.w.word);
+      }
+
+      function check() {
+        var o = open(), wrong = [];
+        o.forEach(function (i) {
+          var typed = valueOf(i), w = slots[i].w;
+          var ok = !!D.stripPunct(typed).trim() && D.norm(typed) === w.key;
+          if (ok) {
+            if (D.stripPunct(typed).trim() !== w.word && D.stripPunct(typed).trim().toLowerCase() !== w.word.toLowerCase()) accentTips.push(w.word);
+            var first = round === 1 && !hinted[i];
+            if (first) firstRight++;
+            B.word(i, round === 1 ? (first ? "right" : "hint") : "wrong");
+            B.hit(first, "Fill in the blank", 0, true);
+            if (typing && D.stripPunct(typed).trim() !== w.word) slots[i].el.value = w.word + "";
+            lock(i, "right");
+          } else {
+            B.miss();
+            if (round === 1) { wrong.push(i); }
+            else { B.word(i, "wrong"); lock(i, "wrong", true); }
+          }
+        });
+        B.flush("Fill in the blank");
+        if (round === 1 && wrong.length) {
+          round = 2;
+          wrong.forEach(function (i) {
+            var s = slots[i];
+            s.el.classList.add("is-wrong"); s.el.classList.add("amc-retry");
+            if (typing) { s.el.value = ""; s.el.placeholder = s.w.word.charAt(0) + "…"; }
+            else { setSlot(i, ""); s.el.firstChild.textContent = s.w.word.charAt(0) + "…"; }
+          });
+          B.say("bad", (o.length - wrong.length) + " of " + o.length + " right. Fix the " + wrong.length + " marked blank" + (wrong.length === 1 ? "" : "s") + ": the first letter is shown.");
+          paintProgress();
+          if (typing) focusSoon(slots[wrong[0]].el); else select(wrong[0]);
+          return;
+        }
+        results();
+      }
+
+      function results() {
+        hintBtn.disabled = true; checkBtn.remove();
+        if (bank) bank.remove();
+        var total = hidden.length, perfect = firstRight === total;
+        B.progress("Done", 1);
+        var tip = accentTips.length ? " On paper, remember the accents: " + accentTips.slice(0, 4).join(", ") + "." : "";
+        B.say(perfect ? "good" : "hint", (perfect ? "Perfect! All " + total + " right on the first try." : firstRight + " of " + total + " right on the first try.") + tip);
+        if (perfect && !ctx.reduced) QuestKit.celebrate("Fill in the blank: perfect!");
+        var again = h("button", { type: "button", class: "qk-btn qk-btn-ghost", onclick: function () { play(mode, sizeId); } }, "New blanks");
+        var bigger = size.id !== "all" ? h("button", { type: "button", class: "qk-btn qk-btn-ghost", onclick: function () {
+          var nx = size.id === "some" ? "lots" : "all"; save(ctx, "amc_blanksPref", { mode: mode, size: nx }); play(mode, nx); } }, "More blanks →") : null;
+        var fin = nextBtn(B, "See results", function () {
+          B.finish({ title: "Fill in the blank", correct: firstRight, total: total, points: B.points,
+            note: (typing ? "Typed" : "Word bank") + ", " + size.d.toLowerCase() + ". " + (perfect ? "Try more blanks next time!" : "The words you missed will come back in your practice.") + tip });
+        });
+        B.body.firstChild.appendChild(h("div", { class: "amc-row" }, fin, bigger, again));
+        focusSoon(fin);
+      }
+    }
+    return { destroy: B.destroy };
+  };
+
+  /* =====================================================================
      5. TEST-DAY PRACTICE /31
      ===================================================================== */
   G.test = function (mount, ctx, opts) {

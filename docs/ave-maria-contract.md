@@ -48,7 +48,9 @@ Body: `<body class="qk qk-ave am">`. `games.js` exposes `window.AM_GAMES`; `app.
 
 ## Screens (hash routes)
 
-`#home` dashboard · `#plan` Tonight's Plan (the 8 PLAN steps as a checklist that launches each activity, ticks
+`#blanks` Fill in the blank (added Nov 16: type the missing words or use a word bank; 8, 16 or all 31 blanks,
+shaky words first; capitals/accents ignored when checking but the accented spelling is shown; one retry with the
+first letter; last game of the plan's Recall step) · `#home` dashboard · `#plan` Tonight's Plan (the 8 PLAN steps as a checklist that launches each activity, ticks
 persist, break step shows a countdown and "come back at HH:MM") · `#meet` · `#learn/A`…`#learn/D` · `#vanish` ·
 `#build` · `#next` · `#slip` · `#match` · `#test` (test-day practice) · `#bedtime` · `#morning` · `#prayer` (the full
 prayer card: Latin / pronunciation / English toggles, listen, print-friendly).

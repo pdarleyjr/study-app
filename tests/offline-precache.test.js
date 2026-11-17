@@ -41,8 +41,8 @@ test("homework photos are precached for offline checking", () => {
 });
 
 test("cache name was bumped for this release", () => {
-  // v8: Spanish Quest Unit 2 (spanish-unit2/) added on Nov 15, 2026. v9: Ave María Quest (ave-maria/) on Nov 16.
-  assert.match(sw, /var CACHE = "studyquest-v9";/);
+  // v8: Spanish Quest Unit 2 (spanish-unit2/) added on Nov 15, 2026. v9: Ave María Quest (ave-maria/) on Nov 16. v10: its Fill in the blank game.
+  assert.match(sw, /var CACHE = "studyquest-v10";/);
 });
 
 test("Spanish Unit 2 guide is precached and linked from the 5th grade dashboard", () => {
