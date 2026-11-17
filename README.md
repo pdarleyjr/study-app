@@ -20,6 +20,7 @@ The home page (`index.html`) shows two big grade cards:
 | First Americans & Cultural Regions | `social-studies-unit1/` | Social Studies Unit 1, Lessons 2 and 3. |
 | Map Skills Mission | `map-skills/` | Map parts, map types, symbols, scale, grids, and contour lines. |
 | Spanish Quest: ¿Cómo vivimos? | `spanish-unit2/` | 5th grade Spanish, *Descubre el español con Santillana E*, Unidad 2 (workbook pp. 19–32): housing, places and map directions, clothing/colors/prices, cleaning and household commands, community workers and ESTAR. Tonight's Study Mission, Quick Practice, 24-question Practice Test, 7-minute Morning Warm-Up. See "Spanish Quest files" below. |
+| Ave María Quest | `ave-maria/` | 5th grade: recite the Ave María in Latin word for word (the class test is scored out of 31, one point per word). Tonight's Plan (~45 min with a break), learning games, challenge games, Test-day practice /31, Bedtime lock-in, Morning warm-up. See "Ave María Quest files" below. |
 | Spanish Days of the Week Adventure | `second-grade/spanish-days/` | 2nd grade: the seven days in Spanish (lunes–domingo), order, before/after, listening, parent-checked oral recitation, Monday Morning Quick Review. See `docs/spanish-days-rationale.md`. |
 
 ## Works on iPad, phone, and desktop
@@ -78,6 +79,20 @@ The home page (`index.html`) shows two big grade cards:
 - Only the Chapter Detective is open-book. Every other mode works without the textbook.
 - The Benchmark Challenge result goes to `StudyQuest.record("stars-galaxies", percent)`. Mission stars, skill mastery and missed questions live under the local key `studyquest:stars-galaxies:v1`.
 - The textbook's galaxy percentages (spiral/irregular/elliptical) are the textbook's claims, labelled that way in the game. Solar-system, comet, planet and model questions come from the benchmark itself and are marked as extra context because pages 137-143 do not teach them.
+
+## Ave María Quest files (5th grade, Latin prayer)
+
+- `ave-maria/data.js`: the prayer exactly as on the class test sheet (8 lines, 31 words, accents included), word
+  meanings, kid pronunciation, English and Spanish lines, memory hooks, phrases, "spot the slip" mistakes, tonight's
+  plan, and pure helpers (`vanishMask`, `scoreRecital`, `firstLetters`, `speechText`). `tests/ave-maria.test.js` pins
+  the text to the sheet.
+- `ave-maria/app.js` (screens, Tonight's Plan, word heat map, points and Latin ranks, prayer card), `games-learn.js` +
+  `learn.css` (meet, learn parts A–D, disappearing words, bedtime, morning), `games-challenge.js` + `challenge.css`
+  (what comes next, spot the slip, meaning match, word builder, test-day /31), `speech.js` (optional voice: an Italian
+  voice reads Church Latin well, Spanish as fallback; no microphone), `art.js`, `styles.css`, `index.html`.
+- Test-day practice is scored like the sheet (one point per word, attempts 1–3) and goes to
+  `StudyQuest.record("ave-maria", percent)`. Everything else lives under `studyquest:ave-maria:v1`.
+- Why it is built this way: `docs/ave-maria-contract.md`.
 
 ## Spanish Quest files (5th grade, Spanish Unit 2)
 
