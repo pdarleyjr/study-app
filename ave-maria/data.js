@@ -145,7 +145,7 @@
     { id: "learnCD", title: "Learn parts 3 & 4", minutes: 8, text: "Same steps, then join all four parts." },
     { id: "vanish", title: "Disappearing words", minutes: 5, text: "Words vanish until you can say it from memory." },
     { id: "break", title: "Brain break", minutes: 10, text: "Step away for 10 minutes. The break helps memory." },
-    { id: "recall", title: "Recall challenge", minutes: 4, text: "What comes next? and Spot the slip." },
+    { id: "recall", title: "Recall challenge", minutes: 7, text: "What comes next?, Spot the slip, then Fill in the blank." },
     { id: "test", title: "Test-day practice", minutes: 3, text: "Say it all. Scored out of 31, like the real sheet." },
     { id: "bedtime", title: "Bedtime lock-in", minutes: 2, text: "Say it once right before sleep. Sleep locks it in." }
   ];

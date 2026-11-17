@@ -135,7 +135,9 @@ test("page loads its scripts in the contract order and links back to 5th grade",
 test("games register under AM_GAMES and the test result is recorded as ave-maria", () => {
   const learn = read("ave-maria/games-learn.js"), chal = read("ave-maria/games-challenge.js"), app = read("ave-maria/app.js");
   ["meet", "learn", "vanish", "bedtime", "morning"].forEach((g) => assert.match(learn, new RegExp("G\\." + g + "\\s*=")));
-  ["next", "slip", "match", "build", "test"].forEach((g) => assert.match(chal, new RegExp("G\\." + g + "\\s*=")));
+  ["next", "slip", "match", "build", "test", "blanks"].forEach((g) => assert.match(chal, new RegExp("G\\." + g + "\\s*=")));
+  assert.match(app, /blanks:\s*1/, "#blanks is a game route");
+  assert.match(app, /recall:\s*\[\["next"\], \["slip"\], \["blanks"\]\]/, "the recall step ends with Fill in the blank");
   assert.match(app, /StudyQuest\.record\(\s*["']ave-maria["']/);
   assert.ok(app.includes("studyquest:ave-maria:v1"));
 });

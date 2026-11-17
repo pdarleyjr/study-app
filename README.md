@@ -88,7 +88,8 @@ The home page (`index.html`) shows two big grade cards:
   the text to the sheet.
 - `ave-maria/app.js` (screens, Tonight's Plan, word heat map, points and Latin ranks, prayer card), `games-learn.js` +
   `learn.css` (meet, learn parts A–D, disappearing words, bedtime, morning), `games-challenge.js` + `challenge.css`
-  (what comes next, spot the slip, meaning match, word builder, test-day /31), `speech.js` (optional voice: an Italian
+  (what comes next, spot the slip, fill in the blank — typed or word bank, 8/16/31 blanks favouring shaky words,
+  accent-tolerant with the right spelling shown — meaning match, word builder, test-day /31), `speech.js` (optional voice: an Italian
   voice reads Church Latin well, Spanish as fallback; no microphone), `art.js`, `styles.css`, `index.html`.
 - Test-day practice is scored like the sheet (one point per word, attempts 1–3) and goes to
   `StudyQuest.record("ave-maria", percent)`. Everything else lives under `studyquest:ave-maria:v1`.
