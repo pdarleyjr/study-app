@@ -229,7 +229,7 @@
       leadCard(),
       h("div", { class: "am-cols" }, morningCard(), testCard()),
       rankCard(), heatCard(), gridCard(),
-      h("p", { class: "am-muted am-no-print", style: "text-align:center" }, h("a", { href: "#prayer" }, "The full prayer card"), " · ", h("a", { href: "#plan" }, "Tonight's plan"))
+      h("div", { class: "qk-row am-no-print", style: "justify-content:center" }, h("a", { class: "qk-btn qk-btn-ghost", href: "#prayer" }, "📜 The full prayer card"), h("a", { class: "qk-btn qk-btn-ghost", href: "#plan" }, "✅ Tonight's plan"))
     ], "Home", "home");
   }
 
@@ -387,14 +387,17 @@
 
   function gameScreen(r) {
     var pl = inPlan(r), mode = pl ? "plan" : "free", frame = h("div", { class: "am-game-frame" }), mount = h("div", { class: "am-game-mount" });
-    var title = titleFor(r.name, r.arg), bk = backFor(r, !!pl), finished = false, game = null;
+    var title = titleFor(r.name, r.arg), bk = backFor(r, !!pl), finished = false, game = null, earned = 0;
     var ctx = {
       D: D, speech: window.AM_SPEECH, mode: mode, reduced: QK.reducedMotion(),
       word: function (i, result) {
         i = +i; if (!(i >= 0 && i < 31) || i % 1 || RESULTS.indexOf(result) < 0) { return; }
         save(function (x) { var a = x.words[i] || []; a.push(result); x.words[i] = a.slice(-4); });
       },
-      strength: strength, award: award,
+      strength: strength,
+      /* games may award points while playing (challenge games) or only report them in ctx.done (learn games);
+         count what was awarded so the finish only credits the difference and nothing is lost or doubled */
+      award: function (points, label) { earned += Math.max(0, Math.round(+points || 0)); return award(points, label); },
       save: function (name, value) { save(function (x) { x.games[String(name)] = value; }); },
       load: function (name) { var v = get().games[String(name)]; return v === undefined ? null : v; },
       done: function (summary) {
@@ -402,6 +405,8 @@
         finished = true;
         try { if (game && game.destroy) { game.destroy(); } } catch (e) { /* ignore */ }
         game = null; SP.stop();
+        var extra = Math.round(+((summary || {}).points) || 0) - earned;
+        if (extra > 0) { award(extra, "round finished"); }
         mount.replaceChildren(finishCard(summary, r, pl));
         window.scrollTo(0, 0);
         var fh = document.getElementById("am-fin-h"); if (fh) { try { fh.focus({ preventScroll: true }); } catch (e) { /* ignore */ } }

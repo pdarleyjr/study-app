@@ -132,10 +132,10 @@
   /* Latin rank titles for points (fun, not a grade). */
   var RANKS = [
     { min: 0, title: "Discipulus", en: "Student" },
-    { min: 120, title: "Lector", en: "Reader" },
-    { min: 300, title: "Cantor", en: "Singer" },
-    { min: 550, title: "Custos", en: "Guardian" },
-    { min: 850, title: "Magister", en: "Master" }
+    { min: 250, title: "Lector", en: "Reader" },
+    { min: 700, title: "Cantor", en: "Singer" },
+    { min: 1300, title: "Custos", en: "Guardian" },
+    { min: 2000, title: "Magister", en: "Master" }
   ];
 
   /* Tonight's plan (spaced, with a real break) and tomorrow morning. */
