@@ -1,7 +1,7 @@
 /* Study Quest service worker: lets the games open with no Wi-Fi after the first visit.
    Pages: network first (so updates show up), falling back to the saved copy.
    Other files: saved copy first, refreshed in the background. */
-var CACHE = "studyquest-v10";
+var CACHE = "studyquest-v11";
 var SCOPE = self.registration.scope;
 var PRECACHE = [
   "", "index.html", "manifest.webmanifest",
@@ -19,6 +19,7 @@ var PRECACHE = [
   "spanish-unit2/speech.js", "spanish-unit2/engine.js", "spanish-unit2/activities.js", "spanish-unit2/app.js",
   "ave-maria/", "ave-maria/styles.css", "ave-maria/learn.css", "ave-maria/challenge.css", "ave-maria/data.js",
   "ave-maria/speech.js", "ave-maria/art.js", "ave-maria/games-learn.js", "ave-maria/games-challenge.js", "ave-maria/app.js",
+  "ave-maria/catch.css", "ave-maria/window.css", "ave-maria/games-catch.js", "ave-maria/games-window.js",
   "spanish/", "social-studies-unit1/", "map-skills/", "northeast-states/",
   "european-exploration/", "european-exploration/styles.css", "european-exploration/data.js", "european-exploration/art.js", "european-exploration/game.js",
   "stars-galaxies/", "stars-galaxies/styles.css", "stars-galaxies/art-core.js", "stars-galaxies/art-stars.js", "stars-galaxies/art-galaxies.js",

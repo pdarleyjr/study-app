@@ -143,7 +143,7 @@
     { id: "meet", title: "Meet the prayer", minutes: 4, text: "What it means, how to say it." },
     { id: "learnAB", title: "Learn parts 1 & 2", minutes: 8, text: "Listen, echo, build it with word tiles." },
     { id: "learnCD", title: "Learn parts 3 & 4", minutes: 8, text: "Same steps, then join all four parts." },
-    { id: "vanish", title: "Disappearing words", minutes: 5, text: "Words vanish until you can say it from memory." },
+    { id: "vanish", title: "Disappearing words + Lantern catch", minutes: 8, text: "Words vanish until you can say it from memory, then catch every word in order." },
     { id: "break", title: "Brain break", minutes: 10, text: "Step away for 10 minutes. The break helps memory." },
     { id: "recall", title: "Recall challenge", minutes: 7, text: "What comes next?, Spot the slip, then Fill in the blank." },
     { id: "test", title: "Test-day practice", minutes: 3, text: "Say it all. Scored out of 31, like the real sheet." },

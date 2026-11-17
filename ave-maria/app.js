@@ -58,7 +58,7 @@
   function planStep(id) { return D.PLAN.filter(function (s) { return s.id === id; })[0] || null; }
 
   /* ---------- plan <-> routes ---------- */
-  var QUEUES = { meet: [["meet"]], learnAB: [["learn", "A"], ["learn", "B"]], learnCD: [["learn", "C"], ["learn", "D"]], vanish: [["vanish"]],
+  var QUEUES = { meet: [["meet"]], learnAB: [["learn", "A"], ["learn", "B"]], learnCD: [["learn", "C"], ["learn", "D"]], vanish: [["vanish"], ["catch"]],
     "break": [["break"]], recall: [["next"], ["slip"], ["blanks"]], test: [["test"]], bedtime: [["bedtime"]] };
   function href(name, arg, planId) { return "#" + name + (arg ? "/" + arg : "") + (planId ? "?plan=" + planId : ""); }
   function stepHref(step) { var q = QUEUES[step.id]; return q ? href(q[0][0], q[0][1], step.id) : "#plan"; }
@@ -70,7 +70,7 @@
     return { name: parts[0] || "home", arg: parts[1] || "", plan: plan };
   }
   function partTitle(id) { var p = D.PARTS.filter(function (x) { return x.id === id; })[0]; return p; }
-  var GAME_TITLES = { meet: "Meet the prayer", vanish: "Disappearing words", build: "Word builder", next: "What comes next?", slip: "Spot the slip", blanks: "Fill in the blank",
+  var GAME_TITLES = { meet: "Meet the prayer", vanish: "Disappearing words", build: "Word builder", next: "What comes next?", slip: "Spot the slip", blanks: "Fill in the blank", "catch": "Lantern catch", "window": "Light the window",
     match: "Meaning match", test: "Test-day practice", bedtime: "Bedtime lock-in", morning: "Morning warm-up" };
   function titleFor(name, arg) {
     if (name === "learn") { var p = partTitle(arg); return p ? "Learn " + arg + ": " + p.title : "Learn the prayer"; }
@@ -131,6 +131,8 @@
     { n: "learn", a: "D", i: "icon-learn", d: "Finish it and join all four parts." },
     { n: "vanish", t: "Disappearing words", d: "Words fade until you say it from memory.", i: "icon-vanish", href: "#vanish" },
     { n: "blanks", t: "Fill in the blank", d: "Type or pick the missing words.", i: "icon-blanks", href: "#blanks" },
+    { n: "catch", t: "Lantern catch", d: "Catch the next word as the lanterns float by.", i: "icon-catch", href: "#catch" },
+    { n: "window", t: "Light the window", d: "Fill each line to light up a stained-glass window.", i: "icon-window", href: "#window" },
     { n: "build", t: "Word builder", d: "Rebuild a line from shuffled words.", i: "icon-build", href: "#build" },
     { n: "next", t: "What comes next?", d: "Nail the spots where people stumble.", i: "icon-next", href: "#next" },
     { n: "slip", t: "Spot the slip", d: "Find the one wrong word.", i: "icon-slip", href: "#slip" },
@@ -441,7 +443,7 @@
   }
 
   /* ---------- router ---------- */
-  var GAME_ROUTES = { meet: 1, learn: 1, vanish: 1, build: 1, next: 1, slip: 1, blanks: 1, match: 1, test: 1, bedtime: 1, morning: 1 };
+  var GAME_ROUTES = { meet: 1, learn: 1, vanish: 1, build: 1, next: 1, slip: 1, blanks: 1, "catch": 1, "window": 1, match: 1, test: 1, bedtime: 1, morning: 1 };
   function route() {
     teardown();
     var r = parseHash();
