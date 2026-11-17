@@ -506,7 +506,7 @@ var G = window.AM_GAMES = window.AM_GAMES || {};
             nav.appendChild(btn("Finish ✓", function () {
               e.save("vanish", null);
               ctx.done({ title: "Disappearing words", correct: r.right, total: r.total, points: e.points,
-                note: r.wrong.length ? "Say the shaky words again, then take a break." : "From memory! Take your brain break next." });
+                note: r.wrong.length ? "Say the shaky words again, then keep going." : "From memory! That is the whole prayer." });
             }, "qk-btn-primary"));
             nav.appendChild(btn("Try level 4 again", function () { go(4); }, "qk-btn-ghost"));
             e.celebrate("Level 4 done! Amazing!");

@@ -123,19 +123,24 @@ function read(f) { return fs.readFileSync(path.join(ROOT, f), "utf8"); }
 
 test("page loads its scripts in the contract order and links back to 5th grade", () => {
   const html = read("ave-maria/index.html");
-  const order = ["../assets/app.js", "../assets/quest-kit.js", "data.js", "speech.js", "art.js", "games-learn.js", "games-challenge.js", "app.js"];
+  const order = ["../assets/app.js", "../assets/quest-kit.js", "data.js", "speech.js", "art.js", "games-learn.js", "games-challenge.js", "games-catch.js", "games-window.js", "app.js"];
   const pos = order.map((s) => html.indexOf('src="' + s));
   pos.forEach((p, i) => assert.ok(p > 0, order[i] + " is loaded"));
   assert.deepEqual(pos.slice().sort((a, b) => a - b), pos, "scripts are in order");
   assert.match(html, /class="qk qk-ave am"/);
   assert.ok(html.includes('href="../fifth-grade/"'));
-  ["styles.css", "learn.css", "challenge.css"].forEach((c) => assert.ok(html.includes('href="' + c), c));
+  ["styles.css", "learn.css", "challenge.css", "catch.css", "window.css"].forEach((c) => assert.ok(html.includes('href="' + c), c));
 });
 
 test("games register under AM_GAMES and the test result is recorded as ave-maria", () => {
   const learn = read("ave-maria/games-learn.js"), chal = read("ave-maria/games-challenge.js"), app = read("ave-maria/app.js");
   ["meet", "learn", "vanish", "bedtime", "morning"].forEach((g) => assert.match(learn, new RegExp("G\\." + g + "\\s*=")));
   ["next", "slip", "match", "build", "test", "blanks"].forEach((g) => assert.match(chal, new RegExp("G\\." + g + "\\s*=")));
+  assert.match(read("ave-maria/games-catch.js"), /G\.catch\s*=/, "Lantern catch registers G.catch");
+  assert.match(read("ave-maria/games-window.js"), /G\.window\s*=/, "Light the window registers G.window");
+  assert.match(app, /"catch":\s*1/, "#catch is a game route");
+  assert.match(app, /"window":\s*1/, "#window is a game route");
+  assert.match(app, /vanish:\s*\[\["vanish"\], \["catch"\]\]/, "the plan's vanish step ends with Lantern catch");
   assert.match(app, /blanks:\s*1/, "#blanks is a game route");
   assert.match(app, /recall:\s*\[\["next"\], \["slip"\], \["blanks"\]\]/, "the recall step ends with Fill in the blank");
   assert.match(app, /StudyQuest\.record\(\s*["']ave-maria["']/);
@@ -155,6 +160,7 @@ test("the guide is on the 5th grade dashboard and precached for offline use", ()
   assert.ok(dash.includes('data-best="ave-maria"'));
   const sw = read("sw.js");
   const PRECACHE = JSON.parse(sw.match(/var PRECACHE = (\[[\s\S]*?\]);/)[1]);
-  ["", "styles.css", "learn.css", "challenge.css", "data.js", "speech.js", "art.js", "games-learn.js", "games-challenge.js", "app.js"]
+  ["", "styles.css", "learn.css", "challenge.css", "catch.css", "window.css", "data.js", "speech.js", "art.js", "games-learn.js",
+    "games-challenge.js", "games-catch.js", "games-window.js", "app.js"]
     .forEach((f) => assert.ok(PRECACHE.includes("ave-maria/" + f), "ave-maria/" + f + " precached"));
 });
